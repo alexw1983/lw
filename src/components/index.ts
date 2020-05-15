@@ -8,5 +8,5 @@ export { default as LoadingContainer } from "./loading-container";
 export { default as MainNav } from "./shared/main-nav";
 
 export { default as Player } from "./players/player";
-export { default as PlayersList } from "./players/players-list";
+export { default as PlayersList } from "./players/players-list-container";
 export { default as NewPlayer } from "./players/new-player";

@@ -1,45 +1,28 @@
-import { createStore } from "redux";
-import reducer from "./reducers";
-import { takeDamage, loadActionChart, loadActionChartSuccess } from "./actions";
+import { createStore, applyMiddleware, compose } from "redux";
+import { createLogger } from "redux-logger";
+import thunkMiddleware from "redux-thunk";
+import lwAppReducer from "./reducers";
+import { toggleLoading } from "./actions/other-actions";
+import { fetchPlayers, requestPlayers } from "./actions/player-actions";
 
-const store = createStore(
-  reducer,
-  {},
-  (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
-    (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+const loggerMiddleware = createLogger();
+
+const composeEnhancers =
+  typeof window === "object" &&
+  (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+    : compose;
+
+const enhancer = composeEnhancers(
+  applyMiddleware(loggerMiddleware, thunkMiddleware)
 );
 
-// Log the initial state
-console.log(store.getState());
+const store = createStore(lwAppReducer, enhancer);
 
-// Every time the state changes, log it
-// Note that subscribe() returns a function for unregistering the listener
-const unsubscribe = store.subscribe(() => console.log(store.getState()));
+store.dispatch<any>(requestPlayers());
 
-// Dispatch some actions
-store.dispatch(takeDamage(5));
-store.dispatch(takeDamage(1));
-store.dispatch(takeDamage(3));
-store.dispatch(loadActionChart("1"));
-store.dispatch(
-  loadActionChartSuccess("1", {
-    combatSkill: 25,
-    endurancePoints: 30,
-    kaiDiscipines: [
-      { name: "Healing", description: "" },
-      { name: "Sixth Sense", description: "" },
-      { name: "Mind Blast", description: "" },
-      { name: "Weapon Skill", description: "" },
-      { name: "Hunting", description: "" },
-    ],
-    backpack: [],
-    beltPouch: 10,
-    weapons: ["Sword", "dagger"],
-    specialItems: [],
-  })
-);
+store.dispatch<any>(toggleLoading());
 
-// Stop listening to state updates
-unsubscribe();
+store.dispatch<any>(fetchPlayers());
 
 export default store;

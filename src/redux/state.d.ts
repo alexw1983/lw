@@ -1,4 +1,3 @@
-
 export interface IKaiDiscipline {
   name: string;
   description: string;
@@ -14,7 +13,13 @@ export interface IActionChart {
   specialItems: string[];
 }
 
+export interface IPlayer {
+  name: string;
+  id: string;
+}
+
 export interface ILwState {
   loading: boolean;
   actionChart: IActionChart;
+  players: IPlayer[];
 }

@@ -1,14 +1,15 @@
-import { LW_ACTION_TYPE, ILwAction } from "../actionTypes";
+import { LwActionTypes } from "../actions/actionTypes";
 
-const { LOAD_ACTION_CHART, LOAD_ACTION_CHART_SUCCESS, TOGGLE_LOADING } = LW_ACTION_TYPE;
-
-const loadingReducer = (state: boolean = false, action: ILwAction) => {
+const loadingReducer = (state: boolean = false, action: LwActionTypes) => {
   switch (action.type) {
-    case TOGGLE_LOADING:
+    case "TOGGLE_LOADING":
       return !state;
-    case LOAD_ACTION_CHART:
+    case "LOAD_ACTION_CHART":
+    case "REQUEST_PLAYERS":
       return true;
-    case LOAD_ACTION_CHART_SUCCESS:
+    case "LOAD_ACTION_CHART_SUCCESS":
+    case "RECEIVE_PLAYERS":
+    case "LOAD_PLAYERS_FAIL":
       return false;
     default:
       return state;

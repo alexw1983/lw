@@ -1,8 +1,8 @@
 import * as React from "react";
-import PlayerList from "./players/players-list";
+import { PlayersList } from ".";
 
 const Home: React.FC<{}> = () => {
-  return <PlayerList />;
+  return <PlayersList />;
 };
 
 export default Home;

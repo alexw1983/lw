@@ -8,23 +8,13 @@ import {
   Col,
   Container,
 } from "react-bootstrap";
+import { IPlayer } from "../../redux/state";
 
-const PlayerList: React.FC<{}> = (props) => {
-  const players = [
-    {
-      id: "1",
-      name: "Alex Wilson",
-    },
-    {
-      id: "2",
-      name: "Sayer Hilton",
-    },
-    {
-      id: "3",
-      name: "Robin Wilson Thorn",
-    },
-  ];
+interface Props {
+  players: IPlayer[];
+}
 
+const PlayersListView: React.FC<Props> = (props: Props) => {
   let history = useHistory();
 
   const routeChange = () => {
@@ -36,13 +26,15 @@ const PlayerList: React.FC<{}> = (props) => {
       <Row className="mt-1">
         <Col>
           <ListGroup>
-            {players.map((player, idx) => {
-              return (
-                <ListGroupItem key={`player_${idx}`}>
-                  <Link to={`/player/${player.id}`}>{player.name}</Link>
-                </ListGroupItem>
-              );
-            })}
+            {props.players &&
+              props.players.length > 0 &&
+              props.players.map((player, idx) => {
+                return (
+                  <ListGroupItem key={`player_${idx}`}>
+                    <Link to={`/player/${player.id}`}>{player.name}</Link>
+                  </ListGroupItem>
+                );
+              })}
           </ListGroup>
         </Col>
       </Row>
@@ -57,4 +49,4 @@ const PlayerList: React.FC<{}> = (props) => {
   );
 };
 
-export default PlayerList;
+export default PlayersListView;

@@ -1,6 +1,6 @@
 import ActionChart from "./action-chart";
 import { connect } from "react-redux";
-import { takeDamage } from "../../redux/actions";
+import { takeDamage } from "../../redux/actions/other-actions";
 import { ILwState } from "../../redux/state";
 
 const mapStateToProps = (state: ILwState) => ({

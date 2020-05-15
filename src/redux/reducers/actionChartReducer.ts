@@ -1,7 +1,5 @@
-import { ILwAction, LW_ACTION_TYPE } from "../actionTypes";
+import { LwActionTypes } from "../actions/actionTypes";
 import { IActionChart } from "../state";
-
-const { LOAD_ACTION_CHART_SUCCESS, TAKE_DAMAGE } = LW_ACTION_TYPE;
 
 const initalState: IActionChart = {
   combatSkill: 25,
@@ -11,7 +9,7 @@ const initalState: IActionChart = {
     { name: "Sixth Sense", description: "" },
     { name: "Mind Blast", description: "" },
     { name: "Weapon Skill", description: "" },
-    { name: "Hunting", description: "" }
+    { name: "Hunting", description: "" },
   ],
   backpack: [],
   beltPouch: 10,
@@ -21,16 +19,16 @@ const initalState: IActionChart = {
 
 const actionChartReducer = (
   state: IActionChart = initalState,
-  action: ILwAction
+  action: LwActionTypes
 ) => {
   switch (action.type) {
-    case TAKE_DAMAGE:
+    case "TAKE_DAMAGE":
       return Object.assign({}, state, {
         ...state,
-        endurancePoints: state.endurancePoints - action.payload.damage,
+        endurancePoints: state.endurancePoints - action.payload,
       });
 
-    case LOAD_ACTION_CHART_SUCCESS:
+    case "LOAD_ACTION_CHART_SUCCESS":
       return Object.assign({}, state, action.payload);
 
     default:
