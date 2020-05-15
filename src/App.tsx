@@ -9,7 +9,6 @@ import {
   MainNav,
   Player,
   PlayersList,
-  NewPlayer,
 } from "./components";
 
 function App() {
@@ -26,9 +25,6 @@ function App() {
           </Route>
           <Route path="/players">
             <PlayersList />
-          </Route>
-          <Route path="/new-player">
-            <NewPlayer />
           </Route>
           <Route path="/player/:id">
             <Player />

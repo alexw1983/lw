@@ -1,8 +1,8 @@
-import { LwActionTypes } from "./actionTypes";
 import { IPlayer, ILwState } from "../state";
 import { getPlayers } from "../api/api";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
+import { LwActionTypes } from "./actionTypes";
 
 export const requestPlayers = (): LwActionTypes => {
   return {
@@ -26,7 +26,7 @@ export const fetchPlayers = (): ThunkAction<
 > => async (dispatch: ThunkDispatch<ILwState, unknown, LwActionTypes>) => {
   dispatch(requestPlayers());
 
-  const players = getPlayers()
+  getPlayers()
     .then(
       (response) => response.json,
       (error) => {

@@ -2,8 +2,7 @@ import { createStore, applyMiddleware, compose } from "redux";
 import { createLogger } from "redux-logger";
 import thunkMiddleware from "redux-thunk";
 import lwAppReducer from "./reducers";
-import { toggleLoading } from "./actions/other-actions";
-import { fetchPlayers, requestPlayers } from "./actions/player-actions";
+import { fetchPlayers } from "./actions/player-actions";
 
 const loggerMiddleware = createLogger();
 
@@ -18,10 +17,6 @@ const enhancer = composeEnhancers(
 );
 
 const store = createStore(lwAppReducer, enhancer);
-
-store.dispatch<any>(requestPlayers());
-
-store.dispatch<any>(toggleLoading());
 
 store.dispatch<any>(fetchPlayers());
 
