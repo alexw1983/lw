@@ -1,22 +1,23 @@
+import { IPlayer } from "../state";
+
 /**
  * Loads players from the API
  */
 export const getPlayers = async () => {
-  console.log("GOT HERE");
+  const current = JSON.parse(localStorage.getItem("players"));
+
   return {
-      json: [
-          {
-              id: "1",
-              name: "Alex Wilson",
-          },
-          {
-              id: "2",
-              name: "Sayer Hilton",
-          },
-          {
-              id: "3",
-              name: "Robin Wilson Thorn",
-          },
-      ],
+    json: current ?? [],
   };
+};
+
+export const addPlayer = async (player: IPlayer) => {
+  const current = JSON.parse(localStorage.getItem("players"));
+  if (!current) {
+    localStorage.setItem("players", JSON.stringify([player]));
+  } else {
+    localStorage.setItem("players", JSON.stringify([...current, player]));
+  }
+
+  return true;
 };

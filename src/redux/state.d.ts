@@ -22,4 +22,5 @@ export interface ILwState {
   loading: boolean;
   actionChart: IActionChart;
   players: IPlayer[];
+  showNewPlayerForm: boolean;
 }

@@ -7,7 +7,11 @@ export type LW_ACTION_TYPE =
   | "TOGGLE_LOADING"
   | "REQUEST_PLAYERS"
   | "RECEIVE_PLAYERS"
-  | "LOAD_PLAYERS_FAIL";
+  | "LOAD_PLAYERS_FAIL"
+  | "REQUEST_SAVE_PLAYERS"
+  | "SAVE_PLAYER"
+  | "SAVE_PLAYER_SUCCESS"
+  | "TOGGLE_NEW_PLAYER_FORM";
 
 interface ILwAction {
   type: LW_ACTION_TYPE;
@@ -36,10 +40,15 @@ interface ITakeDamageAction extends ILwAction {
   payload: number;
 }
 
+interface ISavePlayerAction extends ILwAction {
+  payload: IPlayer;
+}
+
 export type LwActionTypes =
   | IFetchPlayerAction
   | ILoadingAction
   | IReceivePlayerAction
   | ILoadActionChartAction
   | ILoadActionChartSuccessAction
-  | ITakeDamageAction;
+  | ITakeDamageAction
+  | ISavePlayerAction;

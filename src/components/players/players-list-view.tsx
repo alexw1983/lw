@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   ListGroup,
@@ -7,34 +7,20 @@ import {
   Row,
   Col,
   Container,
-  Form,
 } from "react-bootstrap";
 import { IPlayer } from "../../redux/state";
+import NewPlayerForm from "./new-player-form-container";
 
 interface Props {
+  showNewPlayerForm: boolean;
   players: IPlayer[];
+  toggleNewPlayerForm: () => void;
 }
 
 const PlayersListView: React.FC<Props> = (props: Props) => {
-  const [showNewPlayerForm, setShowNewPlayerForm] = useState(false);
-  const [validated, setValidated] = useState(false);
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const form = event.currentTarget;
-    console.log(event.target.value);
-
-    if (form.checkValidity() === false) {
-    }
-
-    setValidated(true);
-  };
-
   return (
     <Container>
-      {!showNewPlayerForm && (
+      {!props.showNewPlayerForm && (
         <>
           <Row className="mt-1">
             <Col>
@@ -55,7 +41,7 @@ const PlayersListView: React.FC<Props> = (props: Props) => {
             <Col>
               <Button
                 color="primary"
-                onClick={() => setShowNewPlayerForm(true)}
+                onClick={() => props.toggleNewPlayerForm()}
               >
                 New Player
               </Button>
@@ -63,23 +49,10 @@ const PlayersListView: React.FC<Props> = (props: Props) => {
           </Row>
         </>
       )}
-      {showNewPlayerForm && (
+      {props.showNewPlayerForm && (
         <Row>
           <Col>
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
-              <Form.Group controlId="name">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="please enter the players name"
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please enter a name
-                </Form.Control.Feedback>
-              </Form.Group>
-              <Button type="submit">Submit</Button>
-            </Form>
+            <NewPlayerForm />
           </Col>
         </Row>
       )}
