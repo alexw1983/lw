@@ -22,7 +22,12 @@ const PlayersListView: React.FC<Props> = (props: Props) => {
     <Container>
       {!props.showNewPlayerForm && (
         <>
-          <Row className="mt-1">
+          <Row className="mt-2">
+            <Col>
+              <h2>Select Player</h2>
+            </Col>
+          </Row>
+          <Row className="mt-2">
             <Col>
               <ListGroup>
                 {props.players &&
@@ -37,7 +42,7 @@ const PlayersListView: React.FC<Props> = (props: Props) => {
               </ListGroup>
             </Col>
           </Row>
-          <Row className="mt-1">
+          <Row className="mt-2">
             <Col>
               <Button
                 color="primary"
@@ -50,7 +55,7 @@ const PlayersListView: React.FC<Props> = (props: Props) => {
         </>
       )}
       {props.showNewPlayerForm && (
-        <Row>
+        <Row className="mt-2">
           <Col>
             <NewPlayerForm />
           </Col>

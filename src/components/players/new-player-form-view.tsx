@@ -44,7 +44,7 @@ const NewPlayerFormView = (props: Props) => {
           {formik.errors.playerName}
         </Form.Control.Feedback>
       </Form.Group>
-      <Button type="submit">Submit</Button>
+      <Button type="submit">Save</Button>
     </Form>
   );
 };
