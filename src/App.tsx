@@ -26,9 +26,7 @@ function App() {
           <Route path="/players">
             <PlayersList />
           </Route>
-          <Route path="/player/:id">
-            <Player />
-          </Route>
+          <Route path="/player/:playerId" component={Player} />
           <Route path="/combat-log">
             <CombatLog />
           </Route>

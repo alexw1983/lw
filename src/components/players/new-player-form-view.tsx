@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { Form, Button } from "react-bootstrap";
 import * as Yup from "yup";
 import { IPlayer } from "../../redux/state";
-import { v4 as uuidv4 } from "uuid";
+import { generateNewPlayer } from "../../utils/player.utils";
 
 interface IFormValues {
   playerName: string;
@@ -24,7 +24,7 @@ const NewPlayerFormView = (props: Props) => {
     } as IFormValues,
     validationSchema,
     onSubmit: (values) => {
-      props.savePlayer({ id: uuidv4(), name: values.playerName });
+      props.savePlayer(generateNewPlayer(values.playerName));
     },
   });
 

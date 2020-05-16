@@ -13,9 +13,18 @@ export interface IActionChart {
   specialItems: string[];
 }
 
+export type ADVENTURE_STATUS = "COMPLETE" | "IN PROGRESS" | "NOT STARTED";
+
+export interface IAdventure {
+  bookNumber: number;
+  status: ADVENTURE_STATUS;
+  actionChart: IActionChart;
+}
+
 export interface IPlayer {
   name: string;
   id: string;
+  adventures: IAdventure[];
 }
 
 export interface ILwState {

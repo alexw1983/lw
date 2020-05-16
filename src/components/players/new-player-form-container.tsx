@@ -8,7 +8,7 @@ const mapStateToProps = (state: ILwState) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-    savePlayer: (player: IPlayer) => dispatch(savePlayer(player))
+  savePlayer: (player: IPlayer) => dispatch(savePlayer(player)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewPlayerFormView);
