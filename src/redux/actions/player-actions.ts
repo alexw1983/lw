@@ -1,5 +1,5 @@
-import { IPlayer, ILwState, IAdventure } from "../state";
-import { getPlayers, addPlayer, _savePlayer } from "../../data/api";
+import { IPlayer, ILwState } from "../state";
+import { getPlayers, upsertPlayer } from "../../data/api";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { LwActionTypes } from "./actionTypes";
 
@@ -32,7 +32,7 @@ export const savePlayer = (player: IPlayer): LwThunkAction => async (
 ) => {
   dispatch(requestSavePlayer());
 
-  _savePlayer(player)
+  upsertPlayer(player)
     .then(
       (response) => response,
       (error) => {

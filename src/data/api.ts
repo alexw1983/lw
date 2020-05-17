@@ -22,7 +22,7 @@ export const addPlayer = async (player: IPlayer) => {
   return true;
 };
 
-export const _savePlayer = async (player: IPlayer) => {
+export const upsertPlayer = async (player: IPlayer) => {
   const current = JSON.parse(localStorage.getItem("players")) as IPlayer[];
   if (!current) {
     localStorage.setItem("players", JSON.stringify([player]));
