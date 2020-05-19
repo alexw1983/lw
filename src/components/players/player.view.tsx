@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import { Form, Button } from "react-bootstrap";
 import * as Yup from "yup";
 import { Trash, Clock, CheckCircle, Circle, Play } from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
 
 interface Props {
   player: IPlayer;
@@ -123,7 +124,7 @@ const PlayerView: React.FC<Props> = (props: Props) => {
   };
 
   const getBookTitle = (ad: IAdventure) => {
-    const book = books.find((x) => x.bookNumber == ad.bookNumber);
+    const book = books.find((x) => +x.bookNumber === +ad.bookNumber);
 
     if (book) {
       return book.title;
@@ -171,13 +172,17 @@ const PlayerView: React.FC<Props> = (props: Props) => {
                       </OverlayTrigger>
                     </Col>
                     <Col xs="1">
-                      <Button
-                        className="icon-button"
-                        variant="link"
-                        onClick={(evt) => handleShow(evt, ad)}
+                      <OverlayTrigger
+                        placement="top"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={(props) => renderTooltip(props, "Continue")}
                       >
-                        <Play />
-                      </Button>
+                        <Link
+                          to={`/player/${props.player.id}/adventure/${ad.bookNumber}`}
+                        >
+                          <Play />
+                        </Link>
+                      </OverlayTrigger>
                     </Col>
                     <Col xs="1">
                       <Button

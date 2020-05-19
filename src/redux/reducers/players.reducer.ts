@@ -8,7 +8,7 @@ const playersReducer = (state: IPlayer[] = [], action: LwActionTypes) => {
     case "RECEIVE_PLAYERS":
       return Object.assign([], state, [...action.payload]);
     case "SAVE_PLAYER_SUCCESS":
-      if (state.find(x => x.id == action.payload.id)) {
+      if (state.find(x => x.id === action.payload.id)) {
         const newState = state.reduce((acc, curr) => {
           if (curr.id === action.payload.id) {
             return [...acc, action.payload];

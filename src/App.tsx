@@ -9,6 +9,7 @@ import {
   MainNav,
   Player,
   PlayersList,
+  Adventure,
 } from "./components";
 
 function App() {
@@ -26,7 +27,12 @@ function App() {
           <Route path="/players">
             <PlayersList />
           </Route>
-          <Route path="/player/:playerId" component={Player} />
+          <Route path="/player/:playerId" exact component={Player} />
+          <Route
+            path="/player/:playerId/adventure/:bookNumber"
+            component={Adventure}
+          />
+
           <Route path="/combat-log">
             <CombatLog />
           </Route>

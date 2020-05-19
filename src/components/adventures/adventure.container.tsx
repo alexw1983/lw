@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { ILwState, IPlayer } from "../../redux/state";
 import { savePlayer } from "../../redux/actions/player-actions";
-import PlayerView from "./player.view";
+import AdventureView from "./adventure.view";
 import { selectPlayer } from "../../redux/selectors/players.selectors";
 
 const mapStateToProps = (state: ILwState, ownProps) => ({
@@ -9,7 +9,7 @@ const mapStateToProps = (state: ILwState, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  savePlayer: (player: IPlayer) => dispatch(savePlayer(player))
+  savePlayer: (player: IPlayer) => dispatch(savePlayer(player)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlayerView);
+export default connect(mapStateToProps, mapDispatchToProps)(AdventureView);

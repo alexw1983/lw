@@ -27,7 +27,7 @@ export const upsertPlayer = async (player: IPlayer) => {
   if (!current) {
     localStorage.setItem("players", JSON.stringify([player]));
   } else {
-    if (current.find((x) => x.id == player.id)) {
+    if (current.find((x) => x.id === player.id)) {
       const newPlayers = current.reduce((acc, curr) => {
         if (curr.id !== player.id) {
           return [...acc, curr];
