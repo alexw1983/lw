@@ -2,10 +2,10 @@ import { connect } from "react-redux";
 import { ILwState, IPlayer } from "../../redux/state";
 import { savePlayer } from "../../redux/actions/player-actions";
 import AdventureView from "./adventure.view";
-import { selectPlayer } from "../../redux/selectors/players.selectors";
+import { selectAdventure } from "../../redux/selectors/players.selectors";
 
 const mapStateToProps = (state: ILwState, ownProps) => ({
-  player: selectPlayer(state, ownProps.match.params.playerId)
+  adventure: selectAdventure(state, ownProps.match.params.playerId, ownProps.match.params.bookNumber)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

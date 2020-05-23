@@ -15,6 +15,8 @@ import { Form, Button } from "react-bootstrap";
 import * as Yup from "yup";
 import { Trash, Clock, CheckCircle, Circle, Play } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
+import { Books } from "../../data/books";
+import { getBookTitle } from "../../utils/book.utils";
 
 interface Props {
   player: IPlayer;
@@ -30,14 +32,6 @@ const PlayerView: React.FC<Props> = (props: Props) => {
   const [selectedAdventure, setSelectedAdventure] = useState({} as IAdventure);
 
   const handleClose = () => setShow(false);
-
-  const books = [
-    { bookNumber: 1, title: "Flight From The Dark" },
-    { bookNumber: 2, title: "Fire On The Water" },
-    { bookNumber: 3, title: "Caverns Of Kalte" },
-    { bookNumber: 4, title: "The Chasm Of Doom" },
-    { bookNumber: 5, title: "Shadow On The Sand" },
-  ];
 
   const validationSchema = Yup.object().shape({
     bookNumber: Yup.number().required("book is required"),
@@ -123,23 +117,11 @@ const PlayerView: React.FC<Props> = (props: Props) => {
     setShow(false);
   };
 
-  const getBookTitle = (ad: IAdventure) => {
-    const book = books.find((x) => +x.bookNumber === +ad.bookNumber);
-
-    if (book) {
-      return book.title;
-    }
-
-    return "";
-  };
-
   const getBooks = (player: IPlayer) => {
-    return books
-      .filter(
-        (x) =>
-          !player.adventures.map((ad) => +ad.bookNumber).includes(x.bookNumber)
-      )
-      .sort((s, t) => s.bookNumber - t.bookNumber);
+    return Books.filter(
+      (x) =>
+        !player.adventures.map((ad) => +ad.bookNumber).includes(x.bookNumber)
+    ).sort((s, t) => s.bookNumber - t.bookNumber);
   };
 
   return (
@@ -159,7 +141,7 @@ const PlayerView: React.FC<Props> = (props: Props) => {
                 >
                   <Row>
                     <Col xs="1">{ad.bookNumber}</Col>
-                    <Col>{getBookTitle(ad)}</Col>
+                    <Col>{getBookTitle(+ad.bookNumber)}</Col>
                     <Col xs="1">
                       <OverlayTrigger
                         placement="top"
