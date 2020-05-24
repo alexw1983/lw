@@ -48,7 +48,7 @@ const AdventureView = (props: Props) => {
           <hr />
           {!showNewAdventureForm && renderStart()}
           <hr />
-          {showNewAdventureForm && <NewAdventure />}
+          {showNewAdventureForm && <NewAdventure bookNumber={props.adventure.bookNumber}/>}
         </>
       )}
     </Container>

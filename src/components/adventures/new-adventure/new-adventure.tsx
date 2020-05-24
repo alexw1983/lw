@@ -6,8 +6,9 @@ import { DisciplinesStep } from "./disciplines-step";
 import { RandomNumberTable } from "../../shared/random-number-table";
 import { ActionRow } from "./actions-row";
 import { GoldStep } from "./gold-step";
+import { EquipmentStep } from "./equipment-step";
 
-export const NewAdventure = () => {
+export const NewAdventure = (props: { bookNumber: number }) => {
   const [showWeaponSkillRandom, setShowWeaponSkillRandom] = useState(false);
   const [importQuestion, setImportQuestion] = useState({
     complete: false,
@@ -27,6 +28,11 @@ export const NewAdventure = () => {
   const [goldQuestion, setGoldQuestion] = useState({
     complete: false,
     gold: undefined,
+  });
+
+  const [equipmentQuestion, setEquipmentQuestion] = useState({
+    complete: false,
+    equipment: undefined,
   });
 
   const handleSetCombatSkill = (r: number) => {
@@ -222,6 +228,36 @@ export const NewAdventure = () => {
     );
   };
 
+  const renderEquipmentQuestion = () => {
+    return (
+      <>
+        <EquipmentStep
+          equipment={equipmentQuestion.equipment}
+          bookNumber={+props.bookNumber}
+          setEquipment={(e) =>
+            setEquipmentQuestion((prevState) => ({
+              ...prevState,
+              equipment: e,
+            }))
+          }
+          setGold={(g) =>
+            setGoldQuestion((prevState) => ({
+              ...prevState,
+              gold: prevState.gold + g,
+            }))
+          }
+        />
+        <ActionRow
+          show={!equipmentQuestion.complete}
+          showNextButton={goldQuestion.gold !== undefined}
+          onBackClicked={handleGoldQuestionBack}
+          onNextClicked={handleGoldQuestionNext}
+        />
+        <hr />
+      </>
+    );
+  };
+
   return (
     <>
       <h2>New Adventure</h2>
@@ -230,6 +266,7 @@ export const NewAdventure = () => {
       {importQuestion.complete && renderStatsQuestion()}
       {statsQuestion.complete && renderDisciplinesQuestion()}
       {disciplinesQuestion.complete && renderGoldQuestion()}
+      {goldQuestion.complete && renderEquipmentQuestion()}
     </>
   );
 };

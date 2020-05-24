@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { Form, Row, Col, Button } from "react-bootstrap";
+import React from "react";
+import { Form, Row, Col } from "react-bootstrap";
 import { useFormik } from "formik";
 import { KaiDisciplines, KaiDiscipineId } from "../../../data/disciplines";
-import { RandomNumberTable } from "../../shared/random-number-table";
 
 interface Props {
   complete: boolean;
@@ -19,10 +18,7 @@ export const DisciplinesStep = (props: Props) => {
     validate: (values: { disciplines: any[] }) => {
       props.setDisciplines(values.disciplines);
     },
-    // validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
-    },
+    onSubmit: (values) => {},
     validateOnChange: true,
   });
 
@@ -60,11 +56,17 @@ export const DisciplinesStep = (props: Props) => {
           {props.complete && (
             <>
               <h5>Kai Disciplines</h5>
-              {KaiDisciplines.filter((x) =>
-                props.kaiDisciplines.includes(x.id)
-              ).map((discipline) => {
-                return <p>{discipline.name}</p>;
-              })}
+              <Row>
+                {KaiDisciplines.filter((x) =>
+                  props.kaiDisciplines.includes(x.id)
+                ).map((discipline, i) => {
+                  return (
+                    <Col xs={6} md={2} key={`discipline_list_${i}`}>
+                      {discipline.name}
+                    </Col>
+                  );
+                })}
+              </Row>
             </>
           )}
           {!props.complete && (

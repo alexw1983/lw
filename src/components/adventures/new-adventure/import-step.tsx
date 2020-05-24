@@ -19,7 +19,6 @@ export const ImportStep = (props: Props) => {
           name="import-prev"
           id="import-prev-yes"
           label="Yes"
-          checked={props.importPrev}
           onClick={() => props.setImport(true)}
         />
         <Form.Check
@@ -28,7 +27,6 @@ export const ImportStep = (props: Props) => {
           name="import-prev"
           id="import-prev-no"
           label="No"
-          checked={props.importPrev === false}
           onClick={() => props.setImport(false)}
         />
       </Form.Group>
