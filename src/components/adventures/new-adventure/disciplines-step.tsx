@@ -59,7 +59,7 @@ export const DisciplinesStep = (props: Props) => {
         <Col>
           {props.complete && (
             <>
-              <h6>Kai Disciplines</h6>
+              <h5>Kai Disciplines</h5>
               {KaiDisciplines.filter((x) =>
                 props.kaiDisciplines.includes(x.id)
               ).map((discipline) => {

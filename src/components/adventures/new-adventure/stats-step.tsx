@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { RandomNumberTable } from "../../shared/random-number-table";
 
 interface Props {
+  importPrevious: boolean;
   combatSkill: number;
   endurancePoints: number;
   setCombatSkill: (combatSkill: number) => void;
@@ -16,14 +17,30 @@ export const StatsStep = (props: Props) => {
     setShowEndurancePointsRandomNumberTable,
   ] = useState(false);
 
-  return (
-    <Form>
-      <Form.Group>
-        <Form.Label>Combat Skill</Form.Label>
+  const renderImported = () => {
+    return (
+      <Row>
+        <Col>
+          <h5>Combat Skill</h5>
+        </Col>
+        <Col>
+          <h5>Endurance Points</h5>
+        </Col>
+      </Row>
+    );
+  };
+
+  const renderNotImported = () => {
+    return (
+      <>
+        <h5>Combat Skill</h5>
         <p>{props.combatSkill}</p>
         {props.combatSkill === 0 && (
-          <Button onClick={() => setshowRandomNumberTable(true)}>
-            Pick a number from the random number table
+          <Button
+            onClick={() => setshowRandomNumberTable(true)}
+            className="mb-3"
+          >
+            Pick Combat Skill
           </Button>
         )}
         <RandomNumberTable
@@ -32,14 +49,15 @@ export const StatsStep = (props: Props) => {
             setshowRandomNumberTable(false);
             props.setCombatSkill(r);
           }}
-        ></RandomNumberTable>
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Endurance Points</Form.Label>
+        />
+        <h5>Endurance Points</h5>
         <p>{props.endurancePoints}</p>
         {props.endurancePoints === 0 && (
-          <Button onClick={() => setShowEndurancePointsRandomNumberTable(true)}>
-            Pick a number from the random number table
+          <Button
+            onClick={() => setShowEndurancePointsRandomNumberTable(true)}
+            className="mb-3"
+          >
+            Pick Endurance Points
           </Button>
         )}
         <RandomNumberTable
@@ -48,8 +66,9 @@ export const StatsStep = (props: Props) => {
             setShowEndurancePointsRandomNumberTable(false);
             props.setEndurancePoints(r);
           }}
-        ></RandomNumberTable>
-      </Form.Group>
-    </Form>
-  );
+        />
+      </>
+    );
+  };
+  return props.importPrevious ? renderImported() : renderNotImported();
 };
