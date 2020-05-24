@@ -21,7 +21,7 @@ export const StatsStep = (props: Props) => {
       <Form.Group>
         <Form.Label>Combat Skill</Form.Label>
         <p>{props.combatSkill}</p>
-        {props.combatSkill === undefined && (
+        {props.combatSkill === 0 && (
           <Button onClick={() => setshowRandomNumberTable(true)}>
             Pick a number from the random number table
           </Button>
@@ -37,7 +37,7 @@ export const StatsStep = (props: Props) => {
       <Form.Group>
         <Form.Label>Endurance Points</Form.Label>
         <p>{props.endurancePoints}</p>
-        {props.endurancePoints === undefined && (
+        {props.endurancePoints === 0 && (
           <Button onClick={() => setShowEndurancePointsRandomNumberTable(true)}>
             Pick a number from the random number table
           </Button>
