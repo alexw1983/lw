@@ -14,13 +14,13 @@ export type KaiDiscipline = {
   id: KaiDiscipineId;
   name: string;
   description: string;
-  weapon: string | undefined;
+  weaponNumber: number | undefined;
 };
 
 export interface IActionChart {
   combatSkill: number;
   endurancePoints: number;
-  kaiDiscipines: IKaiDiscipline[];
+  kaiDiscipines: KaiDiscipline[];
   weapons: string[];
   backpack: string[];
   beltPouch: number;

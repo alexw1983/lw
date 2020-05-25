@@ -2,6 +2,7 @@ import * as React from "react";
 import { IActionChart } from "../../redux/types";
 import { Container, Row, Col } from "react-bootstrap";
 import ActionChartList from "./action-chart-list-item";
+import { getWeaponName } from "../../utils/weapon.utils";
 
 interface Props {
   actionChart: IActionChart;
@@ -25,7 +26,10 @@ const ActionChart: React.FC<Props> = (props: Props) => {
           <ActionChartList
             header={"Kai Disciplines"}
             items={props.actionChart.kaiDiscipines.map(
-              (d) => `${d.name} ${d.weapon ? "(" + d.weapon + ")" : ""}`
+              (d) =>
+                `${d.name} ${
+                  d.weaponNumber ? "(" + getWeaponName(d.weaponNumber) + ")" : ""
+                }`
             )}
           />
         </Col>

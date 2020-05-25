@@ -22,9 +22,11 @@ export const StatsStep = (props: Props) => {
       <Row>
         <Col>
           <h5>Combat Skill</h5>
+          <p>{props.combatSkill}</p>
         </Col>
         <Col>
           <h5>Endurance Points</h5>
+          <p>{props.endurancePoints}</p>
         </Col>
       </Row>
     );

@@ -11,11 +11,13 @@ import {
   IActionChart,
   KaiDiscipline,
   KaiDiscipineId,
+  IAdventure,
 } from "../../../redux/types";
 import { KaiDisciplines } from "../../../data/disciplines";
 
 interface Props {
   bookNumber: number;
+  previousAdventures: IAdventure[];
   saveActionChart: (chart: IActionChart) => void;
 }
 
@@ -58,6 +60,34 @@ export const NewAdventure = (props: Props) => {
       ...prevState,
       endurancePoints: r + 20,
     }));
+  };
+
+  const handleImportQuestionNext = () => {
+    setImportQuestion((prevState) => {
+      return { ...prevState, complete: true };
+    });
+
+    if (importQuestion.import && props.previousAdventures) {
+      const mostRecentAdventure = props.previousAdventures
+        .sort((a, b) => a.bookNumber - b.bookNumber)
+        .find((x) => x.bookNumber < props.bookNumber);
+
+      if (mostRecentAdventure) {
+        setStatsQuestion({
+          complete: true,
+          combatSkill: mostRecentAdventure.actionChart.combatSkill,
+          endurancePoints: mostRecentAdventure.actionChart.endurancePoints,
+        });
+
+        setDisciplinesQuestion((prevState) => ({
+          ...prevState,
+          kaiDisciplines: mostRecentAdventure.actionChart.kaiDiscipines,
+          weaponSkillNumber: mostRecentAdventure.actionChart.kaiDiscipines.find(
+            (x) => x.id === "weapon-skill"
+          ).weaponNumber,
+        }));
+      }
+    }
   };
 
   const handleStatsQuestonBack = () => {
@@ -169,13 +199,9 @@ export const NewAdventure = (props: Props) => {
         />
         <ActionRow
           show={importQuestion.import !== undefined}
-          showNextButton={true}
+          showNextButton={!importQuestion.complete}
           onBackClicked={undefined}
-          onNextClicked={() =>
-            setImportQuestion((prevState) => {
-              return { ...prevState, complete: true };
-            })
-          }
+          onNextClicked={handleImportQuestionNext}
         />
       </>
     );
@@ -209,43 +235,30 @@ export const NewAdventure = (props: Props) => {
     const discipline = KaiDisciplines.find((x) => x.id === id);
 
     if (discipline.id === "weapon-skill") {
-      discipline.weapon = getWeaponName();
+      discipline.weaponNumber = disciplinesQuestion.weaponSkillNumber;
     }
 
     return discipline;
   };
 
-  const getWeaponName = () => {
-    switch (disciplinesQuestion.weaponSkillNumber) {
-      case 0:
-        return "Dagger";
-      case 1:
-        return "Spear";
-      case 2:
-        return "Mace";
-      case 3:
-        return "Short Sword";
-      case 4:
-        return "Warhammer";
-      case 5:
-        return "Sword";
-      case 6:
-        return "Axe";
-      case 7:
-        return "Sword";
-      case 8:
-        return "QuarterStaff";
-      case 9:
-        return "Broad Sword";
-      default:
-        return "";
-    }
+  const getMaximumDisciplines = () => {
+    return (
+      5 +
+      props.previousAdventures
+        .sort((a, b) => a.bookNumber - b.bookNumber)
+        .filter((x) => x.bookNumber < props.bookNumber).length
+    );
   };
 
   const renderDisciplinesQuestion = () => {
     return (
       <>
         <DisciplinesStep
+          importPrevious={importQuestion.import}
+          mostRecentAdventure={props.previousAdventures
+            .sort((a, b) => a.bookNumber - b.bookNumber)
+            .find((x) => x.bookNumber < props.bookNumber)}
+          maxDisciplines={getMaximumDisciplines()}
           complete={disciplinesQuestion.complete}
           kaiDisciplines={disciplinesQuestion.kaiDisciplines.map((x) => x.id)}
           weaponSkillNumber={disciplinesQuestion.weaponSkillNumber}
@@ -282,7 +295,8 @@ export const NewAdventure = (props: Props) => {
         <ActionRow
           show={!disciplinesQuestion.complete}
           showNextButton={
-            disciplinesQuestion.kaiDisciplines.length === 5 &&
+            disciplinesQuestion.kaiDisciplines.length ===
+              getMaximumDisciplines() &&
             !(
               disciplinesQuestion.kaiDisciplines
                 .map((x) => x.id)
@@ -356,8 +370,13 @@ export const NewAdventure = (props: Props) => {
     <>
       <h2>New Adventure</h2>
       <hr />
-      {!importQuestion.complete && renderImportQuestion()}
-      {importQuestion.complete && renderStatsQuestion()}
+      {props.bookNumber > 1 &&
+        (!importQuestion.complete ||
+        (props.previousAdventures && props.previousAdventures.length > 0)
+          ? renderImportQuestion()
+          : null)}
+      {(importQuestion.complete || props.bookNumber < 2) &&
+        renderStatsQuestion()}
       {statsQuestion.complete && renderDisciplinesQuestion()}
       {disciplinesQuestion.complete && renderGoldQuestion()}
       {goldQuestion.complete && renderEquipmentQuestion()}

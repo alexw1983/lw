@@ -7,6 +7,7 @@ import { ActionChart } from "..";
 
 interface Props {
   adventure: IAdventure;
+  previousAdventures: IAdventure[];
   saveAdventure: (adventure: IAdventure) => void;
 }
 
@@ -62,6 +63,7 @@ const AdventureView = (props: Props) => {
           <hr />
           {showNewAdventureForm && (
             <NewAdventure
+              previousAdventures={props.previousAdventures}
               bookNumber={props.adventure.bookNumber}
               saveActionChart={handleSaveActionChart}
             />

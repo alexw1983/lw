@@ -30,7 +30,6 @@ export const KaiDisciplines = [
     id: "weapon-skill",
     name: "Weapon Skill",
     description: "",
-    weapon: "",
   } as KaiDiscipline,
   {
     id: "mind-shield",

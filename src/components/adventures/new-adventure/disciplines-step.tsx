@@ -2,9 +2,13 @@ import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { useFormik } from "formik";
 import { KaiDisciplines } from "../../../data/disciplines";
-import { KaiDiscipineId } from "../../../redux/types";
+import { KaiDiscipineId, IAdventure } from "../../../redux/types";
+import { getWeaponName } from "../../../utils/weapon.utils";
 
 interface Props {
+  maxDisciplines: number;
+  importPrevious: boolean;
+  mostRecentAdventure: IAdventure;
   complete: boolean;
   weaponSkillNumber: number | undefined;
   kaiDisciplines: KaiDiscipineId[];
@@ -23,33 +27,6 @@ export const DisciplinesStep = (props: Props) => {
     validateOnChange: true,
   });
 
-  const getWeaponName = () => {
-    switch (props.weaponSkillNumber) {
-      case 0:
-        return "Dagger";
-      case 1:
-        return "Spear";
-      case 2:
-        return "Mace";
-      case 3:
-        return "Short Sword";
-      case 4:
-        return "Warhammer";
-      case 5:
-        return "Sword";
-      case 6:
-        return "Axe";
-      case 7:
-        return "Sword";
-      case 8:
-        return "QuarterStaff";
-      case 9:
-        return "Broad Sword";
-      default:
-        return "";
-    }
-  };
-
   return (
     <>
       <Row>
@@ -64,7 +41,9 @@ export const DisciplinesStep = (props: Props) => {
                   return (
                     <Col xs={6} md={2} key={`discipline_list_${i}`}>
                       {`${discipline.name} ${
-                        discipline.weapon ? "(" + discipline.weapon + ")" : ""
+                        discipline.weaponNumber
+                          ? "(" + getWeaponName(discipline.weaponNumber) + ")"
+                          : ""
                       }`}
                     </Col>
                   );
@@ -74,7 +53,7 @@ export const DisciplinesStep = (props: Props) => {
           )}
           {!props.complete && (
             <>
-              <h5>Pick 5 disciplines</h5>
+              <h5>Pick {props.maxDisciplines} disciplines</h5>
               <Form>
                 <Row>
                   {KaiDisciplines.map((discipline) => {
@@ -90,16 +69,21 @@ export const DisciplinesStep = (props: Props) => {
                           key={`discipline-${discipline.id}`}
                           label={`${discipline.name} ${
                             discipline.id === "weapon-skill"
-                              ? `(${getWeaponName()})`
+                              ? `(${getWeaponName(props.weaponSkillNumber)})`
                               : ""
                           }`}
                           type="checkbox"
                           disabled={
                             props.complete ||
-                            (formik.values.disciplines.length === 5 &&
+                            (formik.values.disciplines.length ===
+                              props.maxDisciplines &&
                               !formik.values.disciplines.includes(
                                 discipline.id
-                              ))
+                              )) ||
+                            (props.importPrevious &&
+                              props.mostRecentAdventure.actionChart.kaiDiscipines
+                                .map((x) => x.id)
+                                .includes(discipline.id))
                           }
                           checked={props.kaiDisciplines.includes(discipline.id)}
                           name="disciplines"
