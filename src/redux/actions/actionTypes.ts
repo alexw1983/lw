@@ -1,4 +1,4 @@
-import { IPlayer, IActionChart, IAdventure, ILwState } from "../state";
+import { IPlayer, IActionChart, IAdventure, ILwState } from "../types";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 
 export type LW_ACTION_TYPE =

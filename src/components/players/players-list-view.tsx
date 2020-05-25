@@ -8,7 +8,7 @@ import {
   Col,
   Container,
 } from "react-bootstrap";
-import { IPlayer } from "../../redux/state";
+import { IPlayer } from "../../redux/types";
 import NewPlayerForm from "./new-player-form-container";
 
 interface Props {

@@ -1,5 +1,5 @@
 import { LwActionTypes } from "../actions/actionTypes";
-import { IPlayer } from "../state";
+import { IPlayer } from "../types";
 
 const playersReducer = (state: IPlayer[] = [], action: LwActionTypes) => {
   switch (action.type) {

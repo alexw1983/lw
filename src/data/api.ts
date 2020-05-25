@@ -1,4 +1,4 @@
-import { IPlayer, IAdventure } from "../redux/state";
+import { IPlayer, IAdventure } from "../redux/types";
 
 /**
  * Loads players from the API

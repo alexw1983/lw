@@ -1,4 +1,4 @@
-import { IAdventure, IPlayer, ILwState } from "../state";
+import { IAdventure, IPlayer, ILwState } from "../types";
 import { LwActionTypes, LwThunkAction, LwTHunkDispatch } from "./actionTypes";
 import {
   upsertAdventure,

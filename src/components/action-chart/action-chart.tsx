@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IActionChart } from "../../redux/state";
+import { IActionChart } from "../../redux/types";
 import { Container, Row, Col } from "react-bootstrap";
 import ActionChartList from "./action-chart-list-item";
 
@@ -24,7 +24,9 @@ const ActionChart: React.FC<Props> = (props: Props) => {
         <Col>
           <ActionChartList
             header={"Kai Disciplines"}
-            items={props.actionChart.kaiDiscipines.map((d) => d.name)}
+            items={props.actionChart.kaiDiscipines.map(
+              (d) => `${d.name} ${d.weapon ? "(" + d.weapon + ")" : ""}`
+            )}
           />
         </Col>
       </Row>

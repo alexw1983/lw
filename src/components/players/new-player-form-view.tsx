@@ -2,7 +2,7 @@ import React from "react";
 import { useFormik } from "formik";
 import { Form, Button } from "react-bootstrap";
 import * as Yup from "yup";
-import { IPlayer } from "../../redux/state";
+import { IPlayer } from "../../redux/types";
 import { generateNewPlayer } from "../../utils/player.utils";
 
 interface IFormValues {

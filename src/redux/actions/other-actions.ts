@@ -1,4 +1,4 @@
-import { IActionChart } from "../state";
+import { IActionChart } from "../types";
 import { LwActionTypes } from "./actionTypes";
 
 export const toggleLoading = (): LwActionTypes => {

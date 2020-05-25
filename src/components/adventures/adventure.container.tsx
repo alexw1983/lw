@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { ILwState, IAdventure } from "../../redux/state";
+import { ILwState, IAdventure } from "../../redux/types";
 import AdventureView from "./adventure.view";
 import { selectAdventure } from "../../redux/selectors/adventures.selectors";
 import { saveAdventure } from "../../redux/actions/adventures-action";

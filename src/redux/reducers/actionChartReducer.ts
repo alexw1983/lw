@@ -1,24 +1,8 @@
 import { LwActionTypes } from "../actions/actionTypes";
-import { IActionChart } from "../state";
-
-const initalState: IActionChart = {
-  combatSkill: 25,
-  endurancePoints: 30,
-  kaiDiscipines: [
-    { name: "Healing", description: "" },
-    { name: "Sixth Sense", description: "" },
-    { name: "Mind Blast", description: "" },
-    { name: "Weapon Skill", description: "" },
-    { name: "Hunting", description: "" },
-  ],
-  backpack: [],
-  beltPouch: 10,
-  weapons: ["Sword", "dagger"],
-  specialItems: [],
-};
+import { IActionChart } from "../types";
 
 const actionChartReducer = (
-  state: IActionChart = initalState,
+  state: IActionChart = {} as IActionChart,
   action: LwActionTypes
 ) => {
   switch (action.type) {

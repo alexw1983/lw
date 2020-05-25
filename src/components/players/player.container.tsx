@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { ILwState, IPlayer, IAdventure } from "../../redux/state";
+import { ILwState, IPlayer, IAdventure } from "../../redux/types";
 import { savePlayer } from "../../redux/actions/player-actions";
 import PlayerView from "./player.view";
 import { selectPlayer } from "../../redux/selectors/players.selectors";

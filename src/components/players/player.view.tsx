@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IPlayer, IAdventure, ADVENTURE_STATUS } from "../../redux/state";
+import { IPlayer, IAdventure, ADVENTURE_STATUS } from "../../redux/types";
 import {
   ListGroup,
   ListGroupItem,

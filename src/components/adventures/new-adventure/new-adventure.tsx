@@ -7,12 +7,12 @@ import { RandomNumberTable } from "../../shared/random-number-table";
 import { ActionRow } from "./actions-row";
 import { GoldStep } from "./gold-step";
 import { EquipmentStep } from "./equipment-step";
-import { IActionChart } from "../../../redux/state";
 import {
+  IActionChart,
   KaiDiscipline,
   KaiDiscipineId,
-  KaiDisciplines,
-} from "../../../data/disciplines";
+} from "../../../redux/types";
+import { KaiDisciplines } from "../../../data/disciplines";
 
 interface Props {
   bookNumber: number;
@@ -206,7 +206,40 @@ export const NewAdventure = (props: Props) => {
   };
 
   const getDiscipline = (id: KaiDiscipineId) => {
-    return KaiDisciplines.find((x) => x.id === id);
+    const discipline = KaiDisciplines.find((x) => x.id === id);
+
+    if (discipline.id === "weapon-skill") {
+      discipline.weapon = getWeaponName();
+    }
+
+    return discipline;
+  };
+
+  const getWeaponName = () => {
+    switch (disciplinesQuestion.weaponSkillNumber) {
+      case 0:
+        return "Dagger";
+      case 1:
+        return "Spear";
+      case 2:
+        return "Mace";
+      case 3:
+        return "Short Sword";
+      case 4:
+        return "Warhammer";
+      case 5:
+        return "Sword";
+      case 6:
+        return "Axe";
+      case 7:
+        return "Sword";
+      case 8:
+        return "QuarterStaff";
+      case 9:
+        return "Broad Sword";
+      default:
+        return "";
+    }
   };
 
   const renderDisciplinesQuestion = () => {

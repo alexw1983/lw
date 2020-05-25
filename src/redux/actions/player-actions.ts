@@ -1,4 +1,4 @@
-import { IPlayer, ILwState } from "../state";
+import { IPlayer, ILwState } from "../types";
 import { getPlayers, upsertPlayer } from "../../data/api";
 import { LwActionTypes, LwThunkAction, LwTHunkDispatch } from "./actionTypes";
 

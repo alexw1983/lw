@@ -1,20 +1,4 @@
-export type KaiDiscipineId =
-  | "camouflage"
-  | "hunting"
-  | "sixth-sense"
-  | "tracking"
-  | "healing"
-  | "weapon-skill"
-  | "mind-shield"
-  | "mind-blast"
-  | "animal-kinship"
-  | "mind-over-matter";
-
-export type KaiDiscipline = {
-  id: KaiDiscipineId;
-  name: string;
-  description: string;
-};
+import { KaiDiscipline } from "../redux/types";
 
 export const KaiDisciplines = [
   {
@@ -46,6 +30,7 @@ export const KaiDisciplines = [
     id: "weapon-skill",
     name: "Weapon Skill",
     description: "",
+    weapon: "",
   } as KaiDiscipline,
   {
     id: "mind-shield",

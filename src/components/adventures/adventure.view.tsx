@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IAdventure, IActionChart } from "../../redux/state";
+import { IAdventure, IActionChart } from "../../redux/types";
 import { getBookTitle } from "../../utils/book.utils";
 import { Button, Container } from "react-bootstrap";
 import { NewAdventure } from "./new-adventure/new-adventure";

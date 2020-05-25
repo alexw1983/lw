@@ -1,7 +1,21 @@
-export interface IKaiDiscipline {
+export type KaiDiscipineId =
+  | "camouflage"
+  | "hunting"
+  | "sixth-sense"
+  | "tracking"
+  | "healing"
+  | "weapon-skill"
+  | "mind-shield"
+  | "mind-blast"
+  | "animal-kinship"
+  | "mind-over-matter";
+
+export type KaiDiscipline = {
+  id: KaiDiscipineId;
   name: string;
   description: string;
-}
+  weapon: string | undefined;
+};
 
 export interface IActionChart {
   combatSkill: number;

@@ -1,7 +1,8 @@
 import React from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import { useFormik } from "formik";
-import { KaiDisciplines, KaiDiscipineId } from "../../../data/disciplines";
+import { KaiDisciplines } from "../../../data/disciplines";
+import { KaiDiscipineId } from "../../../redux/types";
 
 interface Props {
   complete: boolean;
@@ -62,7 +63,9 @@ export const DisciplinesStep = (props: Props) => {
                 ).map((discipline, i) => {
                   return (
                     <Col xs={6} md={2} key={`discipline_list_${i}`}>
-                      {discipline.name}
+                      {`${discipline.name} ${
+                        discipline.weapon ? "(" + discipline.weapon + ")" : ""
+                      }`}
                     </Col>
                   );
                 })}

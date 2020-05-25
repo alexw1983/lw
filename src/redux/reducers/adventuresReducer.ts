@@ -1,4 +1,4 @@
-import { IAdventure } from "../state";
+import { IAdventure } from "../types";
 import { LwActionTypes } from "../actions/actionTypes";
 
 const adventuresReducer = (state: IAdventure[] = [], action: LwActionTypes) => {

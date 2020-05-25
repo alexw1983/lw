@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { ILwState } from "../../redux/state";
+import { ILwState } from "../../redux/types";
 import PlayersListView from "./players-list-view";
 import { toggleNewPlayerForm } from "../../redux/actions/player-actions";
 

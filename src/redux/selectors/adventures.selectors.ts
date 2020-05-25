@@ -1,4 +1,4 @@
-import { ILwState, IAdventure } from "../state";
+import { ILwState, IAdventure } from "../types";
 
 export function selectAdventure(
   state: ILwState,
