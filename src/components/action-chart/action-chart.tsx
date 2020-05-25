@@ -31,12 +31,22 @@ const ActionChart: React.FC<Props> = (props: Props) => {
       <Row>
         <Col>
           <ActionChartList
+            header={"Weapons"}
+            items={props.actionChart.weapons}
+          />
+        </Col>
+        <Col>
+          <h5>Belt Pouch</h5>
+          {props.actionChart.beltPouch}
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <ActionChartList
             header={"Backpack"}
             items={props.actionChart.backpack}
           />
         </Col>
-      </Row>
-      <Row>
         <Col>
           <ActionChartList
             header={"Special Items"}

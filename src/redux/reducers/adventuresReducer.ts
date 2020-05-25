@@ -7,6 +7,20 @@ const adventuresReducer = (state: IAdventure[] = [], action: LwActionTypes) => {
       return [];
     case "RECEIVE_ADVENTURES":
       return Object.assign([], state, [...action.payload]);
+    case "REMOVE_ADVENTURE_SUCCESS":
+      const newState = state.reduce((acc, curr) => {
+        if (
+          curr.playerId === action.payload.playerId &&
+          curr.bookNumber === action.payload.bookNumber
+        ) {
+          return [...acc];
+        } else {
+          return [...acc, curr];
+        }
+      }, []);
+
+      return newState;
+
     case "SAVE_ADVENTURE_SUCCESS":
       if (
         state.find(

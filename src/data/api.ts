@@ -23,7 +23,7 @@ export const addPlayer = async (player: IPlayer) => {
 };
 
 export const upsertPlayer = async (player: IPlayer) => {
-  const current = JSON.parse(localStorage.getItem("players")) as IPlayer[];
+  const current = _load<IPlayer[]>("players");
   if (!current) {
     _save("players", [player]);
   } else {
@@ -51,10 +51,26 @@ export const getAdventures = async () => {
   };
 };
 
+export const deleteAdventure = async (adventure: IAdventure) => {
+  const current = _load<IAdventure[]>("adventures");
+  if (current) {
+    const newAdventures = current.reduce((acc, curr) => {
+      if (
+        curr.bookNumber === adventure.bookNumber &&
+        curr.playerId === adventure.playerId
+      ) {
+        return [...acc];
+      } else {
+        return [...acc, curr];
+      }
+    }, []);
+
+    _save("adventures", newAdventures);
+  }
+};
+
 export const upsertAdventure = async (adventure: IAdventure) => {
-  const current = JSON.parse(
-    localStorage.getItem("adventures")
-  ) as IAdventure[];
+  const current = _load<IAdventure[]>("adventures");
   if (!current) {
     _save("adventures", [adventure]);
   } else {
@@ -81,6 +97,10 @@ export const upsertAdventure = async (adventure: IAdventure) => {
       _save("adventures", [...current, adventure]);
     }
   }
+};
+
+const _load = <T>(key: string) => {
+  return JSON.parse(localStorage.getItem("adventures")) as T;
 };
 
 const _save = (key: string, item: any) => {

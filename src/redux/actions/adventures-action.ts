@@ -1,6 +1,10 @@
 import { IAdventure, IPlayer, ILwState } from "../state";
 import { LwActionTypes, LwThunkAction, LwTHunkDispatch } from "./actionTypes";
-import { upsertAdventure, getAdventures } from "../../data/api";
+import {
+  upsertAdventure,
+  getAdventures,
+  deleteAdventure,
+} from "../../data/api";
 
 export const saveAdventureSuccess = (adventure: IAdventure): LwActionTypes => {
   return {
@@ -24,13 +28,41 @@ export const saveAdventure = (adventure: IAdventure): LwThunkAction => async (
   upsertAdventure(adventure)
     .then(
       (response) => response,
-      (error) => {
-        console.log("An error occurred.", error);
-        return [] as IPlayer[];
-      }
+      (error) => handleError(error, [] as IPlayer[])
     )
     .then(() => {
       dispatch(saveAdventureSuccess(adventure));
+    });
+};
+
+export const requestRemoveAdventure = (): LwActionTypes => {
+  return {
+    type: "REQUEST_REMOVE_ADVENTURE",
+    payload: {},
+  };
+};
+
+export const removeAdventureSuccess = (
+  adventure: IAdventure
+): LwActionTypes => {
+  return {
+    type: "REMOVE_ADVENTURE_SUCCESS",
+    payload: adventure,
+  };
+};
+
+export const removeAdventure = (adventure: IAdventure): LwThunkAction => async (
+  dispatch: LwTHunkDispatch
+) => {
+  dispatch(requestRemoveAdventure());
+
+  deleteAdventure(adventure)
+    .then(
+      (response) => response,
+      (error) => handleError(error, [] as IPlayer[])
+    )
+    .then(() => {
+      dispatch(removeAdventureSuccess(adventure));
     });
 };
 
@@ -56,10 +88,7 @@ export const fetchAdventures = (): LwThunkAction => async (
   getAdventures()
     .then(
       (response) => response.json,
-      (error) => {
-        console.log("An error occurred.", error);
-        return [] as IPlayer[];
-      }
+      (error) => handleError(error, [] as IPlayer[])
     )
     .then((adventures) => {
       dispatch(receiveAdventures(adventures));
@@ -75,4 +104,9 @@ export const fetchAdventuresIfNeeded = (): LwThunkAction => async (
   } else {
     return Promise.resolve();
   }
+};
+
+const handleError = <T>(error: any, empty: T) => {
+  console.log("An error occurred.", error);
+  return empty;
 };

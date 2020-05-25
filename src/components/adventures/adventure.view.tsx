@@ -3,6 +3,7 @@ import { IAdventure, IActionChart } from "../../redux/state";
 import { getBookTitle } from "../../utils/book.utils";
 import { Button, Container } from "react-bootstrap";
 import { NewAdventure } from "./new-adventure/new-adventure";
+import { ActionChart } from "..";
 
 interface Props {
   adventure: IAdventure;
@@ -18,6 +19,7 @@ const AdventureView = (props: Props) => {
       actionChart: actionChart,
     });
     props.saveAdventure(newAdventure);
+    setShowNewAdventureForm(false);
   };
 
   const renderHeading = () => {
@@ -35,7 +37,12 @@ const AdventureView = (props: Props) => {
           <Button onClick={() => setShowNewAdventureForm(true)}>Reset</Button>
         );
       case "IN PROGRESS":
-        return <h2>Action Chart</h2>;
+        return (
+          <>
+            <h2>Action Chart</h2>
+            <ActionChart actionChart={props.adventure.actionChart} />
+          </>
+        );
       case "NOT STARTED":
         return (
           <Button onClick={() => setShowNewAdventureForm(true)}>

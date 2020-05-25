@@ -23,6 +23,7 @@ interface Props {
   adventures: IAdventure[];
   savePlayer: (player: IPlayer) => void;
   saveAdventure: (adventure: IAdventure) => void;
+  removeAdventure: (adventure: IAdventure) => void;
 }
 
 interface IFormValues {
@@ -102,14 +103,7 @@ const PlayerView: React.FC<Props> = (props: Props) => {
   };
 
   const handleRemoveAdventure = () => {
-    const newPlayer = Object.assign({}, props.player, {
-      adventures: props.adventures.filter(
-        (x) => x.bookNumber !== selectedAdventure.bookNumber
-      ),
-    });
-
-    props.savePlayer(newPlayer);
-
+    props.removeAdventure(selectedAdventure);
     setShow(false);
   };
 
