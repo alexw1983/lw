@@ -8,6 +8,11 @@ import { ActionRow } from "./actions-row";
 import { GoldStep } from "./gold-step";
 import { EquipmentStep } from "./equipment-step";
 import { IActionChart } from "../../../redux/state";
+import {
+  KaiDiscipline,
+  KaiDiscipineId,
+  KaiDisciplines,
+} from "../../../data/disciplines";
 
 interface Props {
   bookNumber: number;
@@ -27,7 +32,7 @@ export const NewAdventure = (props: Props) => {
   });
   const [disciplinesQuestion, setDisciplinesQuestion] = useState({
     complete: false,
-    kaiDisciplines: [],
+    kaiDisciplines: [] as KaiDiscipline[],
     weaponSkillNumber: -1,
   });
 
@@ -200,22 +205,28 @@ export const NewAdventure = (props: Props) => {
     );
   };
 
+  const getDiscipline = (id: KaiDiscipineId) => {
+    return KaiDisciplines.find((x) => x.id === id);
+  };
+
   const renderDisciplinesQuestion = () => {
     return (
       <>
         <DisciplinesStep
           complete={disciplinesQuestion.complete}
-          kaiDisciplines={disciplinesQuestion.kaiDisciplines}
+          kaiDisciplines={disciplinesQuestion.kaiDisciplines.map((x) => x.id)}
           weaponSkillNumber={disciplinesQuestion.weaponSkillNumber}
-          setDisciplines={(disciplines) =>
+          setDisciplines={(disciplines: KaiDiscipineId[]) =>
             setDisciplinesQuestion((prevState) => ({
               ...prevState,
-              kaiDisciplines: disciplines,
+              kaiDisciplines: disciplines.map((x) => getDiscipline(x)),
             }))
           }
         />
 
-        {disciplinesQuestion.kaiDisciplines.includes("weapon-skill") &&
+        {disciplinesQuestion.kaiDisciplines
+          .map((x) => x.id)
+          .includes("weapon-skill") &&
           !(disciplinesQuestion.weaponSkillNumber > -1) && (
             <Row className="mb-3">
               <Col>
@@ -240,7 +251,9 @@ export const NewAdventure = (props: Props) => {
           showNextButton={
             disciplinesQuestion.kaiDisciplines.length === 5 &&
             !(
-              disciplinesQuestion.kaiDisciplines.includes("weapon-skill") &&
+              disciplinesQuestion.kaiDisciplines
+                .map((x) => x.id)
+                .includes("weapon-skill") &&
               disciplinesQuestion.weaponSkillNumber < 0
             )
           }
