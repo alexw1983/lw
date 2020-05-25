@@ -1,4 +1,4 @@
-import { IPlayer } from "../redux/state";
+import { IPlayer, IAdventure } from "../redux/state";
 
 /**
  * Loads players from the API
@@ -25,7 +25,7 @@ export const addPlayer = async (player: IPlayer) => {
 export const upsertPlayer = async (player: IPlayer) => {
   const current = JSON.parse(localStorage.getItem("players")) as IPlayer[];
   if (!current) {
-    localStorage.setItem("players", JSON.stringify([player]));
+    _save("players", [player]);
   } else {
     if (current.find((x) => x.id === player.id)) {
       const newPlayers = current.reduce((acc, curr) => {
@@ -36,9 +36,53 @@ export const upsertPlayer = async (player: IPlayer) => {
         }
       }, []);
 
-      localStorage.setItem("players", JSON.stringify(newPlayers));
+      _save("players", newPlayers);
     } else {
-      localStorage.setItem("players", JSON.stringify([...current, player]));
+      _save("players", [...current, player]);
     }
   }
+};
+
+export const getAdventures = async () => {
+  const current = JSON.parse(localStorage.getItem("adventures"));
+
+  return {
+    json: current ?? [],
+  };
+};
+
+export const upsertAdventure = async (adventure: IAdventure) => {
+  const current = JSON.parse(
+    localStorage.getItem("adventures")
+  ) as IAdventure[];
+  if (!current) {
+    _save("adventures", [adventure]);
+  } else {
+    if (
+      current.find(
+        (x) =>
+          x.bookNumber === adventure.bookNumber &&
+          x.playerId === adventure.playerId
+      )
+    ) {
+      const newAdventures = current.reduce((acc, curr) => {
+        if (
+          curr.bookNumber !== adventure.bookNumber ||
+          curr.playerId !== adventure.playerId
+        ) {
+          return [...acc, curr];
+        } else {
+          return [...acc, adventure];
+        }
+      }, []);
+
+      _save("adventures", newAdventures);
+    } else {
+      _save("adventures", [...current, adventure]);
+    }
+  }
+};
+
+const _save = (key: string, item: any) => {
+  localStorage.setItem(key, JSON.stringify(item));
 };

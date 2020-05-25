@@ -1,10 +1,6 @@
 import { IPlayer, ILwState } from "../state";
 import { getPlayers, upsertPlayer } from "../../data/api";
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { LwActionTypes } from "./actionTypes";
-
-type LwThunkAction = ThunkAction<void, ILwState, unknown, LwActionTypes>;
-type LwTHunkDispatch = ThunkDispatch<ILwState, unknown, LwActionTypes>;
+import { LwActionTypes, LwThunkAction, LwTHunkDispatch } from "./actionTypes";
 
 export const toggleNewPlayerForm = (): LwActionTypes => {
   return {
@@ -19,6 +15,7 @@ export const requestSavePlayer = (): LwActionTypes => {
     payload: {},
   };
 };
+
 
 export const savePlayerSuccess = (player: IPlayer): LwActionTypes => {
   return {

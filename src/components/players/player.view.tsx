@@ -20,7 +20,9 @@ import { getBookTitle } from "../../utils/book.utils";
 
 interface Props {
   player: IPlayer;
+  adventures: IAdventure[];
   savePlayer: (player: IPlayer) => void;
+  saveAdventure: (adventure: IAdventure) => void;
 }
 
 interface IFormValues {
@@ -43,18 +45,12 @@ const PlayerView: React.FC<Props> = (props: Props) => {
     } as IFormValues,
     validationSchema,
     onSubmit: (values) => {
-      props.savePlayer(
-        Object.assign({}, props.player, {
-          adventures: [
-            ...props.player.adventures,
-            {
-              bookNumber: values.bookNumber,
-              status: "NOT STARTED",
-              actionChart: {},
-            } as IAdventure,
-          ],
-        })
-      );
+      props.saveAdventure({
+        playerId: props.player.id,
+        bookNumber: values.bookNumber,
+        status: "NOT STARTED",
+        actionChart: {},
+      } as IAdventure);
     },
   });
 
@@ -107,7 +103,7 @@ const PlayerView: React.FC<Props> = (props: Props) => {
 
   const handleRemoveAdventure = () => {
     const newPlayer = Object.assign({}, props.player, {
-      adventures: props.player.adventures.filter(
+      adventures: props.adventures.filter(
         (x) => x.bookNumber !== selectedAdventure.bookNumber
       ),
     });
@@ -117,10 +113,9 @@ const PlayerView: React.FC<Props> = (props: Props) => {
     setShow(false);
   };
 
-  const getBooks = (player: IPlayer) => {
+  const getBooks = (adventures: IAdventure[]) => {
     return Books.filter(
-      (x) =>
-        !player.adventures.map((ad) => +ad.bookNumber).includes(x.bookNumber)
+      (x) => !adventures.map((ad) => +ad.bookNumber).includes(x.bookNumber)
     ).sort((s, t) => s.bookNumber - t.bookNumber);
   };
 
@@ -132,7 +127,7 @@ const PlayerView: React.FC<Props> = (props: Props) => {
           <hr />
           <h5>Progress</h5>
           <ListGroup>
-            {props.player.adventures
+            {props.adventures
               .sort((a, b) => a.bookNumber - b.bookNumber)
               .map((ad, idx) => (
                 <ListGroupItem
@@ -191,7 +186,7 @@ const PlayerView: React.FC<Props> = (props: Props) => {
                 value={formik.values.bookNumber}
               >
                 <option value="" label="Select a book" />
-                {getBooks(props.player).map((book) => (
+                {getBooks(props.adventures).map((book) => (
                   <option value={book.bookNumber} key={book.title}>
                     {book.bookNumber} - {book.title}
                   </option>

@@ -90,14 +90,17 @@ export const EquipmentStep = (props: Props) => {
         {props.equipment.weapons.map((weapon, i) => (
           <p key={`weapon_${i}`}>{weapon}</p>
         ))}
+        <hr />
         <h5>Backpack</h5>
         {props.equipment.backpack.map((item, i) => (
           <p key={`backpack_${i}`}>{item}</p>
         ))}
+        <hr />
         <h5>Special Items</h5>
         {props.equipment.specialItems.map((item, i) => (
           <p key={`special_item_${i}`}>{item}</p>
         ))}
+        <hr />
       </>
     );
   };

@@ -1,19 +1,24 @@
 import React, { useState } from "react";
-import { IAdventure } from "../../redux/state";
+import { IAdventure, IActionChart } from "../../redux/state";
 import { getBookTitle } from "../../utils/book.utils";
-import { Button, Col, Row, Container } from "react-bootstrap";
-import { ImportStep } from "./new-adventure/import-step";
-import { StatsStep } from "./new-adventure/stats-step";
-import { RandomNumberTable } from "../shared/random-number-table";
-import { DisciplinesStep } from "./new-adventure/disciplines-step";
+import { Button, Container } from "react-bootstrap";
 import { NewAdventure } from "./new-adventure/new-adventure";
 
 interface Props {
   adventure: IAdventure;
+  saveAdventure: (adventure: IAdventure) => void;
 }
 
 const AdventureView = (props: Props) => {
   const [showNewAdventureForm, setShowNewAdventureForm] = useState(false);
+
+  const handleSaveActionChart = (actionChart: IActionChart) => {
+    const newAdventure = Object.assign({}, props.adventure, {
+      status: "IN PROGRESS",
+      actionChart: actionChart,
+    });
+    props.saveAdventure(newAdventure);
+  };
 
   const renderHeading = () => {
     return (
@@ -48,7 +53,12 @@ const AdventureView = (props: Props) => {
           <hr />
           {!showNewAdventureForm && renderStart()}
           <hr />
-          {showNewAdventureForm && <NewAdventure bookNumber={props.adventure.bookNumber}/>}
+          {showNewAdventureForm && (
+            <NewAdventure
+              bookNumber={props.adventure.bookNumber}
+              saveActionChart={handleSaveActionChart}
+            />
+          )}
         </>
       )}
     </Container>

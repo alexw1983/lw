@@ -7,8 +7,14 @@ import { RandomNumberTable } from "../../shared/random-number-table";
 import { ActionRow } from "./actions-row";
 import { GoldStep } from "./gold-step";
 import { EquipmentStep } from "./equipment-step";
+import { IActionChart } from "../../../redux/state";
 
-export const NewAdventure = (props: { bookNumber: number }) => {
+interface Props {
+  bookNumber: number;
+  saveActionChart: (chart: IActionChart) => void;
+}
+
+export const NewAdventure = (props: Props) => {
   const [showWeaponSkillRandom, setShowWeaponSkillRandom] = useState(false);
   const [importQuestion, setImportQuestion] = useState({
     complete: false,
@@ -105,6 +111,44 @@ export const NewAdventure = (props: { bookNumber: number }) => {
         complete: true,
       };
     });
+
+  const handleEquipmentQuestionBack = () => {
+    setGoldQuestion((prevState) => {
+      return {
+        ...prevState,
+        complete: false,
+      };
+    });
+    setEquipmentQuestion((prevState) => {
+      return {
+        ...prevState,
+        complete: false,
+      };
+    });
+  };
+
+  const handleEquipmentQuestionNext = () => {
+    setEquipmentQuestion((prevState) => {
+      return {
+        ...prevState,
+        complete: true,
+      };
+    });
+  };
+
+  const handleSave = () => {
+    const actionChart = {
+      combatSkill: statsQuestion.combatSkill,
+      endurancePoints: statsQuestion.endurancePoints,
+      kaiDiscipines: disciplinesQuestion.kaiDisciplines,
+      weapons: equipmentQuestion.equipment.weapons,
+      backpack: equipmentQuestion.equipment.backpack,
+      beltPouch: goldQuestion.gold,
+      specialItems: equipmentQuestion.equipment.specialItems,
+    };
+    console.log(actionChart);
+    props.saveActionChart(actionChart);
+  };
 
   const renderImportQuestion = () => {
     return (
@@ -249,13 +293,17 @@ export const NewAdventure = (props: { bookNumber: number }) => {
         />
         <ActionRow
           show={!equipmentQuestion.complete}
-          showNextButton={goldQuestion.gold !== undefined}
-          onBackClicked={handleGoldQuestionBack}
-          onNextClicked={handleGoldQuestionNext}
+          showNextButton={equipmentQuestion.equipment !== undefined}
+          onBackClicked={handleEquipmentQuestionBack}
+          onNextClicked={handleEquipmentQuestionNext}
         />
         <hr />
       </>
     );
+  };
+
+  const renderSave = () => {
+    return <Button onClick={() => handleSave()}>Save Action Chart</Button>;
   };
 
   return (
@@ -267,6 +315,7 @@ export const NewAdventure = (props: { bookNumber: number }) => {
       {statsQuestion.complete && renderDisciplinesQuestion()}
       {disciplinesQuestion.complete && renderGoldQuestion()}
       {goldQuestion.complete && renderEquipmentQuestion()}
+      {equipmentQuestion.complete && renderSave()}
     </>
   );
 };

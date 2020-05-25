@@ -16,6 +16,7 @@ export interface IActionChart {
 export type ADVENTURE_STATUS = "COMPLETE" | "IN PROGRESS" | "NOT STARTED";
 
 export interface IAdventure {
+  playerId: string;
   bookNumber: number;
   status: ADVENTURE_STATUS;
   actionChart: IActionChart;
@@ -24,12 +25,12 @@ export interface IAdventure {
 export interface IPlayer {
   name: string;
   id: string;
-  adventures: IAdventure[];
 }
 
 export interface ILwState {
   loading: boolean;
   actionChart: IActionChart;
   players: IPlayer[];
+  adventures: IAdventure[];
   showNewPlayerForm: boolean;
 }

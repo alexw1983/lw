@@ -1,4 +1,5 @@
-import { IPlayer, IActionChart } from "../state";
+import { IPlayer, IActionChart, IAdventure, ILwState } from "../state";
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
 
 export type LW_ACTION_TYPE =
   | "LOAD_ACTION_CHART"
@@ -11,7 +12,11 @@ export type LW_ACTION_TYPE =
   | "REQUEST_SAVE_PLAYERS"
   | "SAVE_PLAYER"
   | "SAVE_PLAYER_SUCCESS"
-  | "TOGGLE_NEW_PLAYER_FORM";
+  | "TOGGLE_NEW_PLAYER_FORM"
+  | "REQUEST_ADVENTURES"
+  | "RECEIVE_ADVENTURES"
+  | "REQUEST_SAVE_ADVENTURE"
+  | "SAVE_ADVENTURE_SUCCESS";
 
 interface ILwAction {
   type: LW_ACTION_TYPE;
@@ -44,6 +49,14 @@ interface ISavePlayerAction extends ILwAction {
   payload: IPlayer;
 }
 
+interface ISaveAdventureAction extends ILwAction {
+  payload: IAdventure;
+}
+
+interface IReceiveAdvenruesAction extends ILwAction {
+  payload: IAdventure[];
+}
+
 export type LwActionTypes =
   | IFetchPlayerAction
   | ILoadingAction
@@ -51,4 +64,9 @@ export type LwActionTypes =
   | ILoadActionChartAction
   | ILoadActionChartSuccessAction
   | ITakeDamageAction
-  | ISavePlayerAction;
+  | ISavePlayerAction
+  | ISaveAdventureAction
+  | IReceiveAdvenruesAction;
+
+export type LwThunkAction = ThunkAction<void, ILwState, unknown, LwActionTypes>;
+export type LwTHunkDispatch = ThunkDispatch<ILwState, unknown, LwActionTypes>;
