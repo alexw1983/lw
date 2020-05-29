@@ -28,7 +28,9 @@ const ActionChart: React.FC<Props> = (props: Props) => {
             items={props.actionChart.kaiDiscipines.map(
               (d) =>
                 `${d.name} ${
-                  d.weaponNumber ? "(" + getWeaponName(d.weaponNumber) + ")" : ""
+                  d.weaponNumber
+                    ? "(" + getWeaponName(d.weaponNumber) + ")"
+                    : ""
                 }`
             )}
           />
@@ -38,7 +40,10 @@ const ActionChart: React.FC<Props> = (props: Props) => {
         <Col>
           <ActionChartList
             header={"Weapons"}
-            items={props.actionChart.weapons}
+            items={[
+              props.actionChart.weapons.first,
+              props.actionChart.weapons.second,
+            ]}
           />
         </Col>
         <Col>

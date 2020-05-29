@@ -3,9 +3,10 @@ import { RandomNumberTable } from "../../shared/random-number-table";
 import { Button } from "react-bootstrap";
 
 interface Props {
+  importedGold: number | undefined;
   gold: number | undefined;
   setGold: (g) => void;
-}
+} 
 
 export const GoldStep = (props: Props) => {
   const [showRandomNumberTable, setshowRandomNumberTable] = useState(false);
@@ -13,6 +14,7 @@ export const GoldStep = (props: Props) => {
   return (
     <>
       <h5>Belt Pouch</h5>
+      {!!props.importedGold && props.importedGold > 0 && !props.gold && <p>{props.importedGold}</p>}
       {props.gold && <p>{props.gold}</p>}
       {!props.gold && (
         <Button onClick={() => setshowRandomNumberTable(true)} className="mb-3">

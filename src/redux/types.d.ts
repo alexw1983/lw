@@ -21,7 +21,10 @@ export interface IActionChart {
   combatSkill: number;
   endurancePoints: number;
   kaiDiscipines: KaiDiscipline[];
-  weapons: string[];
+  weapons: {
+    first: string;
+    second: string;
+  };
   backpack: string[];
   beltPouch: number;
   specialItems: string[];

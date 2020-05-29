@@ -62,15 +62,20 @@ export const NewAdventure = (props: Props) => {
     }));
   };
 
+  const getMostRecentAdventure = () => {
+    return props.previousAdventures
+      .filter((a) => a.status === "IN PROGRESS" || a.status === "COMPLETE")
+      .sort((a, b) => a.bookNumber - b.bookNumber)
+      .find((x) => x.bookNumber < props.bookNumber);
+  };
+
   const handleImportQuestionNext = () => {
     setImportQuestion((prevState) => {
       return { ...prevState, complete: true };
     });
 
     if (importQuestion.import && props.previousAdventures) {
-      const mostRecentAdventure = props.previousAdventures
-        .sort((a, b) => a.bookNumber - b.bookNumber)
-        .find((x) => x.bookNumber < props.bookNumber);
+      const mostRecentAdventure = getMostRecentAdventure();
 
       if (mostRecentAdventure) {
         setStatsQuestion({
@@ -189,6 +194,7 @@ export const NewAdventure = (props: Props) => {
     return (
       <>
         <ImportStep
+          complete={importQuestion.complete}
           importPrev={importQuestion.import}
           setImport={(importPrevious) =>
             setImportQuestion((prevState) => ({
@@ -313,12 +319,23 @@ export const NewAdventure = (props: Props) => {
   };
 
   const renderGoldQuestion = () => {
+    let importedGold = 0;
+    const mostRecentAdventure = getMostRecentAdventure();
+
+    if (mostRecentAdventure) {
+      importedGold = mostRecentAdventure.actionChart.beltPouch;
+    }
+
     return (
       <>
         <GoldStep
+          importedGold={importedGold}
           gold={goldQuestion.gold}
           setGold={(g) =>
-            setGoldQuestion((prevState) => ({ ...prevState, gold: g }))
+            setGoldQuestion((prevState) => ({
+              ...prevState,
+              gold: importedGold ? g + importedGold + 10 : g,
+            }))
           }
         />
         <ActionRow
@@ -333,9 +350,22 @@ export const NewAdventure = (props: Props) => {
   };
 
   const renderEquipmentQuestion = () => {
+    let importedEquipment = undefined;
+
+    const mostRecentAdventure = getMostRecentAdventure();
+    if (mostRecentAdventure) {
+      importedEquipment = {
+        backpack: mostRecentAdventure.actionChart.backpack,
+        specialItems: mostRecentAdventure.actionChart.specialItems,
+        weapons: mostRecentAdventure.actionChart.weapons,
+      };
+    }
+
     return (
       <>
         <EquipmentStep
+          importPrevious={importQuestion.import}
+          importedEquipment={importedEquipment}
           equipment={equipmentQuestion.equipment}
           bookNumber={+props.bookNumber}
           setEquipment={(e) =>
@@ -371,6 +401,8 @@ export const NewAdventure = (props: Props) => {
       <h2>New Adventure</h2>
       <hr />
       {props.bookNumber > 1 &&
+        props.previousAdventures &&
+        props.previousAdventures.length > 0 &&
         (!importQuestion.complete ||
         (props.previousAdventures && props.previousAdventures.length > 0)
           ? renderImportQuestion()

@@ -40,7 +40,7 @@ export const DisciplinesStep = (props: Props) => {
                 ).map((discipline, i) => {
                   return (
                     <Col xs={6} md={2} key={`discipline_list_${i}`}>
-                      {`${discipline.name} ${
+                      {`${discipline.name} ${discipline.weaponNumber} ${
                         discipline.weaponNumber
                           ? "(" + getWeaponName(discipline.weaponNumber) + ")"
                           : ""
