@@ -6,7 +6,7 @@ export function selectAdventure(
   bookNumber: number
 ) {
   const adventure = state.adventures.find(
-    (x) => x.bookNumber === bookNumber && x.playerId === playerId
+    (x) => +x.bookNumber === +bookNumber && x.playerId === playerId
   ) as IAdventure;
 
   return adventure;

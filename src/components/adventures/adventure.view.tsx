@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { IAdventure, IActionChart } from "../../redux/types";
 import { getBookTitle } from "../../utils/book.utils";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import { NewAdventure } from "./new-adventure/new-adventure";
-import { ActionChart } from "..";
+import { ActionChart } from "../action-chart";
 
 interface Props {
   adventure: IAdventure;
@@ -25,9 +25,17 @@ const AdventureView = (props: Props) => {
 
   const renderHeading = () => {
     return (
-      <h1>
-        {props.adventure.bookNumber} {getBookTitle(+props.adventure.bookNumber)}
-      </h1>
+      <>
+        <h1>
+          {props.adventure.bookNumber}{" "}
+          {getBookTitle(+props.adventure.bookNumber)}
+        </h1>
+        <Row>
+          <Col>
+            <p>STATUS = {props.adventure.status}</p>
+          </Col>
+        </Row>
+      </>
     );
   };
 
@@ -41,7 +49,10 @@ const AdventureView = (props: Props) => {
         return (
           <>
             <h2>Action Chart</h2>
-            <ActionChart actionChart={props.adventure.actionChart} />
+            <ActionChart
+              playerId={props.adventure.playerId}
+              bookNumber={props.adventure.bookNumber}
+            />
           </>
         );
       case "NOT STARTED":

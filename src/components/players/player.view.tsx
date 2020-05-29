@@ -15,8 +15,7 @@ import { Form, Button } from "react-bootstrap";
 import * as Yup from "yup";
 import { Trash, Clock, CheckCircle, Circle, Play } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
-import { Books } from "../../data/books";
-import { getBookTitle } from "../../utils/book.utils";
+import { getBookTitle, getBooks } from "../../utils/book.utils";
 
 interface Props {
   player: IPlayer;
@@ -107,10 +106,79 @@ const PlayerView: React.FC<Props> = (props: Props) => {
     setShow(false);
   };
 
-  const getBooks = (adventures: IAdventure[]) => {
-    return Books.filter(
-      (x) => !adventures.map((ad) => +ad.bookNumber).includes(x.bookNumber)
-    ).sort((s, t) => s.bookNumber - t.bookNumber);
+  const renderRemoveModal = () => {
+    return (
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Remove Adventure</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure? This will remove all traces.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleRemoveAdventure}>
+            Remove Adventure
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  const renderProgress = () => {
+    return (
+      <>
+        <ListGroup>
+          {props.adventures
+            .sort((a, b) => a.bookNumber - b.bookNumber)
+            .map((ad, idx) => (
+              <ListGroupItem
+                key={`${ad.bookNumber}_${idx}`}
+                variant={getVariant(ad.status)}
+              >
+                <Row>
+                  <Col xs="1">{ad.bookNumber}</Col>
+                  <Col>{getBookTitle(+ad.bookNumber)}</Col>
+                  <Col xs="1">
+                    <OverlayTrigger
+                      placement="top"
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={(props) => renderTooltip(props, ad.status)}
+                    >
+                      <Button className="icon-button" variant="link">
+                        {getIcon(ad.status)}
+                      </Button>
+                    </OverlayTrigger>
+                  </Col>
+                  <Col xs="1">
+                    <OverlayTrigger
+                      placement="top"
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={(props) => renderTooltip(props, "Continue")}
+                    >
+                      <Link
+                        to={`/player/${props.player.id}/adventure/${ad.bookNumber}`}
+                      >
+                        <Play />
+                      </Link>
+                    </OverlayTrigger>
+                  </Col>
+                  <Col xs="1">
+                    <Button
+                      className="icon-button"
+                      variant="link"
+                      onClick={(evt) => handleShow(evt, ad)}
+                    >
+                      <Trash />
+                    </Button>
+                  </Col>
+                </Row>
+              </ListGroupItem>
+            ))}
+        </ListGroup>
+        {renderRemoveModal()}
+      </>
+    );
   };
 
   return (
@@ -120,54 +188,7 @@ const PlayerView: React.FC<Props> = (props: Props) => {
           <h4 className="mt-3">{props.player.name}</h4>
           <hr />
           <h5>Progress</h5>
-          <ListGroup>
-            {props.adventures
-              .sort((a, b) => a.bookNumber - b.bookNumber)
-              .map((ad, idx) => (
-                <ListGroupItem
-                  key={`${ad.bookNumber}_${idx}`}
-                  variant={getVariant(ad.status)}
-                >
-                  <Row>
-                    <Col xs="1">{ad.bookNumber}</Col>
-                    <Col>{getBookTitle(+ad.bookNumber)}</Col>
-                    <Col xs="1">
-                      <OverlayTrigger
-                        placement="top"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={(props) => renderTooltip(props, ad.status)}
-                      >
-                        <Button className="icon-button" variant="link">
-                          {getIcon(ad.status)}
-                        </Button>
-                      </OverlayTrigger>
-                    </Col>
-                    <Col xs="1">
-                      <OverlayTrigger
-                        placement="top"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={(props) => renderTooltip(props, "Continue")}
-                      >
-                        <Link
-                          to={`/player/${props.player.id}/adventure/${ad.bookNumber}`}
-                        >
-                          <Play />
-                        </Link>
-                      </OverlayTrigger>
-                    </Col>
-                    <Col xs="1">
-                      <Button
-                        className="icon-button"
-                        variant="link"
-                        onClick={(evt) => handleShow(evt, ad)}
-                      >
-                        <Trash />
-                      </Button>
-                    </Col>
-                  </Row>
-                </ListGroupItem>
-              ))}
-          </ListGroup>
+          {renderProgress()}
           <hr />
           <h5>New Adventure</h5>
           <Form onSubmit={formik.handleSubmit}>
@@ -193,20 +214,6 @@ const PlayerView: React.FC<Props> = (props: Props) => {
 
             <Button type="submit">Add</Button>
           </Form>
-          <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Remove Adventure</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Are you sure? This will remove all traces.</Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
-              </Button>
-              <Button variant="primary" onClick={handleRemoveAdventure}>
-                Remove Adventure
-              </Button>
-            </Modal.Footer>
-          </Modal>
         </Container>
       )}
     </>

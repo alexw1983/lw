@@ -1,31 +1,39 @@
 import * as React from "react";
-import { IActionChart } from "../../redux/types";
-import { Container, Row, Col } from "react-bootstrap";
+import { IAdventure } from "../../redux/types";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import ActionChartList from "./action-chart-list-item";
 import { getWeaponName } from "../../utils/weapon.utils";
 
 interface Props {
-  actionChart: IActionChart;
+  adventure: IAdventure;
+  saveAdventure: (adventure: IAdventure) => void;
 }
 
-const ActionChart: React.FC<Props> = (props: Props) => {
+const ActionChartView: React.FC<Props> = (props: Props) => {
+  const handleCompleteAdventure = () => {
+    props.saveAdventure(
+      Object.assign({}, props.adventure, { status: "COMPLETE" })
+    );
+  };
+
   return (
     <Container>
+     
       <Row>
         <Col>
           <h5>Combat Skill</h5>
-          {props.actionChart.combatSkill}
+          {props.adventure.actionChart.combatSkill}
         </Col>
         <Col>
           <h5>Endurance Points</h5>
-          {props.actionChart.endurancePoints}
+          {props.adventure.actionChart.endurancePoints}
         </Col>
       </Row>
       <Row>
         <Col>
           <ActionChartList
             header={"Kai Disciplines"}
-            items={props.actionChart.kaiDiscipines.map(
+            items={props.adventure.actionChart.kaiDiscipines.map(
               (d) =>
                 `${d.name} ${
                   d.weaponNumber
@@ -40,33 +48,35 @@ const ActionChart: React.FC<Props> = (props: Props) => {
         <Col>
           <ActionChartList
             header={"Weapons"}
-            items={[
-              props.actionChart.weapons.first,
-              props.actionChart.weapons.second,
-            ]}
+            items={props.adventure.actionChart.weapons}
           />
         </Col>
         <Col>
           <h5>Belt Pouch</h5>
-          {props.actionChart.beltPouch}
+          {props.adventure.actionChart.beltPouch}
         </Col>
       </Row>
       <Row>
         <Col>
           <ActionChartList
             header={"Backpack"}
-            items={props.actionChart.backpack}
+            items={props.adventure.actionChart.backpack}
           />
         </Col>
         <Col>
           <ActionChartList
             header={"Special Items"}
-            items={props.actionChart.specialItems}
+            items={props.adventure.actionChart.specialItems}
           />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Button onClick={(evt) => handleCompleteAdventure()}>Complete</Button>
         </Col>
       </Row>
     </Container>
   );
 };
 
-export default ActionChart;
+export default ActionChartView;

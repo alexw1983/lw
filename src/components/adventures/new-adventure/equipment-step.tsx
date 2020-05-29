@@ -4,10 +4,7 @@ import { Button, Form, Row, Col } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
 
 interface Equipment {
-  weapons: {
-    first: string;
-    second: string;
-  };
+  weapons: string[];
   backpack: string[];
   specialItems: string[];
 }
@@ -22,36 +19,29 @@ interface Props {
 }
 
 const initialState = {
-  weapons: {
-    first: undefined,
-    second: undefined,
-  },
+  weapons: [],
   backpack: [],
   specialItems: [],
 } as Equipment;
 
 export const EquipmentStep = (props: Props) => {
   const [showRandomNumberTable, setshowRandomNumberTable] = useState(false);
-  const [equipment, setEquipment] = useState(
-    props.importedEquipment ? props.importedEquipment : initialState
-  );
+  const [equipment, setEquipment] = useState(initialState);
+  
 
   const handleBookOneSelect = (r: number) => {
     const equipment = {
-      weapons: {
-        first: "axe",
-        second: "",
-      },
+      weapons: ["axe"],
       backpack: ["meal"],
       specialItems: ["map-of-summerlund"],
     } as Equipment;
 
     switch (r) {
       case 0:
-        equipment.weapons.second = "broadsword";
+        equipment.weapons.push("broadsword");
         break;
       case 1:
-        equipment.weapons.second = "sword";
+        equipment.weapons.push("sword");
         break;
       case 2:
         equipment.specialItems.push("helmet");
@@ -64,16 +54,16 @@ export const EquipmentStep = (props: Props) => {
         equipment.specialItems.push("chain-mail-waistcoat");
         break;
       case 5:
-        equipment.weapons.second = "mace";
+        equipment.weapons.push("mace");
         break;
       case 6:
         equipment.backpack.push("healing-potion");
         break;
       case 7:
-        equipment.weapons.second = "quarterstaff";
+        equipment.weapons.push("quarterstaff");
         break;
       case 8:
-        equipment.weapons.second = "spear";
+        equipment.weapons.push("spear");
         break;
       case 9:
         props.setGold(12);
@@ -85,18 +75,15 @@ export const EquipmentStep = (props: Props) => {
     setshowRandomNumberTable(false);
   };
 
-  const handleSelectWeapon = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const weapon = evt.target.value;
-
-
-
-    setEquipment(prevState=> ({
-      ...prevState,
-      weapons: {
-        first: !!prevState.weapons.first ?  prevState.weapons.first : weapon,
-        second: !!prevState.weapons.second ?  prevState.weapons.second : weapon
-      }
-    }))
+  const handleSelectWeapon = (weapon: string) => {
+    if (equipment.weapons.length < 2) {
+      setEquipment((prevState) => ({
+        ...prevState,
+        weapons: [...prevState.weapons, weapon],
+      }));
+    } else {
+      alert("Only two weapons allowed, remove one before continuing");
+    }
   };
 
   const renderSelection = () => {
@@ -104,7 +91,7 @@ export const EquipmentStep = (props: Props) => {
       case 1:
         return (
           <>
-            {equipment.weapons.first === undefined && (
+            {equipment.weapons.length < 1 && (
               <>
                 <Button
                   onClick={() => setshowRandomNumberTable(true)}
@@ -145,11 +132,7 @@ export const EquipmentStep = (props: Props) => {
                         type="checkbox"
                         label={weapon}
                         name="equipment"
-                        disabled={
-                          !!equipment.weapons.first &&
-                          !!equipment.weapons.second
-                        }
-                        onChange={handleSelectWeapon}
+                        onChange={(evt) => handleSelectWeapon(weapon)}
                       />
                     </Col>
                   ))}
@@ -188,24 +171,15 @@ export const EquipmentStep = (props: Props) => {
   const removeWeapon = (weapon: string) => {
     setEquipment((prevState) => ({
       ...prevState,
-      weapons: {
-        first:
-          prevState.weapons.first === weapon
-            ? undefined
-            : prevState.weapons.first,
-        second:
-          prevState.weapons.second === weapon
-            ? undefined
-            : prevState.weapons.second,
-      },
+      weapons: prevState.weapons.filter((x) => x !== weapon),
     }));
   };
 
-  const renderWeapon = (weapon: string) => {
+  const renderWeapon = (weapon: string, i: number) => {
     return (
       weapon && (
-        <p>
-          1 - {`${weapon}`}
+        <p key={`weapon_${i}`}>
+          {`${i + 1} ${weapon}`}
           {props.bookNumber > 1 && (
             <Button
               className="icon-button"
@@ -224,16 +198,15 @@ export const EquipmentStep = (props: Props) => {
     return (
       <>
         <h5>Weapons</h5>
-        {renderWeapon(equipment.weapons.first)}
-        {renderWeapon(equipment.weapons.second)}
+        {equipment && equipment.weapons.map((item, i) => renderWeapon(item, i))}
         <hr />
         <h5>Backpack</h5>
-        {equipment.backpack.map((item, i) => (
+        {equipment && equipment.backpack.map((item, i) => (
           <p key={`backpack_${i}`}>{item}</p>
         ))}
         <hr />
         <h5>Special Items</h5>
-        {equipment.specialItems.map((item, i) => (
+        {equipment && equipment.specialItems.map((item, i) => (
           <p key={`special_item_${i}`}>{item}</p>
         ))}
         <hr />

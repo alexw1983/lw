@@ -45,36 +45,8 @@ export const upsertAdventure = async (adventure: IAdventure) => {
   _upsert<IAdventure>(
     "adventures",
     adventure,
-    (a, b) => a.bookNumber === b.bookNumber && a.playerId === b.playerId
+    (a, b) => +a.bookNumber === +b.bookNumber && a.playerId === b.playerId
   );
-
-  // const current = _load<IAdventure[]>("adventures");
-  // if (!current) {
-  //   _save("adventures", [adventure]);
-  // } else {
-  //   if (
-  //     current.find(
-  //       (x) =>
-  //         x.bookNumber === adventure.bookNumber &&
-  //         x.playerId === adventure.playerId
-  //     )
-  //   ) {
-  //     const newAdventures = current.reduce((acc, curr) => {
-  //       if (
-  //         curr.bookNumber !== adventure.bookNumber ||
-  //         curr.playerId !== adventure.playerId
-  //       ) {
-  //         return [...acc, curr];
-  //       } else {
-  //         return [...acc, adventure];
-  //       }
-  //     }, []);
-
-  //     _save("adventures", newAdventures);
-  //   } else {
-  //     _save("adventures", [...current, adventure]);
-  //   }
-  // }
 };
 
 const _upsert = <T>(key: string, item: T, matchFn: (a: T, b: T) => boolean) => {
