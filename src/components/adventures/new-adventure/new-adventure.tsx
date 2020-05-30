@@ -14,6 +14,7 @@ import {
   IAdventure,
 } from "../../../redux/types";
 import { KaiDisciplines } from "../../../data/disciplines";
+import { EquipmentStepTwo } from "./equipment-step-2";
 
 interface Props {
   bookNumber: number;
@@ -400,6 +401,17 @@ export const NewAdventure = (props: Props) => {
     <>
       <h2>New Adventure</h2>
       <hr />
+      <EquipmentStepTwo
+        bookNumber={1}
+        complete={false}
+        saveEquipment={(equipment) => {}}
+        setGold={(g) =>
+          setGoldQuestion((prevState) => ({
+            ...prevState,
+            gold: prevState.gold + g,
+          }))
+        }
+      />
       {props.bookNumber > 1 &&
         props.previousAdventures &&
         props.previousAdventures.length > 0 &&

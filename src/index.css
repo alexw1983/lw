@@ -31,3 +31,7 @@ code {
 .icon-button:hover {
   background-color: #aaa;
 }
+
+.equipment {
+  cursor: pointer;
+}

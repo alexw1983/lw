@@ -24,10 +24,16 @@ const initialState = {
   specialItems: [],
 } as Equipment;
 
+const MAX_WEAPONS = 2;
+const MAX_BACKPACK_ITEMS = 8;
+const MAX_SPECIAL_ITEMS = 12;
+
 export const EquipmentStep = (props: Props) => {
   const [showRandomNumberTable, setshowRandomNumberTable] = useState(false);
-  const [equipment, setEquipment] = useState(initialState);
-  
+  const [equipment, setEquipment] = useState(
+    props.importPrevious ? props.importedEquipment : initialState
+  );
+  const [selections, setSelections] = useState(0);
 
   const handleBookOneSelect = (r: number) => {
     const equipment = {
@@ -81,8 +87,46 @@ export const EquipmentStep = (props: Props) => {
         ...prevState,
         weapons: [...prevState.weapons, weapon],
       }));
+      setSelections(selections + 1);
     } else {
-      alert("Only two weapons allowed, remove one before continuing");
+      alert(
+        `Only ${MAX_WEAPONS} weapons allowed, remove one before continuing`
+      );
+    }
+  };
+
+  const handleSelectBackpackItem = (backpackItem: string) => {
+    if (equipment.backpack.length < 8) {
+      if (backpackItem === "2 meals") {
+        setEquipment((prevState) => ({
+          ...prevState,
+          backpack: [...prevState.backpack, "meal", "meal"],
+        }));
+      } else {
+        setEquipment((prevState) => ({
+          ...prevState,
+          backpack: [...prevState.backpack, backpackItem],
+        }));
+      }
+      setSelections(selections + 1);
+    } else {
+      alert(
+        `Only ${MAX_BACKPACK_ITEMS} backpack items allowed, remove one before continuing`
+      );
+    }
+  };
+
+  const handleSelectSpecialItem = (item: string) => {
+    if (equipment.specialItems.length < 8) {
+      setEquipment((prevState) => ({
+        ...prevState,
+        specialItems: [...prevState.specialItems, item],
+      }));
+      setSelections(selections + 1);
+    } else {
+      alert(
+        `Only ${MAX_SPECIAL_ITEMS} special items allowed, remove one before continuing`
+      );
     }
   };
 
@@ -132,6 +176,10 @@ export const EquipmentStep = (props: Props) => {
                         type="checkbox"
                         label={weapon}
                         name="equipment"
+                        disabled={
+                          equipment.weapons.includes(weapon) || selections >= 2
+                        }
+                        checked={equipment.weapons.includes(weapon)}
                         onChange={(evt) => handleSelectWeapon(weapon)}
                       />
                     </Col>
@@ -144,6 +192,11 @@ export const EquipmentStep = (props: Props) => {
                         type="checkbox"
                         label={back}
                         name="equipment"
+                        disabled={
+                          equipment.backpack.includes(back) || selections >= 2
+                        }
+                        checked={equipment.backpack.includes(back)}
+                        onChange={(evt) => handleSelectBackpackItem(back)}
                       />
                     </Col>
                   ))}
@@ -155,6 +208,12 @@ export const EquipmentStep = (props: Props) => {
                         type="checkbox"
                         label={item}
                         name="equipment"
+                        disabled={
+                          equipment.specialItems.includes(item) ||
+                          selections >= 2
+                        }
+                        checked={equipment.specialItems.includes(item)}
+                        onChange={(evt) => handleSelectSpecialItem(item)}
                       />
                     </Col>
                   ))}
@@ -173,6 +232,7 @@ export const EquipmentStep = (props: Props) => {
       ...prevState,
       weapons: prevState.weapons.filter((x) => x !== weapon),
     }));
+    setSelections(selections - 1);
   };
 
   const renderWeapon = (weapon: string, i: number) => {
@@ -194,6 +254,60 @@ export const EquipmentStep = (props: Props) => {
     );
   };
 
+  const removeSpecialItem = (specialItem: string) => {
+    setEquipment((prevState) => ({
+      ...prevState,
+      specialItems: prevState.specialItems.filter((x) => x !== specialItem),
+    }));
+    setSelections(selections - 1);
+  };
+
+  const renderSpecialItem = (specialItem: string, i: number) => {
+    return (
+      specialItem && (
+        <p key={`specialItem_${i}`}>
+          {`${i + 1} ${specialItem}`}
+          {props.bookNumber > 1 && (
+            <Button
+              className="icon-button"
+              variant="link"
+              onClick={(evt) => removeSpecialItem(specialItem)}
+            >
+              <Trash />
+            </Button>
+          )}
+        </p>
+      )
+    );
+  };
+
+  const removeBackpackItem = (backpack: string) => {
+    setEquipment((prevState) => ({
+      ...prevState,
+      backpack: prevState.backpack.filter((x) => x !== backpack),
+    }));
+    setSelections(selections - 1);
+  };
+
+  const renderBackpackItem = (backpack: string, i: number) => {
+    return (
+      backpack && (
+        <p key={`backpack${i}`}>
+          {`${i + 1} ${backpack}`}
+          {props.bookNumber > 1 && (
+            <Button
+              className="icon-button"
+              variant="link"
+              onClick={(evt) => removeBackpackItem(backpack)}
+            >
+              <Trash />
+            </Button>
+          )}
+        </p>
+      )
+    );
+  };
+
   const renderList = () => {
     return (
       <>
@@ -201,14 +315,12 @@ export const EquipmentStep = (props: Props) => {
         {equipment && equipment.weapons.map((item, i) => renderWeapon(item, i))}
         <hr />
         <h5>Backpack</h5>
-        {equipment && equipment.backpack.map((item, i) => (
-          <p key={`backpack_${i}`}>{item}</p>
-        ))}
+        {equipment &&
+          equipment.backpack.map((item, i) => renderBackpackItem(item, i))}
         <hr />
         <h5>Special Items</h5>
-        {equipment && equipment.specialItems.map((item, i) => (
-          <p key={`special_item_${i}`}>{item}</p>
-        ))}
+        {equipment &&
+          equipment.specialItems.map((item, i) => renderSpecialItem(item, i))}
         <hr />
       </>
     );
