@@ -48,7 +48,7 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
         <Col>
           <ActionChartList
             header={"Weapons"}
-            items={props.adventure.actionChart.weapons}
+            items={props.adventure.actionChart.equipment.map(x => x.name)}
           />
         </Col>
         <Col>
@@ -60,13 +60,13 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
         <Col>
           <ActionChartList
             header={"Backpack"}
-            items={props.adventure.actionChart.backpack}
+            items={props.adventure.actionChart.equipment.map(x => x.name)}
           />
         </Col>
         <Col>
           <ActionChartList
             header={"Special Items"}
-            items={props.adventure.actionChart.specialItems}
+            items={props.adventure.actionChart.equipment.map(x => x.name)}
           />
         </Col>
       </Row>

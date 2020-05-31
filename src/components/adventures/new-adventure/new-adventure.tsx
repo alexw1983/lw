@@ -6,15 +6,15 @@ import { DisciplinesStep } from "./disciplines-step";
 import { RandomNumberTable } from "../../shared/random-number-table";
 import { ActionRow } from "./actions-row";
 import { GoldStep } from "./gold-step";
-import { EquipmentStep } from "./equipment-step";
 import {
   IActionChart,
   KaiDiscipline,
   KaiDiscipineId,
   IAdventure,
+  IEquipment,
 } from "../../../redux/types";
 import { KaiDisciplines } from "../../../data/disciplines";
-import { EquipmentStepTwo } from "./equipment-step-2";
+import { EquipmentStep } from "./equipment";
 
 interface Props {
   bookNumber: number;
@@ -85,12 +85,14 @@ export const NewAdventure = (props: Props) => {
           endurancePoints: mostRecentAdventure.actionChart.endurancePoints,
         });
 
+        const weaponSkill = mostRecentAdventure.actionChart.kaiDiscipines.find(
+          (x) => x.id === "weapon-skill"
+        );
+
         setDisciplinesQuestion((prevState) => ({
           ...prevState,
           kaiDisciplines: mostRecentAdventure.actionChart.kaiDiscipines,
-          weaponSkillNumber: mostRecentAdventure.actionChart.kaiDiscipines.find(
-            (x) => x.id === "weapon-skill"
-          ).weaponNumber,
+          weaponSkillNumber: weaponSkill ? weaponSkill.weaponNumber : -1,
         }));
       }
     }
@@ -153,39 +155,13 @@ export const NewAdventure = (props: Props) => {
       };
     });
 
-  const handleEquipmentQuestionBack = () => {
-    setGoldQuestion((prevState) => {
-      return {
-        ...prevState,
-        complete: false,
-      };
-    });
-    setEquipmentQuestion((prevState) => {
-      return {
-        ...prevState,
-        complete: false,
-      };
-    });
-  };
-
-  const handleEquipmentQuestionNext = () => {
-    setEquipmentQuestion((prevState) => {
-      return {
-        ...prevState,
-        complete: true,
-      };
-    });
-  };
-
   const handleSave = () => {
     const actionChart = {
       combatSkill: statsQuestion.combatSkill,
       endurancePoints: statsQuestion.endurancePoints,
       kaiDiscipines: disciplinesQuestion.kaiDisciplines,
-      weapons: equipmentQuestion.equipment.weapons,
-      backpack: equipmentQuestion.equipment.backpack,
       beltPouch: goldQuestion.gold,
-      specialItems: equipmentQuestion.equipment.specialItems,
+      equipment: equipmentQuestion.equipment,
     };
     console.log(actionChart);
     props.saveActionChart(actionChart);
@@ -351,42 +327,26 @@ export const NewAdventure = (props: Props) => {
   };
 
   const renderEquipmentQuestion = () => {
-    let importedEquipment = undefined;
-
-    const mostRecentAdventure = getMostRecentAdventure();
-    if (mostRecentAdventure) {
-      importedEquipment = {
-        backpack: mostRecentAdventure.actionChart.backpack,
-        specialItems: mostRecentAdventure.actionChart.specialItems,
-        weapons: mostRecentAdventure.actionChart.weapons,
-      };
-    }
-
     return (
       <>
         <EquipmentStep
-          importPrevious={importQuestion.import}
-          importedEquipment={importedEquipment}
-          equipment={equipmentQuestion.equipment}
-          bookNumber={+props.bookNumber}
-          setEquipment={(e) =>
+          mostRecentAdventure={getMostRecentAdventure()}
+          savedEquipment={equipmentQuestion.equipment}
+          bookNumber={props.bookNumber}
+          complete={equipmentQuestion.complete}
+          saveEquipment={(equipment) => {
             setEquipmentQuestion((prevState) => ({
               ...prevState,
-              equipment: e,
-            }))
-          }
+              complete: true,
+              equipment: equipment,
+            }));
+          }}
           setGold={(g) =>
             setGoldQuestion((prevState) => ({
               ...prevState,
               gold: prevState.gold + g,
             }))
           }
-        />
-        <ActionRow
-          show={!equipmentQuestion.complete}
-          showNextButton={equipmentQuestion.equipment !== undefined}
-          onBackClicked={handleEquipmentQuestionBack}
-          onNextClicked={handleEquipmentQuestionNext}
         />
         <hr />
       </>
@@ -397,28 +357,18 @@ export const NewAdventure = (props: Props) => {
     return <Button onClick={() => handleSave()}>Save Action Chart</Button>;
   };
 
+  const showImportStep =
+    props.bookNumber > 1 &&
+    props.previousAdventures &&
+    props.previousAdventures.length > 0 &&
+    (!importQuestion.complete ||
+      (props.previousAdventures && props.previousAdventures.length > 0));
+
   return (
     <>
       <h2>New Adventure</h2>
       <hr />
-      <EquipmentStepTwo
-        bookNumber={1}
-        complete={false}
-        saveEquipment={(equipment) => {}}
-        setGold={(g) =>
-          setGoldQuestion((prevState) => ({
-            ...prevState,
-            gold: prevState.gold + g,
-          }))
-        }
-      />
-      {props.bookNumber > 1 &&
-        props.previousAdventures &&
-        props.previousAdventures.length > 0 &&
-        (!importQuestion.complete ||
-        (props.previousAdventures && props.previousAdventures.length > 0)
-          ? renderImportQuestion()
-          : null)}
+      {showImportStep && renderImportQuestion()}
       {(importQuestion.complete || props.bookNumber < 2) &&
         renderStatsQuestion()}
       {statsQuestion.complete && renderDisciplinesQuestion()}

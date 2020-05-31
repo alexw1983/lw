@@ -1,0 +1,1 @@
+export { default as EquipmentStep } from './equipment-step';

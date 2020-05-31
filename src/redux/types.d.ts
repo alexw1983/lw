@@ -17,14 +17,22 @@ export type KaiDiscipline = {
   weaponNumber: number | undefined;
 };
 
+interface IEquipment {
+  id: string;
+  type: "WEAPON" | "SPECIAL_ITEM" | "BACKPACK_ITEM";
+  name: string;
+  description?: string;
+}
+
 export interface IActionChart {
   combatSkill: number;
   endurancePoints: number;
   kaiDiscipines: KaiDiscipline[];
-  weapons: string[];
-  backpack: string[];
+  // weapons: string[];
+  // backpack: string[];
   beltPouch: number;
-  specialItems: string[];
+  //specialItems: string[];
+  equipment: IEquipment[];
 }
 
 export type ADVENTURE_STATUS = "COMPLETE" | "IN PROGRESS" | "NOT STARTED";
