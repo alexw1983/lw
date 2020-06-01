@@ -9,12 +9,6 @@ interface Props {
 }
 
 const ActionChartView: React.FC<Props> = (props: Props) => {
-  const handleCompleteAdventure = () => {
-    props.saveAdventure(
-      Object.assign({}, props.adventure, { status: "COMPLETE" })
-    );
-  };
-
   return (
     <Container>
       <Row>
@@ -73,11 +67,6 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
               .filter((w) => w.type === "SPECIAL_ITEM")
               .map((x) => x.name)}
           />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Button onClick={(evt) => handleCompleteAdventure()}>Complete</Button>
         </Col>
       </Row>
     </Container>

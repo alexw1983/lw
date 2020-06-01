@@ -21,6 +21,9 @@ export const GoldStep = (props: Props) => {
         g = r;
         break;
       case 2:
+      case 3:
+      case 4:
+      case 5:
         g = props.gold + r + 10;
         break;
     }

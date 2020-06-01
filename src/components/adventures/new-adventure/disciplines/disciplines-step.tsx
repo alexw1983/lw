@@ -9,6 +9,7 @@ import {
   getRandomWeapon,
 } from "./disciplines.utils";
 import { RandomNumberTable } from "../../../shared/random-number-table";
+import { start } from "repl";
 
 interface Props {
   complete: boolean;

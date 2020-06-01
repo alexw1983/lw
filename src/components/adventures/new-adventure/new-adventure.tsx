@@ -40,7 +40,7 @@ export const NewAdventure = (props: Props) => {
   const getMostRecentAdventure = () => {
     return props.previousAdventures
       .filter((a) => a.status === "COMPLETE")
-      .sort((a, b) => a.bookNumber - b.bookNumber)
+      .sort((a, b) => b.bookNumber - a.bookNumber)
       .find((x) => x.bookNumber < props.bookNumber);
   };
 

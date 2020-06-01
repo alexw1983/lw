@@ -4,6 +4,7 @@ import { getBookTitle } from "../../utils/book.utils";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { NewAdventure } from "./new-adventure/new-adventure";
 import { ActionChart } from "../action-chart";
+import { Link } from "react-router-dom";
 
 interface Props {
   adventure: IAdventure;
@@ -21,6 +22,12 @@ const AdventureView = (props: Props) => {
     });
     props.saveAdventure(newAdventure);
     setShowNewAdventureForm(false);
+  };
+
+  const handleCompleteAdventure = () => {
+    props.saveAdventure(
+      Object.assign({}, props.adventure, { status: "COMPLETE" })
+    );
   };
 
   const renderHeading = () => {
@@ -44,7 +51,14 @@ const AdventureView = (props: Props) => {
       case "COMPLETE":
         return (
           <>
-            <Button onClick={() => setShowNewAdventureForm(true)}>Reset</Button>
+            <Row>
+              <Col>
+                <Button onClick={() => setShowNewAdventureForm(true)}>
+                  Reset
+                </Button>
+              </Col>
+            </Row>
+            <hr />
             <h2>Action Chart</h2>
             <ActionChart
               playerId={props.adventure.playerId}
@@ -55,6 +69,19 @@ const AdventureView = (props: Props) => {
       case "IN PROGRESS":
         return (
           <>
+            <Row>
+              <Col>
+                <Button onClick={(evt) => handleCompleteAdventure()}>
+                  Complete
+                </Button>
+              </Col>
+              <Col>
+                <Button onClick={() => setShowNewAdventureForm(true)}>
+                  Reset
+                </Button>
+              </Col>
+            </Row>
+            <hr />
             <h2>Action Chart</h2>
             <ActionChart
               playerId={props.adventure.playerId}
@@ -64,9 +91,11 @@ const AdventureView = (props: Props) => {
         );
       case "NOT STARTED":
         return (
-          <Button onClick={() => setShowNewAdventureForm(true)}>
-            Get Started
-          </Button>
+          <>
+            <Button onClick={() => setShowNewAdventureForm(true)}>
+              Get Started
+            </Button>
+          </>
         );
     }
   };
@@ -76,6 +105,17 @@ const AdventureView = (props: Props) => {
       {props.adventure && (
         <>
           {renderHeading()}
+          <hr />
+          <Row>
+            <div className="float-right">
+              <Button
+                variant="outline-primary"
+                href={`/player/${props.adventure.playerId}`}
+              >
+                {"< Back"}
+              </Button>
+            </div>
+          </Row>
           <hr />
           {!showNewAdventureForm && renderStart()}
           <hr />
