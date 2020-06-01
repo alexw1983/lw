@@ -47,7 +47,9 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
         <Col>
           <ActionChartList
             header={"Weapons"}
-            items={props.adventure.actionChart.equipment.map((x) => x.name)}
+            items={props.adventure.actionChart.equipment
+              .filter((w) => w.type === "WEAPON")
+              .map((x) => x.name)}
           />
         </Col>
         <Col>
@@ -59,13 +61,17 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
         <Col>
           <ActionChartList
             header={"Backpack"}
-            items={props.adventure.actionChart.equipment.map((x) => x.name)}
+            items={props.adventure.actionChart.equipment
+              .filter((w) => w.type === "BACKPACK_ITEM")
+              .map((x) => x.name)}
           />
         </Col>
         <Col>
           <ActionChartList
             header={"Special Items"}
-            items={props.adventure.actionChart.equipment.map((x) => x.name)}
+            items={props.adventure.actionChart.equipment
+              .filter((w) => w.type === "SPECIAL_ITEM")
+              .map((x) => x.name)}
           />
         </Col>
       </Row>

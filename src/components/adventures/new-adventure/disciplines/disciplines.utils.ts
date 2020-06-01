@@ -1,4 +1,7 @@
-import { KaiDisciplines } from "../../../../data/disciplines";
+import {
+  KaiDisciplines,
+  MagnaKaiDisciplines,
+} from "../../../../data/disciplines";
 import { IDiscipline, IAdventure } from "../../../../redux/types";
 import { Weapons } from "../../../../data/weapons";
 
@@ -23,6 +26,16 @@ export const getOptions = (bookNumber: number, selection: IDiscipline[]) => {
     case 4:
     case 5:
       return KaiDisciplines.filter(
+        (x) => !selection.map((s) => s.id).includes(x.id)
+      );
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+    case 12:
+      return MagnaKaiDisciplines.filter(
         (x) => !selection.map((s) => s.id).includes(x.id)
       );
   }

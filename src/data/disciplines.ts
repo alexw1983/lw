@@ -62,3 +62,66 @@ export const KaiDisciplines = [
     description: "",
   } as IDiscipline,
 ] as IDiscipline[];
+
+export const MagnaKaiDisciplines = [
+  {
+    id: "weapon-mastery",
+    name: "WeaponMastery",
+    type: "MAGNAKAI",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "animal-control",
+    name: "AnimalControl",
+    type: "MAGNAKAI",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "curing",
+    name: "Curing",
+    type: "MAGNAKAI",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "invisibility",
+    name: "Invisibility",
+    type: "MAGNAKAI",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "huntmastery",
+    name: "Huntmastery",
+    type: "MAGNAKAI",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "pathsmanship",
+    name: "Pathsmanship",
+    type: "MAGNAKAI",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "psi-surge",
+    name: "Psi Surge",
+    type: "MAGNAKAI",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "psi-screen",
+    name: "Psi Screen",
+    type: "MAGNAKAI",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "nexus",
+    name: "Nexus",
+    type: "MAGNAKAI",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "divination",
+    name: "Divination",
+    type: "MAGNAKAI",
+    description: "",
+  } as IDiscipline,
+] as IDiscipline[];

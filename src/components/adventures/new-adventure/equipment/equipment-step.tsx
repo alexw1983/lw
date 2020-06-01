@@ -5,6 +5,7 @@ import {
   buildPreviousEquipment,
   GetEquipmentOptions,
   getRandomSelection,
+  maxChoices,
 } from "./equipment.utils";
 import EquipmentOptions from "./equipment-options";
 import EquipmentList from "./equipment-list";
@@ -18,7 +19,6 @@ interface Props {
   setGold: (gold: number) => void;
 }
 
-const MAX_CHOICES = 2;
 const MAX_WEAPONS = 2;
 const MAX_BACKPACK = 8;
 const MAX_SPECIAL_ITEMS = 12;
@@ -73,8 +73,8 @@ const EquipmentStep = (props: Props) => {
       specialItemCount === MAX_SPECIAL_ITEMS
     ) {
       alert(`Can only carry ${MAX_SPECIAL_ITEMS} special items`);
-    } else if (selection.length === MAX_CHOICES) {
-      alert(`Can only select ${MAX_CHOICES} items`);
+    } else if (selection.length === maxChoices(+props.bookNumber)) {
+      alert(`Can only select ${maxChoices(+props.bookNumber)} items`);
     } else {
       setSelection((prevState) => {
         return [...prevState, option];
@@ -109,7 +109,7 @@ const EquipmentStep = (props: Props) => {
               selection={selection}
               bookNumber={props.bookNumber}
               complete={props.complete}
-              maxChoices={MAX_CHOICES}
+              maxChoices={maxChoices(+props.bookNumber)}
               handleAddOption={handleAddOption}
               handleRandomSelection={handleRandomSelection}
             />

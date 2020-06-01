@@ -1,11 +1,20 @@
 import { IEquipment, IAdventure } from "../../../../redux/types";
 import { Weapons } from "../../../../data/weapons";
+import { BackpackItems } from "../../../../data/backpack";
+import { SpecialItems } from "../../../../data/specialItems";
 
 export const GetEquipmentOptions = (bookNumber: number) => {
   switch (bookNumber) {
+    case 1:
+      return [];
     case 2:
       return getBookTwoOptions();
-    case 1:
+    case 3:
+      return getBookThreeOptions();
+    case 4:
+      return getBookFourOptions();
+    case 5:
+      return getBookFiveOptions();
     default:
       return [];
   }
@@ -24,6 +33,18 @@ export const getTypeName = (equipmentType: string) => {
   }
 };
 
+export const maxChoices = (bookNumber: number) => {
+  switch (+bookNumber) {
+    case 1:
+      return 0;
+    case 2:
+    case 3:
+      return 2;
+    case 4:
+      return 6;
+  }
+};
+
 export const buildPreviousEquipment = (
   mostRecentAdventure: IAdventure,
   currentBookNumber: number
@@ -32,16 +53,8 @@ export const buildPreviousEquipment = (
 
   if (+currentBookNumber === 1) {
     startingEquipment = [
-      {
-        id: "axe",
-        type: "WEAPON",
-        name: "Axe",
-      },
-      {
-        id: "meal",
-        type: "BACKPACK_ITEM",
-        name: "Meal",
-      },
+      Weapons.Axe,
+      BackpackItems.Meal,
       {
         id: "map-of-summerlund",
         type: "SPECIAL_ITEM",
@@ -52,19 +65,29 @@ export const buildPreviousEquipment = (
     startingEquipment = mostRecentAdventure.actionChart.equipment;
   }
 
-  if (+currentBookNumber === 2) {
-    startingEquipment.push({
-      id: "seal-of-hammerdal",
-      name: "Seal Of Hammerdal",
-      type: "SPECIAL_ITEM",
-      description: "Signet ring on right hand",
-    });
+  switch (+currentBookNumber) {
+    case 2:
+      startingEquipment.push({
+        id: "seal-of-hammerdal",
+        name: "Seal Of Hammerdal",
+        type: "SPECIAL_ITEM",
+        description: "Signet ring on right hand",
+      });
+      break;
+    case 3:
+      startingEquipment.push({
+        id: "map-of-kalte",
+        name: "Map Of Kalter",
+        type: "SPECIAL_ITEM",
+        description: "",
+      });
+      break;
   }
 
   return startingEquipment;
 };
 
-export const getRandomSelection = (bookNumber: number, r:number) => {
+export const getRandomSelection = (bookNumber: number, r: number) => {
   const equipment = [] as IEquipment[];
 
   switch (r) {
@@ -75,45 +98,20 @@ export const getRandomSelection = (bookNumber: number, r:number) => {
       equipment.push(Weapons.Sword);
       break;
     case 2:
-      equipment.push({
-        id: "helmet",
-        name: "Helmet",
-        type: "SPECIAL_ITEM",
-        description: "Adds 2 ENDURANCE POINTS to your totsl",
-      });
+      equipment.push(SpecialItems.Helmet);
       break;
     case 3:
-      equipment.push({
-        id: "meal",
-        name: "Meal",
-        type: "BACKPACK_ITEM",
-        description: "",
-      });
-      equipment.push({
-        id: "meal",
-        name: "Meal",
-        type: "BACKPACK_ITEM",
-        description: "",
-      });
+      equipment.push(BackpackItems.Meal);
+      equipment.push(BackpackItems.Meal);
       break;
     case 4:
-      equipment.push({
-        id: "chain-mail-waistcoat",
-        name: "Cahinmail Waistcoat",
-        type: "SPECIAL_ITEM",
-        description: "Adds 4 ENDURANCE POINTS to total when worn",
-      });
+      equipment.push(SpecialItems.ChainmailWaistcoat);
       break;
     case 5:
       equipment.push(Weapons.Mace);
       break;
     case 6:
-      equipment.push({
-        id: "healing-potion",
-        name: "Healing Potion",
-        type: "BACKPACK_ITEM",
-        description: "",
-      });
+      equipment.push(BackpackItems.HealingPotion);
       break;
     case 7:
       equipment.push(Weapons.QuarterStaff);
@@ -126,46 +124,67 @@ export const getRandomSelection = (bookNumber: number, r:number) => {
   }
 
   return equipment;
-
-}
+};
 
 const getBookTwoOptions = () => {
-  const weapons = [
+  return [
     Weapons.Sword,
     Weapons.ShortSword,
     Weapons.Mace,
     Weapons.QuarterStaff,
     Weapons.Spear,
     Weapons.Broadsword,
-  ];
-  const backpack = [
-    {
-      id: "healing-potion",
-      type: "BACKPACK_ITEM",
-      name: "Healing Potion",
-      description:
-        "This restores 4 ENDURANCE POINTS to your total when consumed after combat. Enough for one dose",
-    } as IEquipment,
-    {
-      id: "two-meals",
-      type: "BACKPACK_ITEM",
-      name: "2 meals",
-    } as IEquipment,
-  ];
-  const specialItems = [
-    {
-      id: "chainmail-waistcoat",
-      type: "SPECIAL_ITEM",
-      name: "Chainmail Waistcoat",
-      description: "This restores 4 ENDURANCE POINTS to your total",
-    } as IEquipment,
-    {
-      id: "shield",
-      type: "SPECIAL_ITEM",
-      name: "Shield",
-      description: "Adds 2 points to your COMBAT SKILL when used in combat",
-    } as IEquipment,
-  ];
+    BackpackItems.HealingPotion,
+    BackpackItems.TwoMeals,
+    SpecialItems.ChainmailWaistcoat,
+    SpecialItems.Shield,
+  ] as IEquipment[];
+};
 
-  return [...weapons, ...backpack, ...specialItems] as IEquipment[];
+const getBookThreeOptions = () => {
+  return [
+    Weapons.Sword,
+    Weapons.ShortSword,
+    Weapons.Mace,
+    Weapons.QuarterStaff,
+    Weapons.Spear,
+    Weapons.Axe,
+    Weapons.Warhammer,
+    Weapons.Broadsword,
+    BackpackItems.PotionOfLaumspur,
+    BackpackItems.SpecialRations,
+    SpecialItems.PaddedLeatherWaistcoat,
+  ] as IEquipment[];
+};
+
+const getBookFourOptions = () => {
+  return [
+    Weapons.Warhammer,
+    Weapons.Dagger,
+    Weapons.Sword,
+    Weapons.Spear,
+    Weapons.Mace,
+    BackpackItems.PotionOfLaumspur,
+    BackpackItems.PotionOfLaumspur,
+    BackpackItems.SpecialRations,
+    BackpackItems.SpecialRations,
+    BackpackItems.SpecialRations,
+    BackpackItems.SpecialRations,
+    BackpackItems.SpecialRations,
+    SpecialItems.ChainmailWaistcoat,
+    SpecialItems.Shield,
+  ] as IEquipment[];
+};
+
+const getBookFiveOptions = () => {
+  return [
+    Weapons.Dagger,
+    Weapons.Sword,
+    Weapons.Spear,
+    Weapons.Mace,
+    BackpackItems.PotionOfLaumspur,
+    BackpackItems.SpecialRations,
+    BackpackItems.SpecialRations,
+    SpecialItems.Shield,
+  ] as IEquipment[];
 };
