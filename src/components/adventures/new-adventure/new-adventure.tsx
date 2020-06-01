@@ -361,8 +361,7 @@ export const NewAdventure = (props: Props) => {
     props.bookNumber > 1 &&
     props.previousAdventures &&
     props.previousAdventures.length > 0 &&
-    (!importQuestion.complete ||
-      (props.previousAdventures && props.previousAdventures.length > 0));
+    !importQuestion.complete;
 
   return (
     <>

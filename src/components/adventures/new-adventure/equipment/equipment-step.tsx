@@ -1,15 +1,13 @@
-import React, { useState } from "react";
-import { ListGroup, ListGroupItem, Row, Col, Button } from "react-bootstrap";
-import { Plus } from "react-bootstrap-icons";
-import { RandomNumberTable } from "../../../shared/random-number-table";
+import React, { useState, useEffect } from "react";
+import { Row, Col, Button } from "react-bootstrap";
 import { IEquipment, IAdventure } from "../../../../redux/types";
 import {
   buildPreviousEquipment,
-  getTypeName,
   GetEquipmentOptions,
   getRandomSelection,
 } from "./equipment.utils";
-import EquipmentItems from "./equipment-items";
+import EquipmentOptions from "./equipment-options";
+import EquipmentList from "./equipment-list";
 
 interface Props {
   bookNumber: number;
@@ -20,8 +18,6 @@ interface Props {
   setGold: (gold: number) => void;
 }
 
-const equipmentTypes = ["WEAPON", "BACKPACK_ITEM", "SPECIAL_ITEM"];
-
 const MAX_CHOICES = 2;
 const MAX_WEAPONS = 2;
 const MAX_BACKPACK = 8;
@@ -29,15 +25,20 @@ const MAX_SPECIAL_ITEMS = 12;
 
 const EquipmentStep = (props: Props) => {
   const [selection, setSelection] = useState([] as IEquipment[]);
-  const [startingEquipment, setPreviousEquipment] = useState(
-    buildPreviousEquipment(props.mostRecentAdventure, props.bookNumber)
+  const [startingEquipment, setStartingEquipment] = useState(
+    [] as IEquipment[]
   );
-  const [showRandomNumberTable, setshowRandomNumberTable] = useState(false);
+
+  useEffect(() => {
+    setStartingEquipment(
+      buildPreviousEquipment(props.mostRecentAdventure, props.bookNumber)
+    );
+  }, [props.mostRecentAdventure]);
 
   const options = GetEquipmentOptions(+props.bookNumber);
 
   const handleRemovePreviousItem = (option: IEquipment) => {
-    setPreviousEquipment((prevState) => [
+    setStartingEquipment((prevState) => [
       ...prevState.filter((x) => x.id !== option.id),
     ]);
   };
@@ -75,7 +76,9 @@ const EquipmentStep = (props: Props) => {
     } else if (selection.length === MAX_CHOICES) {
       alert(`Can only select ${MAX_CHOICES} items`);
     } else {
-      setSelection((prevState) => [...prevState, option]);
+      setSelection((prevState) => {
+        return [...prevState, option];
+      });
     }
   };
 
@@ -94,90 +97,35 @@ const EquipmentStep = (props: Props) => {
     }
 
     props.saveEquipment([...selection, ...startingEquipment, ...equipment]);
-    setshowRandomNumberTable(false);
-  };
-
-  const renderEquipment = () => {
-    return equipmentTypes.map((equipmentType, idx) => (
-      <React.Fragment key={`${equipmentType}_${idx}`}>
-        <h5 className="mt-3">{getTypeName(equipmentType)}</h5>
-        <ListGroup>
-          {props.complete && (
-            <EquipmentItems
-              items={props.savedEquipment}
-              equipmentType={equipmentType}
-            />
-          )}
-          {!props.complete && startingEquipment && (
-            <EquipmentItems
-              items={startingEquipment}
-              equipmentType={equipmentType}
-              removeFn={(item: IEquipment) => handleRemovePreviousItem(item)}
-            />
-          )}
-          {!props.complete && (
-            <EquipmentItems
-              items={selection}
-              equipmentType={equipmentType}
-              removeFn={(item: IEquipment) => handleRemoveOption(item)}
-            />
-          )}
-        </ListGroup>
-      </React.Fragment>
-    ));
-  };
-
-  const renderOptions = () => {
-    const filteredOptions = options.filter((x) => !selection.includes(x));
-    const random = [1].includes(+props.bookNumber);
-
-    return (
-      <>
-        {!random && (
-          <>
-            <h5 className="mt-3">Pick {MAX_CHOICES}</h5>
-            <ListGroup>
-              {filteredOptions.map((opt) => {
-                return (
-                  <ListGroupItem className="equipment">
-                    {opt.name}
-                    {!props.complete && (
-                      <Button
-                        className="float-right"
-                        onClick={() => handleAddOption(opt)}
-                      >
-                        <Plus />
-                      </Button>
-                    )}
-                  </ListGroupItem>
-                );
-              })}
-            </ListGroup>
-          </>
-        )}
-        {random && (
-          <>
-            <Button
-              onClick={() => setshowRandomNumberTable(true)}
-              className="mb-3"
-            >
-              Pick Equipment
-            </Button>
-            <RandomNumberTable
-              show={showRandomNumberTable}
-              onSelect={handleRandomSelection}
-            />
-          </>
-        )}
-      </>
-    );
   };
 
   return (
     <>
       <Row>
-        <Col>{renderEquipment()}</Col>
-        {!props.complete && <Col>{renderOptions()}</Col>}
+        {!props.complete && (
+          <Col>
+            <EquipmentOptions
+              options={options}
+              selection={selection}
+              bookNumber={props.bookNumber}
+              complete={props.complete}
+              maxChoices={MAX_CHOICES}
+              handleAddOption={handleAddOption}
+              handleRandomSelection={handleRandomSelection}
+            />
+          </Col>
+        )}
+        <Col>
+          <EquipmentList
+            equipmentTypes={["WEAPON", "BACKPACK_ITEM", "SPECIAL_ITEM"]}
+            handleRemovePreviousItem={handleRemovePreviousItem}
+            handleRemoveOption={handleRemoveOption}
+            complete={props.complete}
+            startingEquipment={startingEquipment}
+            selection={selection}
+            savedEquipment={props.savedEquipment}
+          />
+        </Col>
       </Row>
       {!props.complete && (
         <Row>
