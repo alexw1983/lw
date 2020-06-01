@@ -2,19 +2,17 @@ import React, { useState } from "react";
 import { ImportStep } from "./import-step";
 import { Button, Row, Col } from "react-bootstrap";
 import { StatsStep } from "./stats-step";
-import { DisciplinesStep } from "./disciplines-step";
 import { RandomNumberTable } from "../../shared/random-number-table";
 import { ActionRow } from "./actions-row";
 import { GoldStep } from "./gold-step";
 import {
   IActionChart,
   KaiDiscipline,
-  KaiDiscipineId,
   IAdventure,
-  IEquipment,
+  IDiscipline,
 } from "../../../redux/types";
-import { KaiDisciplines } from "../../../data/disciplines";
 import { EquipmentStep } from "./equipment";
+import DisciplinesStep from "./disciplines/disciplines-step";
 
 interface Props {
   bookNumber: number;
@@ -23,7 +21,6 @@ interface Props {
 }
 
 export const NewAdventure = (props: Props) => {
-  const [showWeaponSkillRandom, setShowWeaponSkillRandom] = useState(false);
   const [importQuestion, setImportQuestion] = useState({
     complete: false,
     import: undefined,
@@ -35,8 +32,8 @@ export const NewAdventure = (props: Props) => {
   });
   const [disciplinesQuestion, setDisciplinesQuestion] = useState({
     complete: false,
-    kaiDisciplines: [] as KaiDiscipline[],
-    weaponSkillNumber: -1,
+    disciplines: [] as IDiscipline[],
+    weaponSkill: undefined,
   });
 
   const [goldQuestion, setGoldQuestion] = useState({
@@ -84,16 +81,6 @@ export const NewAdventure = (props: Props) => {
           combatSkill: mostRecentAdventure.actionChart.combatSkill,
           endurancePoints: mostRecentAdventure.actionChart.endurancePoints,
         });
-
-        const weaponSkill = mostRecentAdventure.actionChart.kaiDiscipines.find(
-          (x) => x.id === "weapon-skill"
-        );
-
-        setDisciplinesQuestion((prevState) => ({
-          ...prevState,
-          kaiDisciplines: mostRecentAdventure.actionChart.kaiDiscipines,
-          weaponSkillNumber: weaponSkill ? weaponSkill.weaponNumber : -1,
-        }));
       }
     }
   };
@@ -112,26 +99,6 @@ export const NewAdventure = (props: Props) => {
 
   const handleStatsQuestionNext = () =>
     setStatsQuestion((prevState) => {
-      return {
-        ...prevState,
-        complete: true,
-      };
-    });
-
-  const handleDiscipinesQuestionBack = () => {
-    setStatsQuestion((prevState) => {
-      return {
-        ...prevState,
-        complete: false,
-      };
-    });
-    setDisciplinesQuestion((prevState) => {
-      return { ...prevState, complete: false };
-    });
-  };
-
-  const handleDisciplinesQuestionNext = () =>
-    setDisciplinesQuestion((prevState) => {
       return {
         ...prevState,
         complete: true,
@@ -159,9 +126,10 @@ export const NewAdventure = (props: Props) => {
     const actionChart = {
       combatSkill: statsQuestion.combatSkill,
       endurancePoints: statsQuestion.endurancePoints,
-      kaiDiscipines: disciplinesQuestion.kaiDisciplines,
       beltPouch: goldQuestion.gold,
       equipment: equipmentQuestion.equipment,
+      disciplines: disciplinesQuestion.disciplines,
+      weaponSkill: disciplinesQuestion.weaponSkill,
     };
     console.log(actionChart);
     props.saveActionChart(actionChart);
@@ -214,81 +182,30 @@ export const NewAdventure = (props: Props) => {
     );
   };
 
-  const getDiscipline = (id: KaiDiscipineId) => {
-    const discipline = KaiDisciplines.find((x) => x.id === id);
-
-    if (discipline.id === "weapon-skill") {
-      discipline.weaponNumber = disciplinesQuestion.weaponSkillNumber;
-    }
-
-    return discipline;
-  };
-
-  const getMaximumDisciplines = () => {
-    return (
-      5 +
-      props.previousAdventures
-        .sort((a, b) => a.bookNumber - b.bookNumber)
-        .filter((x) => x.bookNumber < props.bookNumber).length
-    );
-  };
-
   const renderDisciplinesQuestion = () => {
     return (
       <>
         <DisciplinesStep
-          importPrevious={importQuestion.import}
-          mostRecentAdventure={props.previousAdventures
-            .sort((a, b) => a.bookNumber - b.bookNumber)
-            .find((x) => x.bookNumber < props.bookNumber)}
-          maxDisciplines={getMaximumDisciplines()}
+          bookNumber={props.bookNumber}
           complete={disciplinesQuestion.complete}
-          kaiDisciplines={disciplinesQuestion.kaiDisciplines.map((x) => x.id)}
-          weaponSkillNumber={disciplinesQuestion.weaponSkillNumber}
-          setDisciplines={(disciplines: KaiDiscipineId[]) =>
+          weaponSkill={disciplinesQuestion.weaponSkill}
+          mostRecentAdventure={
+            importQuestion.import ? getMostRecentAdventure() : undefined
+          }
+          savedDisciplines={disciplinesQuestion.disciplines}
+          saveDisciplines={(disciplines: IDiscipline[]) =>
             setDisciplinesQuestion((prevState) => ({
               ...prevState,
-              kaiDisciplines: disciplines.map((x) => getDiscipline(x)),
+              complete: true,
+              disciplines: disciplines,
             }))
           }
-        />
-
-        {disciplinesQuestion.kaiDisciplines
-          .map((x) => x.id)
-          .includes("weapon-skill") &&
-          !(disciplinesQuestion.weaponSkillNumber > -1) && (
-            <Row className="mb-3">
-              <Col>
-                <Button onClick={() => setShowWeaponSkillRandom(true)}>
-                  Pick Weapon
-                </Button>
-                <RandomNumberTable
-                  onSelect={(r) =>
-                    setDisciplinesQuestion((prevState) => ({
-                      ...prevState,
-                      weaponSkillNumber: r,
-                    }))
-                  }
-                  show={showWeaponSkillRandom}
-                />
-              </Col>
-            </Row>
-          )}
-
-        <ActionRow
-          show={!disciplinesQuestion.complete}
-          showNextButton={
-            disciplinesQuestion.kaiDisciplines.length ===
-              getMaximumDisciplines() &&
-            !(
-              disciplinesQuestion.kaiDisciplines
-                .map((x) => x.id)
-                .includes("weapon-skill") &&
-              disciplinesQuestion.weaponSkillNumber < 0
-            )
-          }
-          onBackClicked={handleDiscipinesQuestionBack}
-          onNextClicked={handleDisciplinesQuestionNext}
+          saveWeaponSkill={(weaponSkill) => {
+            setDisciplinesQuestion((prevState) => ({
+              ...prevState,
+              weaponSkill,
+            }));
+          }}
         />
         <hr />
       </>
@@ -330,7 +247,9 @@ export const NewAdventure = (props: Props) => {
     return (
       <>
         <EquipmentStep
-          mostRecentAdventure={getMostRecentAdventure()}
+          mostRecentAdventure={
+            importQuestion.import ? getMostRecentAdventure() : undefined
+          }
           savedEquipment={equipmentQuestion.equipment}
           bookNumber={props.bookNumber}
           complete={equipmentQuestion.complete}
@@ -353,10 +272,6 @@ export const NewAdventure = (props: Props) => {
     );
   };
 
-  const renderSave = () => {
-    return <Button onClick={() => handleSave()}>Save Action Chart</Button>;
-  };
-
   const showImportStep =
     props.bookNumber > 1 &&
     props.previousAdventures &&
@@ -373,7 +288,9 @@ export const NewAdventure = (props: Props) => {
       {statsQuestion.complete && renderDisciplinesQuestion()}
       {disciplinesQuestion.complete && renderGoldQuestion()}
       {goldQuestion.complete && renderEquipmentQuestion()}
-      {equipmentQuestion.complete && renderSave()}
+      {equipmentQuestion.complete && (
+        <Button onClick={() => handleSave()}>Save Action Chart</Button>
+      )}
     </>
   );
 };

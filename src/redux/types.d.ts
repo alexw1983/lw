@@ -17,6 +17,13 @@ export type KaiDiscipline = {
   weaponNumber: number | undefined;
 };
 
+interface IDiscipline {
+  id: string;
+  name: string;
+  type: "KAI" | "MAGNAKAI" | "GRAND_MASTER";
+  description?: string;
+}
+
 interface IEquipment {
   id: string;
   type: "WEAPON" | "SPECIAL_ITEM" | "BACKPACK_ITEM";
@@ -27,12 +34,12 @@ interface IEquipment {
 export interface IActionChart {
   combatSkill: number;
   endurancePoints: number;
-  kaiDiscipines: KaiDiscipline[];
-  // weapons: string[];
-  // backpack: string[];
   beltPouch: number;
-  //specialItems: string[];
   equipment: IEquipment[];
+  disciplines: IDiscipline[];
+  weaponSkill?: string | undefined;
+  weaponMastery?: string | undefined;
+  grandWeaponMastery?: string | undefined;
 }
 
 export type ADVENTURE_STATUS = "COMPLETE" | "IN PROGRESS" | "NOT STARTED";

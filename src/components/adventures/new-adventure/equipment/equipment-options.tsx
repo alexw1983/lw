@@ -43,6 +43,7 @@ const EquipmentOptions = (props: Props) => {
                   {opt.name}
                   {!props.complete && (
                     <Button
+                      disabled={props.selection.length === props.maxChoices}
                       className="float-right"
                       onClick={() => props.handleAddOption(opt)}
                     >

@@ -2,7 +2,6 @@ import * as React from "react";
 import { IAdventure } from "../../redux/types";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import ActionChartList from "./action-chart-list-item";
-import { getWeaponName } from "../../utils/weapon.utils";
 
 interface Props {
   adventure: IAdventure;
@@ -18,7 +17,6 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
 
   return (
     <Container>
-     
       <Row>
         <Col>
           <h5>Combat Skill</h5>
@@ -33,11 +31,12 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
         <Col>
           <ActionChartList
             header={"Kai Disciplines"}
-            items={props.adventure.actionChart.kaiDiscipines.map(
+            items={props.adventure.actionChart.disciplines.map(
               (d) =>
                 `${d.name} ${
-                  d.weaponNumber
-                    ? "(" + getWeaponName(d.weaponNumber) + ")"
+                  d.id === "weapon-skill" &&
+                  props.adventure.actionChart.weaponSkill
+                    ? "(" + props.adventure.actionChart.weaponSkill + ")"
                     : ""
                 }`
             )}
@@ -48,7 +47,7 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
         <Col>
           <ActionChartList
             header={"Weapons"}
-            items={props.adventure.actionChart.equipment.map(x => x.name)}
+            items={props.adventure.actionChart.equipment.map((x) => x.name)}
           />
         </Col>
         <Col>
@@ -60,13 +59,13 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
         <Col>
           <ActionChartList
             header={"Backpack"}
-            items={props.adventure.actionChart.equipment.map(x => x.name)}
+            items={props.adventure.actionChart.equipment.map((x) => x.name)}
           />
         </Col>
         <Col>
           <ActionChartList
             header={"Special Items"}
-            items={props.adventure.actionChart.equipment.map(x => x.name)}
+            items={props.adventure.actionChart.equipment.map((x) => x.name)}
           />
         </Col>
       </Row>

@@ -140,15 +140,15 @@ const PlayerView: React.FC<Props> = (props: Props) => {
                   <Col xs="1">{ad.bookNumber}</Col>
                   <Col>{getBookTitle(+ad.bookNumber)}</Col>
                   <Col xs="1">
-                    <OverlayTrigger
-                      placement="top"
-                      delay={{ show: 250, hide: 400 }}
-                      overlay={(props) => renderTooltip(props, ad.status)}
-                    >
-                      <Button className="icon-button" variant="link">
+                    {
+                      <OverlayTrigger
+                        placement="top"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={(props) => renderTooltip(props, ad.status)}
+                      >
                         {getIcon(ad.status)}
-                      </Button>
-                    </OverlayTrigger>
+                      </OverlayTrigger>
+                    }
                   </Col>
                   <Col xs="1">
                     <OverlayTrigger
@@ -156,21 +156,27 @@ const PlayerView: React.FC<Props> = (props: Props) => {
                       delay={{ show: 250, hide: 400 }}
                       overlay={(props) => renderTooltip(props, "Continue")}
                     >
-                      <Link
-                        to={`/player/${props.player.id}/adventure/${ad.bookNumber}`}
+                      <Button
+                        variant="outline-primary"
+                        href={`/player/${props.player.id}/adventure/${ad.bookNumber}`}
                       >
                         <Play />
-                      </Link>
+                      </Button>
                     </OverlayTrigger>
                   </Col>
                   <Col xs="1">
-                    <Button
-                      className="icon-button"
-                      variant="link"
-                      onClick={(evt) => handleShow(evt, ad)}
+                    <OverlayTrigger
+                      placement="top"
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={(props) => renderTooltip(props, "Remove")}
                     >
-                      <Trash />
-                    </Button>
+                      <Button
+                        variant="outline-primary"
+                        onClick={(evt) => handleShow(evt, ad)}
+                      >
+                        <Trash />
+                      </Button>
+                    </OverlayTrigger>
                   </Col>
                 </Row>
               </ListGroupItem>

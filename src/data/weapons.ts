@@ -37,4 +37,22 @@ export const Weapons = {
     name: "Broadsword",
     description: "",
   } as IEquipment,
+  Dagger: {
+    id: "dagger",
+    type: "WEAPON",
+    name: "Dagger",
+    description: "",
+  } as IEquipment,
+  Warhammer: {
+    id: "warhammer",
+    type: "WEAPON",
+    name: "Warhammer",
+    description: "",
+  } as IEquipment,
+  Axe: {
+    id: "axe",
+    type: "WEAPON",
+    name: "Axe",
+    description: "",
+  } as IEquipment,
 };
