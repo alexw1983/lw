@@ -43,7 +43,14 @@ const AdventureView = (props: Props) => {
     switch (props.adventure.status) {
       case "COMPLETE":
         return (
-          <Button onClick={() => setShowNewAdventureForm(true)}>Reset</Button>
+          <>
+            <Button onClick={() => setShowNewAdventureForm(true)}>Reset</Button>
+            <h2>Action Chart</h2>
+            <ActionChart
+              playerId={props.adventure.playerId}
+              bookNumber={props.adventure.bookNumber}
+            />
+          </>
         );
       case "IN PROGRESS":
         return (

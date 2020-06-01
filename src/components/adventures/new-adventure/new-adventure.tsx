@@ -1,16 +1,9 @@
 import React, { useState } from "react";
 import { ImportStep } from "./import-step";
-import { Button, Row, Col } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { StatsStep } from "./stats-step";
-import { RandomNumberTable } from "../../shared/random-number-table";
-import { ActionRow } from "./actions-row";
 import { GoldStep } from "./gold-step";
-import {
-  IActionChart,
-  KaiDiscipline,
-  IAdventure,
-  IDiscipline,
-} from "../../../redux/types";
+import { IActionChart, IAdventure, IDiscipline } from "../../../redux/types";
 import { EquipmentStep } from "./equipment";
 import DisciplinesStep from "./disciplines/disciplines-step";
 
@@ -27,38 +20,22 @@ export const NewAdventure = (props: Props) => {
   });
   const [statsQuestion, setStatsQuestion] = useState({
     complete: false,
-    combatSkill: 0,
-    endurancePoints: 0,
+    combatSkill: undefined,
+    endurancePoints: undefined,
   });
   const [disciplinesQuestion, setDisciplinesQuestion] = useState({
     complete: false,
     disciplines: [] as IDiscipline[],
     weaponSkill: undefined,
   });
-
   const [goldQuestion, setGoldQuestion] = useState({
     complete: false,
-    gold: undefined,
+    gold: 0,
   });
-
   const [equipmentQuestion, setEquipmentQuestion] = useState({
     complete: false,
     equipment: undefined,
   });
-
-  const handleSetCombatSkill = (r: number) => {
-    setStatsQuestion((prevState) => ({
-      ...prevState,
-      combatSkill: r + 10,
-    }));
-  };
-
-  const handleSetEndurancePoints = (r) => {
-    setStatsQuestion((prevState) => ({
-      ...prevState,
-      endurancePoints: r + 20,
-    }));
-  };
 
   const getMostRecentAdventure = () => {
     return props.previousAdventures
@@ -66,61 +43,6 @@ export const NewAdventure = (props: Props) => {
       .sort((a, b) => a.bookNumber - b.bookNumber)
       .find((x) => x.bookNumber < props.bookNumber);
   };
-
-  // const handleImportQuestionNext = () => {
-  //   setImportQuestion((prevState) => {
-  //     return { ...prevState, complete: true };
-  //   });
-
-  //   if (importQuestion.import && props.previousAdventures) {
-  //     const mostRecentAdventure = getMostRecentAdventure();
-
-  //     if (mostRecentAdventure) {
-  //       setStatsQuestion({
-  //         complete: true,
-  //         combatSkill: mostRecentAdventure.actionChart.combatSkill,
-  //         endurancePoints: mostRecentAdventure.actionChart.endurancePoints,
-  //       });
-  //     }
-  //   }
-  // };
-
-  const handleStatsQuestonBack = () => {
-    setStatsQuestion((prevState) => {
-      return {
-        ...prevState,
-        complete: false,
-      };
-    });
-    setImportQuestion((prevState) => {
-      return { ...prevState, complete: false };
-    });
-  };
-
-  const handleStatsQuestionNext = () =>
-    setStatsQuestion((prevState) => {
-      return {
-        ...prevState,
-        complete: true,
-      };
-    });
-
-  const handleGoldQuestionBack = () => {
-    setDisciplinesQuestion((prevState) => {
-      return { ...prevState, complete: false };
-    });
-    setGoldQuestion((prevState) => {
-      return { ...prevState, complete: false };
-    });
-  };
-
-  const handleGoldQuestionNext = () =>
-    setGoldQuestion((prevState) => {
-      return {
-        ...prevState,
-        complete: true,
-      };
-    });
 
   const handleSave = () => {
     const actionChart = {
@@ -148,34 +70,37 @@ export const NewAdventure = (props: Props) => {
             }))
           }
         />
-        {/* <ActionRow
-          show={importQuestion.import !== undefined}
-          showNextButton={!importQuestion.complete}
-          onBackClicked={undefined}
-          onNextClicked={handleImportQuestionNext}
-        /> */}
+        <hr />
       </>
     );
   };
 
   const renderStatsQuestion = () => {
+    const mostRecentAdventure = getMostRecentAdventure();
+    const combatSkill =
+      importQuestion.import && mostRecentAdventure
+        ? mostRecentAdventure.actionChart.combatSkill
+        : statsQuestion.combatSkill;
+
+    const endurancePoints =
+      importQuestion.import && mostRecentAdventure
+        ? mostRecentAdventure.actionChart.endurancePoints
+        : statsQuestion.endurancePoints;
+
     return (
       <>
         <StatsStep
-          importPrevious={importQuestion.import}
-          combatSkill={statsQuestion.combatSkill}
-          endurancePoints={statsQuestion.endurancePoints}
-          setCombatSkill={handleSetCombatSkill}
-          setEndurancePoints={handleSetEndurancePoints}
-        />
-        <ActionRow
-          show={!statsQuestion.complete}
-          showNextButton={
-            statsQuestion.combatSkill !== 0 &&
-            statsQuestion.endurancePoints !== 0
-          }
-          onBackClicked={handleStatsQuestonBack}
-          onNextClicked={handleStatsQuestionNext}
+          complete={statsQuestion.complete}
+          combatSkill={combatSkill}
+          endurancePoints={endurancePoints}
+          saveStats={(combatSkill, endurancePoints) => {
+            setStatsQuestion((prevState) => ({
+              ...prevState,
+              complete: true,
+              combatSkill: combatSkill,
+              endurancePoints: endurancePoints,
+            }));
+          }}
         />
         <hr />
       </>
@@ -213,30 +138,26 @@ export const NewAdventure = (props: Props) => {
   };
 
   const renderGoldQuestion = () => {
-    let importedGold = 0;
     const mostRecentAdventure = getMostRecentAdventure();
 
-    if (mostRecentAdventure) {
-      importedGold = mostRecentAdventure.actionChart.beltPouch;
-    }
+    const gold =
+      importQuestion.import && mostRecentAdventure && !goldQuestion.complete
+        ? mostRecentAdventure.actionChart.beltPouch
+        : goldQuestion.gold;
 
     return (
       <>
         <GoldStep
-          importedGold={importedGold}
-          gold={goldQuestion.gold}
+          bookNumber={props.bookNumber}
+          complete={goldQuestion.complete}
+          gold={gold}
           setGold={(g) =>
             setGoldQuestion((prevState) => ({
               ...prevState,
-              gold: importedGold ? g + importedGold + 10 : g,
+              complete: true,
+              gold: g,
             }))
           }
-        />
-        <ActionRow
-          show={!goldQuestion.complete}
-          showNextButton={goldQuestion.gold !== undefined}
-          onBackClicked={handleGoldQuestionBack}
-          onNextClicked={handleGoldQuestionNext}
         />
         <hr />
       </>
@@ -275,8 +196,7 @@ export const NewAdventure = (props: Props) => {
   const showImportStep =
     props.bookNumber > 1 &&
     props.previousAdventures &&
-    props.previousAdventures.length > 0 &&
-    !importQuestion.complete;
+    props.previousAdventures.length > 0;
 
   return (
     <>
