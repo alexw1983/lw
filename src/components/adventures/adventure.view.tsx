@@ -51,15 +51,19 @@ const AdventureView = (props: Props) => {
       case "COMPLETE":
         return (
           <>
+            <h2>Action Chart</h2>
+            <hr />
             <Row>
               <Col>
-                <Button onClick={() => setShowNewAdventureForm(true)}>
-                  Reset
-                </Button>
+                <div className="d-flex justify-content-end align-items-center">
+                  <Button onClick={() => setShowNewAdventureForm(true)}>
+                    Reset
+                  </Button>
+                </div>
               </Col>
             </Row>
             <hr />
-            <h2>Action Chart</h2>
+
             <ActionChart
               playerId={props.adventure.playerId}
               bookNumber={props.adventure.bookNumber}
@@ -69,20 +73,47 @@ const AdventureView = (props: Props) => {
       case "IN PROGRESS":
         return (
           <>
+            <h2>Action Chart</h2>
+            <hr />
             <Row>
               <Col>
-                <Button onClick={(evt) => handleCompleteAdventure()}>
+                <Button
+                  onClick={() => handleCompleteAdventure()}
+                  className="ml-1 mt-1"
+                >
                   Complete
                 </Button>
               </Col>
               <Col>
-                <Button onClick={() => setShowNewAdventureForm(true)}>
+                <Button
+                  onClick={() => setShowNewAdventureForm(true)}
+                  className="ml-1 mt-1"
+                >
                   Reset
-                </Button>
+                </Button>{" "}
+              </Col>
+              <Col>
+                <Button variant="outline-primary" className="ml-1 mt-1">
+                  Take Damage
+                </Button>{" "}
+              </Col>
+              <Col>
+                <Button variant="outline-primary" className="ml-1 mt-1">
+                  Add Equipment
+                </Button>{" "}
+              </Col>
+              <Col>
+                <Button variant="outline-primary" className="ml-1 mt-1">
+                  Heal
+                </Button>{" "}
+              </Col>
+              <Col>
+                <Button variant="outline-primary" className="ml-1 mt-1">
+                  Combat
+                </Button>{" "}
               </Col>
             </Row>
             <hr />
-            <h2>Action Chart</h2>
             <ActionChart
               playerId={props.adventure.playerId}
               bookNumber={props.adventure.bookNumber}
@@ -107,14 +138,16 @@ const AdventureView = (props: Props) => {
           {renderHeading()}
           <hr />
           <Row>
-            <div className="float-right">
-              <Button
-                variant="outline-primary"
-                href={`/player/${props.adventure.playerId}`}
-              >
-                {"< Back"}
-              </Button>
-            </div>
+            <Col>
+              <div className="d-flex justify-content-end align-items-center">
+                <Button
+                  variant="outline-primary"
+                  href={`/player/${props.adventure.playerId}`}
+                >
+                  {"< Back"}
+                </Button>
+              </div>
+            </Col>
           </Row>
           <hr />
           {!showNewAdventureForm && renderStart()}

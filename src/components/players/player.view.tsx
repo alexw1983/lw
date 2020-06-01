@@ -74,19 +74,6 @@ const PlayerView: React.FC<Props> = (props: Props) => {
     );
   }
 
-  const getIcon = (status: ADVENTURE_STATUS) => {
-    switch (status) {
-      case "IN PROGRESS":
-        return <Clock />;
-      case "NOT STARTED":
-        return <Circle />;
-      case "COMPLETE":
-        return <CheckCircle />;
-      default:
-        return null;
-    }
-  };
-
   const handleShow = (
     evt: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     adventure: IAdventure
@@ -137,19 +124,8 @@ const PlayerView: React.FC<Props> = (props: Props) => {
               >
                 <Row>
                   <Col xs="1">{ad.bookNumber}</Col>
-                  <Col>{getBookTitle(+ad.bookNumber)}</Col>
-                  <Col xs="1">
-                    {
-                      <OverlayTrigger
-                        placement="top"
-                        delay={{ show: 250, hide: 400 }}
-                        overlay={(props) => renderTooltip(props, ad.status)}
-                      >
-                        {getIcon(ad.status)}
-                      </OverlayTrigger>
-                    }
-                  </Col>
-                  <Col xs="1">
+                  <Col xs="8">{getBookTitle(+ad.bookNumber)}</Col>
+                  <Col xs="6" md="1">
                     <OverlayTrigger
                       placement="top"
                       delay={{ show: 250, hide: 400 }}
@@ -163,7 +139,7 @@ const PlayerView: React.FC<Props> = (props: Props) => {
                       </Button>
                     </OverlayTrigger>
                   </Col>
-                  <Col xs="1">
+                  <Col xs="6" md="1">
                     <OverlayTrigger
                       placement="top"
                       delay={{ show: 250, hide: 400 }}

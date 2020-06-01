@@ -101,8 +101,8 @@ export const getRandomSelection = (bookNumber: number, r: number) => {
       equipment.push(SpecialItems.Helmet);
       break;
     case 3:
-      equipment.push(BackpackItems.Meal);
-      equipment.push(BackpackItems.Meal);
+      equipment.push(BackpackItems.Meal());
+      equipment.push(BackpackItems.Meal());
       break;
     case 4:
       equipment.push(SpecialItems.ChainmailWaistcoat);
@@ -151,8 +151,8 @@ const getBookThreeOptions = () => {
     Weapons.Axe,
     Weapons.Warhammer,
     Weapons.Broadsword,
-    BackpackItems.PotionOfLaumspur,
-    BackpackItems.SpecialRations,
+    BackpackItems.PotionOfLaumspur(),
+    BackpackItems.SpecialRations(),
     SpecialItems.PaddedLeatherWaistcoat,
   ] as IEquipment[];
 };
@@ -164,13 +164,13 @@ const getBookFourOptions = () => {
     Weapons.Sword,
     Weapons.Spear,
     Weapons.Mace,
-    BackpackItems.PotionOfLaumspur,
-    BackpackItems.PotionOfLaumspur,
-    BackpackItems.SpecialRations,
-    BackpackItems.SpecialRations,
-    BackpackItems.SpecialRations,
-    BackpackItems.SpecialRations,
-    BackpackItems.SpecialRations,
+    BackpackItems.PotionOfLaumspur(),
+    BackpackItems.PotionOfLaumspur(),
+    BackpackItems.SpecialRations(),
+    BackpackItems.SpecialRations(),
+    BackpackItems.SpecialRations(),
+    BackpackItems.SpecialRations(),
+    BackpackItems.SpecialRations(),
     SpecialItems.ChainmailWaistcoat,
     SpecialItems.Shield,
   ] as IEquipment[];
@@ -182,9 +182,9 @@ const getBookFiveOptions = () => {
     Weapons.Sword,
     Weapons.Spear,
     Weapons.Mace,
-    BackpackItems.PotionOfLaumspur,
-    BackpackItems.SpecialRations,
-    BackpackItems.SpecialRations,
+    BackpackItems.PotionOfLaumspur(),
+    BackpackItems.SpecialRations(),
+    BackpackItems.SpecialRations(),
     SpecialItems.Shield,
   ] as IEquipment[];
 };
