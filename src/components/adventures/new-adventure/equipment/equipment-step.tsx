@@ -131,7 +131,7 @@ const EquipmentStep = (props: Props) => {
         <Row>
           <Col>
             <Button className="mt-3" onClick={() => handleSave()}>
-              Save
+              Next
             </Button>
           </Col>
         </Row>

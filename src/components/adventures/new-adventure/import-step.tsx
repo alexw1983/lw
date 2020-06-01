@@ -1,5 +1,5 @@
-import React from "react";
-import { Form } from "react-bootstrap";
+import React, { useState } from "react";
+import { Form, Row, Col, Button } from "react-bootstrap";
 
 interface Props {
   complete: boolean;
@@ -8,31 +8,29 @@ interface Props {
 }
 
 export const ImportStep = (props: Props) => {
+  const [importPrevious, setImportPrevious] = useState(props.importPrev);
+
   return (
-    <Form>
-      <Form.Group>
-        <Form.Label>Import from Previous ?</Form.Label>
-      </Form.Group>
-      <Form.Group controlId="importFromPrevious">
-        <Form.Check
-          inline
-          type={"radio"}
-          name="import-prev"
-          id="import-prev-yes"
-          label="Yes"
-          disabled={props.complete}
-          onClick={() => props.setImport(true)}
-        />
-        <Form.Check
-          inline
-          type="radio"
-          name="import-prev"
-          id="import-prev-no"
-          label="No"
-          disabled={props.complete}
-          onClick={() => props.setImport(false)}
-        />
-      </Form.Group>
-    </Form>
+    <>
+      <Form>
+        <Form.Group controlId="importFromPrevious">
+          <Form.Check
+            inline
+            type={"checkbox"}
+            name="import-prev"
+            id="import-prev-yes"
+            label="Import Previous"
+            checked={importPrevious}
+            disabled={props.complete}
+            onClick={() => setImportPrevious(!importPrevious)}
+          />
+        </Form.Group>
+      </Form>
+      <Row>
+        <Col>
+          <Button onClick={() => props.setImport(importPrevious)}>Next</Button>
+        </Col>
+      </Row>
+    </>
   );
 };

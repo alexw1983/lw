@@ -67,23 +67,23 @@ export const NewAdventure = (props: Props) => {
       .find((x) => x.bookNumber < props.bookNumber);
   };
 
-  const handleImportQuestionNext = () => {
-    setImportQuestion((prevState) => {
-      return { ...prevState, complete: true };
-    });
+  // const handleImportQuestionNext = () => {
+  //   setImportQuestion((prevState) => {
+  //     return { ...prevState, complete: true };
+  //   });
 
-    if (importQuestion.import && props.previousAdventures) {
-      const mostRecentAdventure = getMostRecentAdventure();
+  //   if (importQuestion.import && props.previousAdventures) {
+  //     const mostRecentAdventure = getMostRecentAdventure();
 
-      if (mostRecentAdventure) {
-        setStatsQuestion({
-          complete: true,
-          combatSkill: mostRecentAdventure.actionChart.combatSkill,
-          endurancePoints: mostRecentAdventure.actionChart.endurancePoints,
-        });
-      }
-    }
-  };
+  //     if (mostRecentAdventure) {
+  //       setStatsQuestion({
+  //         complete: true,
+  //         combatSkill: mostRecentAdventure.actionChart.combatSkill,
+  //         endurancePoints: mostRecentAdventure.actionChart.endurancePoints,
+  //       });
+  //     }
+  //   }
+  // };
 
   const handleStatsQuestonBack = () => {
     setStatsQuestion((prevState) => {
@@ -131,7 +131,6 @@ export const NewAdventure = (props: Props) => {
       disciplines: disciplinesQuestion.disciplines,
       weaponSkill: disciplinesQuestion.weaponSkill,
     };
-    console.log(actionChart);
     props.saveActionChart(actionChart);
   };
 
@@ -144,16 +143,17 @@ export const NewAdventure = (props: Props) => {
           setImport={(importPrevious) =>
             setImportQuestion((prevState) => ({
               ...prevState,
+              complete: true,
               import: importPrevious,
             }))
           }
         />
-        <ActionRow
+        {/* <ActionRow
           show={importQuestion.import !== undefined}
           showNextButton={!importQuestion.complete}
           onBackClicked={undefined}
           onNextClicked={handleImportQuestionNext}
-        />
+        /> */}
       </>
     );
   };

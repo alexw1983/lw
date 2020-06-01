@@ -203,7 +203,7 @@ const DisciplinesStep = (props: Props) => {
               disabled={isSaveButtonDisabled()}
               onClick={() => handleSave()}
             >
-              Save
+              Next
             </Button>
           </Col>
         </Row>
