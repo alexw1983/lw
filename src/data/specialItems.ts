@@ -25,4 +25,21 @@ export const SpecialItems = {
     name: "Padded Leather Waistcoat",
     description: "This adds 2 ENDURANCE POINTS to your total",
   } as IEquipment,
+  MapOfSummerlund: {
+    id: "map-of-summerlund",
+    type: "SPECIAL_ITEM",
+    name: "Map of Summerlund",
+  } as IEquipment,
+  SealOfHammerdal: {
+    id: "seal-of-hammerdal",
+    name: "Seal Of Hammerdal",
+    type: "SPECIAL_ITEM",
+    description: "Signet ring on right hand",
+  } as IEquipment,
+  MapOfKalte: {
+    id: "map-of-kalte",
+    name: "Map Of Kalter",
+    type: "SPECIAL_ITEM",
+    description: "",
+  } as IEquipment,
 };

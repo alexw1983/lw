@@ -54,12 +54,8 @@ export const buildPreviousEquipment = (
   if (+currentBookNumber === 1) {
     startingEquipment = [
       Weapons.Axe,
-      BackpackItems.Meal,
-      {
-        id: "map-of-summerlund",
-        type: "SPECIAL_ITEM",
-        name: "Map of Summerlund",
-      },
+      BackpackItems.Meal(),
+      SpecialItems.MapOfSummerlund,
     ] as IEquipment[];
   } else if (mostRecentAdventure) {
     startingEquipment = mostRecentAdventure.actionChart.equipment;
@@ -67,20 +63,10 @@ export const buildPreviousEquipment = (
 
   switch (+currentBookNumber) {
     case 2:
-      startingEquipment.push({
-        id: "seal-of-hammerdal",
-        name: "Seal Of Hammerdal",
-        type: "SPECIAL_ITEM",
-        description: "Signet ring on right hand",
-      });
+      startingEquipment.push(SpecialItems.SealOfHammerdal);
       break;
     case 3:
-      startingEquipment.push({
-        id: "map-of-kalte",
-        name: "Map Of Kalter",
-        type: "SPECIAL_ITEM",
-        description: "",
-      });
+      startingEquipment.push(SpecialItems.MapOfKalte);
       break;
   }
 
@@ -111,7 +97,7 @@ export const getRandomSelection = (bookNumber: number, r: number) => {
       equipment.push(Weapons.Mace);
       break;
     case 6:
-      equipment.push(BackpackItems.HealingPotion);
+      equipment.push(BackpackItems.HealingPotion());
       break;
     case 7:
       equipment.push(Weapons.QuarterStaff);
@@ -134,8 +120,8 @@ const getBookTwoOptions = () => {
     Weapons.QuarterStaff,
     Weapons.Spear,
     Weapons.Broadsword,
-    BackpackItems.HealingPotion,
-    BackpackItems.TwoMeals,
+    BackpackItems.HealingPotion(),
+    BackpackItems.TwoMeals(),
     SpecialItems.ChainmailWaistcoat,
     SpecialItems.Shield,
   ] as IEquipment[];
