@@ -63,3 +63,13 @@ export interface ILwState {
   adventures: IAdventure[];
   showNewPlayerForm: boolean;
 }
+
+export interface IEnemy {
+  name: string;
+  endurancePoints: number;
+  currentEndurancePoints: number;
+  combatSkill: number;
+  immuneToMindblast: boolean;
+  undead: boolean;
+  evadeAfter: number | undefined;
+}

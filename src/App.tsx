@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import {
   CombatLog,
@@ -29,13 +28,16 @@ function App() {
           </Route>
           <Route path="/player/:playerId" exact component={Player} />
           <Route
+            exact
             path="/player/:playerId/adventure/:bookNumber"
             component={Adventure}
           />
+          <Route
+            exact
+            path="/player/:playerId/adventure/:bookNumber/combat"
+            component={CombatLog}
+          />
 
-          <Route path="/combat-log">
-            <CombatLog />
-          </Route>
           <Route path="/action-chart">
             <ActionChartContainer />
           </Route>

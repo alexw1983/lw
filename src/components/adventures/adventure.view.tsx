@@ -90,17 +90,16 @@ const AdventureView = (props: Props) => {
                   className="ml-1 mt-1"
                 >
                   Reset
-                </Button>{" "}
+                </Button>
               </Col>
               <Col>
-                <Button variant="outline-primary" className="ml-1 mt-1">
-                  Add Equipment
-                </Button>{" "}
-              </Col>
-              <Col>
-                <Button variant="outline-primary" className="ml-1 mt-1">
+                <Button
+                  variant="outline-primary"
+                  className="ml-1 mt-1"
+                  href={`/player/${props.adventure.playerId}/adventure/${props.adventure.bookNumber}/combat`}
+                >
                   Combat
-                </Button>{" "}
+                </Button>
               </Col>
             </Row>
             <hr />

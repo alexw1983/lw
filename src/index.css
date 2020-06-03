@@ -39,3 +39,24 @@ code {
 .lineThrough {
   text-decoration: line-through;
 }
+
+.narrow-form {
+  max-width: 500px;
+  border: 0.2rem solid #ececec;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: left;
+}
+
+.App {
+  text-align: center;
+}
+
+.random-cell {
+  cursor: pointer;
+  text-align: center;
+}
+
+.random-cell:hover {
+  background: grey;
+}

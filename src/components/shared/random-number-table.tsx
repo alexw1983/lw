@@ -40,6 +40,7 @@ export const RandomNumberTable = (props: Props) => {
                       <td
                         key={`random_cell_${jdx}`}
                         onClick={() => handleOnClick(r)}
+                        className="random-cell"
                       >
                         {r}
                       </td>

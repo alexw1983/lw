@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IAdventure, IEquipment, ILwState } from "../../redux/types";
+import { IAdventure, IEquipment } from "../../redux/types";
 import {
   Container,
   Row,
@@ -13,7 +13,6 @@ import {
 import ActionChartEquipmentList from "./action-chart-equipment-list";
 import CX from "classnames";
 import { Plus, Dash } from "react-bootstrap-icons";
-import { useSelector } from "react-redux";
 
 interface Props {
   playerId: string;
@@ -31,6 +30,7 @@ interface Props {
 
 const ActionChartView: React.FC<Props> = (props: Props) => {
   const dead = props.endurancePoints <= 0;
+  const complete = props.adventure.status === "COMPLETE";
 
   const renderEndurancePoints = () => {
     const different =
@@ -51,16 +51,20 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
             <br />
             {different && <span>{props.endurancePoints}</span>}
           </Card.Text>
-          <Button disabled={dead} onClick={() => props.takeDamage(1)}>
-            <Dash />
-          </Button>
-          <Button
-            className="ml-3"
-            disabled={!different || dead}
-            onClick={() => props.takeDamage(-1)}
-          >
-            <Plus />
-          </Button>
+          {!dead && !complete && (
+            <>
+              <Button disabled={dead} onClick={() => props.takeDamage(1)}>
+                <Dash />
+              </Button>
+              <Button
+                className="ml-3"
+                disabled={!different || dead}
+                onClick={() => props.takeDamage(-1)}
+              >
+                <Plus />
+              </Button>
+            </>
+          )}
         </Card.Body>
       </Card>
     );
@@ -77,19 +81,23 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
           <Card.Text>
             <span>{props.beltPouch}</span>
           </Card.Text>
-          <Button
-            disabled={minimum || dead}
-            onClick={() => props.spendMoney(1)}
-          >
-            <Dash />
-          </Button>
-          <Button
-            className="ml-3"
-            disabled={maximum || dead}
-            onClick={() => props.spendMoney(-1)}
-          >
-            <Plus />
-          </Button>
+          {!dead && !complete && (
+            <>
+              <Button
+                disabled={minimum || dead}
+                onClick={() => props.spendMoney(1)}
+              >
+                <Dash />
+              </Button>
+              <Button
+                className="ml-3"
+                disabled={maximum || dead}
+                onClick={() => props.spendMoney(-1)}
+              >
+                <Plus />
+              </Button>
+            </>
+          )}
         </Card.Body>
       </Card>
     );
@@ -150,9 +158,11 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
           <Row>
             <Col>
               <ActionChartEquipmentList
+                complete={dead || complete}
                 header={"Weapons"}
                 equipmentType="WEAPON"
                 items={props.equipment}
+                maxItems={2}
                 onRemove={props.removeEquipment}
                 onAdd={props.addEquipment}
               />
@@ -162,9 +172,11 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
           <Row>
             <Col>
               <ActionChartEquipmentList
+                complete={dead || complete}
                 header={"Backpack"}
                 equipmentType="BACKPACK_ITEM"
                 items={props.equipment}
+                maxItems={8}
                 onRemove={props.removeEquipment}
                 onAdd={props.addEquipment}
               />
@@ -173,9 +185,11 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
           <Row>
             <Col>
               <ActionChartEquipmentList
+                complete={dead || complete}
                 header={"Special Items"}
                 equipmentType="SPECIAL_ITEM"
                 items={props.equipment}
+                maxItems={12}
                 onRemove={props.removeEquipment}
                 onAdd={props.addEquipment}
               />

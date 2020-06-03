@@ -36,9 +36,11 @@ const adventuresReducer = (state: IAdventure[] = [], action: LwActionTypes) => {
       return [...state, action.payload];
 
     case "TAKE_DAMAGE_SUCCESS":
+      console.log("GOT HERE 0", action.payload);
+      console.log("GOT HERE 1", current);
       if (current && current.actionChart) {
-        current.actionChart.currentEndurancePoints =
-          current.actionChart.currentEndurancePoints - action.payload.damage;
+        console.log("GOT HERE 2");
+        current.actionChart.currentEndurancePoints -= action.payload.damage;
 
         return Object.assign([], state, _reduce(state, action.payload));
       }

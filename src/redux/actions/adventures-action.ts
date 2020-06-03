@@ -131,7 +131,7 @@ export const takeDamage = (
 ): LwThunkAction => async (dispatch: LwTHunkDispatch) => {
   dispatch(takeDamageRequest());
 
-  API.takeDamage(damage, bookNumber, playerId)
+  await API.takeDamage(damage, bookNumber, playerId)
     .then(
       (response) => response,
       (error) => handleError(error, [] as IAdventure[])
@@ -148,7 +148,7 @@ export const spendMoney = (
 ): LwThunkAction => async (dispatch: LwTHunkDispatch) => {
   dispatch(spendMoneyRequest());
 
-  API.spendMoney(cost, bookNumber, playerId)
+  await API.spendMoney(cost, bookNumber, playerId)
     .then(
       (response) => response,
       (error) => handleError(error, [] as IAdventure[])

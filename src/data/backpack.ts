@@ -2,7 +2,6 @@ import { IEquipment } from "../redux/types";
 import { v4 as uuidv4 } from "uuid";
 
 export const BackpackItems = {
- 
   HealingPotion: () =>
     ({
       id: "healing-potion",
@@ -17,7 +16,12 @@ export const BackpackItems = {
       type: "BACKPACK_ITEM",
       name: "Meal",
     } as IEquipment),
-  TwoMeals: () => [this.Meal(), this.Meal()],
+  TwoMeals: () =>
+    ({
+      id: uuidv4(),
+      type: "BACKPACK_ITEM",
+      name: "Meal",
+    } as IEquipment),
 
   PotionOfLaumspur: () =>
     ({

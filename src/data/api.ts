@@ -1,23 +1,23 @@
 import { IPlayer, IAdventure, IEquipment } from "../redux/types";
 
+const _match = (a: IAdventure, bookNumber: number, playerId: string) => {
+  return +a.bookNumber === +bookNumber && a.playerId === playerId;
+};
 const _takeDamage = async (
   damage: number,
   bookNumber: number,
   playerId: string
 ) => {
   const adventures = _load<IAdventure[]>("adventures");
-
   if (adventures) {
-    const current = adventures.find(
-      (x) => +x.bookNumber === bookNumber && x.playerId === playerId
-    );
+    const current = adventures.find((x) => _match(x, bookNumber, playerId));
     if (current) {
       current.actionChart.currentEndurancePoints =
         current.actionChart.currentEndurancePoints - damage;
+
+      _upsertAdventure(current);
     }
   }
-
-  _save("adventures", adventures);
 };
 
 const _spendMoney = async (
@@ -26,17 +26,14 @@ const _spendMoney = async (
   playerId: string
 ) => {
   const adventures = _load<IAdventure[]>("adventures");
-
   if (adventures) {
-    const current = adventures.find(
-      (x) => +x.bookNumber === bookNumber && x.playerId === playerId
-    );
+    const current = adventures.find((x) => _match(x, bookNumber, playerId));
     if (current) {
       current.actionChart.beltPouch = current.actionChart.beltPouch - cost;
+
+      _upsertAdventure(current);
     }
   }
-
-  _save("adventures", adventures);
 };
 
 const _removeEquipment = async (
@@ -47,18 +44,18 @@ const _removeEquipment = async (
   const adventures = _load<IAdventure[]>("adventures");
 
   if (adventures) {
-    const current = adventures.find(
-      (x) => +x.bookNumber === bookNumber && x.playerId === playerId
+    const current = adventures.find((x) =>
+      _findAdventure(x, bookNumber, playerId)
     );
 
     if (current) {
       current.actionChart.equipment = current.actionChart.equipment.filter(
         (x) => x.id !== equipment.id
       );
+
+      _upsertAdventure(current);
     }
   }
-
-  _save("adventures", adventures);
 };
 
 const _addEquipment = async (
@@ -69,8 +66,8 @@ const _addEquipment = async (
   const adventures = _load<IAdventure[]>("adventures");
 
   if (adventures) {
-    const current = adventures.find(
-      (x) => +x.bookNumber === +bookNumber && x.playerId === playerId
+    const current = adventures.find((x) =>
+      _findAdventure(x, bookNumber, playerId)
     );
 
     if (current) {
@@ -79,6 +76,16 @@ const _addEquipment = async (
 
     _upsertAdventure(current);
   }
+};
+
+const _findAdventure = (
+  adventure: IAdventure,
+  bookNumber: number,
+  playerId: string
+) => {
+  return (
+    +adventure.bookNumber === +bookNumber && adventure.playerId === playerId
+  );
 };
 
 const _getPlayers = async () => {
@@ -120,6 +127,7 @@ const _deleteAdventure = async (adventure: IAdventure) => {
 };
 
 const _upsertAdventure = async (adventure: IAdventure) => {
+  console.log("GOT HERE 6");
   _upsert<IAdventure>(
     "adventures",
     adventure,
@@ -133,6 +141,7 @@ const _upsert = <T>(key: string, item: T, matchFn: (a: T, b: T) => boolean) => {
     _save(key, [item]);
   } else {
     if (current.find((x) => matchFn(x, item))) {
+      console.log("GOT HERE 5");
       const newItems = current.reduce((acc, curr) => {
         if (matchFn(curr, item)) {
           return [...acc, item];
