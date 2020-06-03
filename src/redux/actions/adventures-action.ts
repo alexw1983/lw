@@ -4,6 +4,7 @@ import {
   upsertAdventure,
   getAdventures,
   deleteAdventure,
+  API,
 } from "../../data/api";
 
 export const saveAdventureSuccess = (adventure: IAdventure): LwActionTypes => {
@@ -73,7 +74,7 @@ export const requestAdventures = (): LwActionTypes => {
   };
 };
 
-export const receiveAdventures = (adventures: IPlayer[]): LwActionTypes => {
+export const receiveAdventures = (adventures: IAdventure[]): LwActionTypes => {
   return {
     type: "RECEIVE_ADVENTURES",
     payload: adventures,
@@ -88,7 +89,7 @@ export const fetchAdventures = (): LwThunkAction => async (
   getAdventures()
     .then(
       (response) => response.json,
-      (error) => handleError(error, [] as IPlayer[])
+      (error) => handleError(error, [] as IAdventure[])
     )
     .then((adventures) => {
       dispatch(receiveAdventures(adventures));
@@ -105,6 +106,86 @@ export const fetchAdventuresIfNeeded = (): LwThunkAction => async (
     return Promise.resolve();
   }
 };
+
+export const takeDamageRequest = (): LwActionTypes => {
+  return {
+    type: "REQUEST_TAKE_DAMAGE",
+    payload: {},
+  };
+};
+
+export const takeDamageSuccess = (
+  damage: number,
+  bookNumber: number,
+  playerId: string
+): LwActionTypes => {
+  return {
+    type: "TAKE_DAMAGE_SUCCESS",
+    payload: {
+      damage: damage,
+      bookNumber: bookNumber,
+      playerId: playerId,
+    },
+  };
+};
+
+export const takeDamage = (
+  damage: number,
+  bookNumber: number,
+  playerId: string
+): LwThunkAction => async (dispatch: LwTHunkDispatch) => {
+  dispatch(takeDamageRequest());
+
+  API.takeDamage(damage, bookNumber, playerId)
+    .then(
+      (response) => response,
+      (error) => handleError(error, [] as IAdventure[])
+    )
+    .then(() => {
+      dispatch(takeDamageSuccess(damage, bookNumber, playerId));
+    });
+};
+
+export const spendMoney = (
+  cost: number,
+  bookNumber: number,
+  playerId: string
+): LwThunkAction => async (dispatch: LwTHunkDispatch) => {
+  dispatch(spendMoneyRequest());
+
+  API.spendMoney(cost, bookNumber, playerId)
+    .then(
+      (response) => response,
+      (error) => handleError(error, [] as IAdventure[])
+    )
+    .then(() => {
+      dispatch(spendMoneySuccess(cost, bookNumber, playerId));
+    });
+};
+
+export const spendMoneyRequest = (): LwActionTypes => {
+  return {
+    type: "REQUEST_SPEND_MONEY",
+    payload: {},
+  };
+};
+
+export const spendMoneySuccess = (
+  cost: number,
+  bookNumber: number,
+  playerId: string
+): LwActionTypes => {
+  return {
+    type: "SUCCESS_SPEND_MONEY",
+    payload: {
+      cost: cost,
+      bookNumber: bookNumber,
+      playerId: playerId,
+    },
+  };
+};
+
+
 
 const handleError = <T>(error: any, empty: T) => {
   console.log("An error occurred.", error);

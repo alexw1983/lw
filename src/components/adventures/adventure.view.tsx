@@ -4,12 +4,12 @@ import { getBookTitle } from "../../utils/book.utils";
 import { Button, Container, Row, Col } from "react-bootstrap";
 import { NewAdventure } from "./new-adventure/new-adventure";
 import { ActionChart } from "../action-chart";
-import { Link } from "react-router-dom";
 
 interface Props {
   adventure: IAdventure;
   previousAdventures: IAdventure[];
   saveAdventure: (adventure: IAdventure) => void;
+  takeDamage: (damage: number) => void;
 }
 
 const AdventureView = (props: Props) => {
@@ -94,17 +94,7 @@ const AdventureView = (props: Props) => {
               </Col>
               <Col>
                 <Button variant="outline-primary" className="ml-1 mt-1">
-                  Take Damage
-                </Button>{" "}
-              </Col>
-              <Col>
-                <Button variant="outline-primary" className="ml-1 mt-1">
                   Add Equipment
-                </Button>{" "}
-              </Col>
-              <Col>
-                <Button variant="outline-primary" className="ml-1 mt-1">
-                  Heal
                 </Button>{" "}
               </Col>
               <Col>

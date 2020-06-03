@@ -34,6 +34,7 @@ interface IEquipment {
 export interface IActionChart {
   combatSkill: number;
   endurancePoints: number;
+  currentEndurancePoints: number;
   beltPouch: number;
   equipment: IEquipment[];
   disciplines: IDiscipline[];
@@ -58,7 +59,6 @@ export interface IPlayer {
 
 export interface ILwState {
   loading: boolean;
-  actionChart: IActionChart;
   players: IPlayer[];
   adventures: IAdventure[];
   showNewPlayerForm: boolean;

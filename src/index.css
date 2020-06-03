@@ -35,3 +35,7 @@ code {
 .equipment {
   cursor: pointer;
 }
+
+.lineThrough {
+  text-decoration: line-through;
+}

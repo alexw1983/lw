@@ -1,38 +1,123 @@
 import * as React from "react";
 import { IAdventure } from "../../redux/types";
-import { Container, Row, Col, Button, Card } from "react-bootstrap";
+import { Container, Row, Col, Button, Card, Alert } from "react-bootstrap";
 import ActionChartList from "./action-chart-list-item";
+import CX from "classnames";
+import { Plus, Dash } from "react-bootstrap-icons";
 
 interface Props {
+  playerId: string;
+  bookNumber: number;
   adventure: IAdventure;
+  endurancePoints: number;
+  beltPouch: number;
   saveAdventure: (adventure: IAdventure) => void;
+  takeDamage: (damage: number) => void;
+  spendMoney: (cost: number) => void;
 }
 
 const ActionChartView: React.FC<Props> = (props: Props) => {
+  const dead = props.endurancePoints <= 0;
+
+  const renderEndurancePoints = () => {
+    const different =
+      props.adventure.actionChart.endurancePoints !== props.endurancePoints;
+
+    return (
+      <Card className="mt-3 mb-3">
+        <Card.Body>
+          <Card.Title>Endurance Points</Card.Title>
+          <Card.Text>
+            <span
+              className={CX({
+                lineThrough: different,
+              })}
+            >
+              {props.adventure.actionChart.endurancePoints}
+            </span>
+            <br />
+            {different && <span>{props.endurancePoints}</span>}
+          </Card.Text>
+          <Button disabled={dead} onClick={() => props.takeDamage(1)}>
+            <Dash />
+          </Button>
+          <Button
+            className="ml-3"
+            disabled={!different || dead}
+            onClick={() => props.takeDamage(-1)}
+          >
+            <Plus />
+          </Button>
+        </Card.Body>
+      </Card>
+    );
+  };
+
+  const renderBeltPouch = () => {
+    const maximum = props.beltPouch >= 50;
+    const minimum = props.beltPouch <= 0;
+
+    return (
+      <Card className="mt-3 mb-3">
+        <Card.Body>
+          <Card.Title>Belt Pouch</Card.Title>
+          <Card.Text>
+            <span>{props.beltPouch}</span>
+          </Card.Text>
+          <Button
+            disabled={minimum || dead}
+            onClick={() => props.spendMoney(1)}
+          >
+            <Dash />
+          </Button>
+          <Button
+            className="ml-3"
+            disabled={maximum || dead}
+            onClick={() => props.spendMoney(-1)}
+          >
+            <Plus />
+          </Button>
+        </Card.Body>
+      </Card>
+    );
+  };
+
   return (
     <Container>
+      {dead && (
+        <Row>
+          <Col>
+            <Alert variant="danger">You are dead</Alert>
+          </Col>
+        </Row>
+      )}
+      {/* <pre>{JSON.stringify(props, null, 2)}</pre> */}
+      {/* <Row>
+        <Col>
+          <Button
+            variant="outline-primary"
+            className="ml-1 mt-1"
+            onClick={() => props.takeDamage(5)}
+          >
+            Take Damage
+          </Button>
+        </Col>
+      </Row> */}
       <Row>
         <Col xs="12" sm="6">
           <Row>
-            <Col xs="6" sm="6">
+            <Col xs="12" sm="6">
               <Card className="mt-3 mb-3">
                 <Card.Body>
-                  <Card.Title>CS</Card.Title>
+                  <Card.Title>Combat Skill</Card.Title>
                   <Card.Text>
                     {props.adventure.actionChart.combatSkill}
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
-            <Col xs="6" sm="6">
-              <Card className="mt-3 mb-3">
-                <Card.Body>
-                  <Card.Title>EP</Card.Title>
-                  <Card.Text>
-                    {props.adventure.actionChart.endurancePoints}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+            <Col xs="12" sm="6">
+              {renderEndurancePoints()}
             </Col>
           </Row>
           <Row>
@@ -85,14 +170,7 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
             </Col>
           </Row>
           <Row>
-            <Col>
-              <Card className="mt-3 mb-3">
-                <Card.Body>
-                  <Card.Title>Belt Pouch</Card.Title>
-                  <Card.Text>{props.adventure.actionChart.beltPouch}</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
+            <Col>{renderBeltPouch()}</Col>
           </Row>
         </Col>
       </Row>

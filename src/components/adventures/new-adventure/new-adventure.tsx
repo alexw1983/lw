@@ -48,6 +48,7 @@ export const NewAdventure = (props: Props) => {
     const actionChart = {
       combatSkill: statsQuestion.combatSkill,
       endurancePoints: statsQuestion.endurancePoints,
+      currentEndurancePoints: statsQuestion.endurancePoints,
       beltPouch: goldQuestion.gold,
       equipment: equipmentQuestion.equipment,
       disciplines: disciplinesQuestion.disciplines,

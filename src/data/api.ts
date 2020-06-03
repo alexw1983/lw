@@ -1,5 +1,38 @@
 import { IPlayer, IAdventure } from "../redux/types";
 
+export const API = {
+  takeDamage: async (damage: number, bookNumber: number, playerId: string) => {
+    const adventures = _load<IAdventure[]>("adventures");
+    
+    if (adventures) {
+      const current = adventures.find(
+        (x) => +x.bookNumber === bookNumber && x.playerId === playerId
+      );
+      if (current) {
+        current.actionChart.currentEndurancePoints =
+          current.actionChart.currentEndurancePoints - damage;
+      }
+    }
+
+    _save("adventures", adventures);
+  },
+  spendMoney: async (cost: number, bookNumber: number, playerId: string) => {
+    const adventures = _load<IAdventure[]>("adventures");
+    
+    if (adventures) {
+      const current = adventures.find(
+        (x) => +x.bookNumber === bookNumber && x.playerId === playerId
+      );
+      if (current) {
+        current.actionChart.beltPouch =
+          current.actionChart.beltPouch - cost;
+      }
+    }
+
+    _save("adventures", adventures);
+  } 
+};
+
 /**
  * Loads players from the API
  */
@@ -16,7 +49,7 @@ export const upsertPlayer = async (player: IPlayer) => {
 };
 
 export const getAdventures = async () => {
-  const current = JSON.parse(localStorage.getItem("adventures"));
+  const current = _load<IAdventure[]>("adventures");
 
   return {
     json: current ?? [],

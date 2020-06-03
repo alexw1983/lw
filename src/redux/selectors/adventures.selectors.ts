@@ -5,13 +5,36 @@ export function selectAdventure(
   playerId: string,
   bookNumber: number
 ) {
-  const adventure = state.adventures.find(
-    (x) => +x.bookNumber === +bookNumber && x.playerId === playerId
-  ) as IAdventure;
+  return _getCurrentAdventure(state, playerId, bookNumber);
+}
 
-  return adventure;
+export function selectCurrentEndurancePoints(
+  state: ILwState,
+  playerId: string,
+  bookNumber: number
+) {
+  return _getCurrentAdventure(state, playerId, bookNumber).actionChart
+    .currentEndurancePoints;
+}
+
+export function selectCurrentBeltPouch(
+  state: ILwState,
+  playerId: string,
+  bookNumber: number
+) {
+  return _getCurrentAdventure(state, playerId, bookNumber).actionChart
+    .beltPouch;
 }
 
 export function selectAdventuresForPlayer(state: ILwState, playerId: string) {
   return state.adventures.filter((x) => x.playerId === playerId);
 }
+
+const _getCurrentAdventure = (
+  state: ILwState,
+  playerId: string,
+  bookNumber: number
+) =>
+  state.adventures.find(
+    (x) => +x.bookNumber === +bookNumber && x.playerId === playerId
+  ) as IAdventure;

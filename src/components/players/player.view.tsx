@@ -13,7 +13,7 @@ import {
 import { useFormik } from "formik";
 import { Form, Button } from "react-bootstrap";
 import * as Yup from "yup";
-import { Trash, Clock, CheckCircle, Circle, Play } from "react-bootstrap-icons";
+import { Trash, Play } from "react-bootstrap-icons";
 import { getBookTitle, getBooks } from "../../utils/book.utils";
 
 interface Props {

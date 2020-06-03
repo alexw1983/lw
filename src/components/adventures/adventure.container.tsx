@@ -5,7 +5,10 @@ import {
   selectAdventure,
   selectAdventuresForPlayer,
 } from "../../redux/selectors/adventures.selectors";
-import { saveAdventure } from "../../redux/actions/adventures-action";
+import {
+  saveAdventure,
+  takeDamage,
+} from "../../redux/actions/adventures-action";
 
 const mapStateToProps = (state: ILwState, ownProps) => ({
   adventure: selectAdventure(
@@ -19,8 +22,16 @@ const mapStateToProps = (state: ILwState, ownProps) => ({
   ),
 });
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
   saveAdventure: (adventure: IAdventure) => dispatch(saveAdventure(adventure)),
+  takeDamage: (damage: number) =>
+    dispatch(
+      takeDamage(
+        damage,
+        ownProps.match.params.bookNumber,
+        ownProps.match.params.playerId
+      )
+    ),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdventureView);

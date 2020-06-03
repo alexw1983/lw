@@ -25,9 +25,3 @@ export const loadActionChartSuccess = (
   };
 };
 
-export const takeDamage = (damage: number): LwActionTypes => {
-  return {
-    type: "TAKE_DAMAGE",
-    payload: damage,
-  };
-};
