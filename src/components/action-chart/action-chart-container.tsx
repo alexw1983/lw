@@ -11,6 +11,7 @@ import {
   takeDamage,
   spendMoney,
   removeEquipment,
+  addEquipment
 } from "../../redux/actions/adventures-action";
 import ActionChartView from "./action-chart-view";
 
@@ -43,6 +44,8 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     dispatch(spendMoney(cost, ownProps.bookNumber, ownProps.playerId)),
   removeEquipment: (item: IEquipment) =>
     dispatch(removeEquipment(item, ownProps.bookNumber, ownProps.playerId)),
+  addEquipment: (item: IEquipment) =>
+    dispatch(addEquipment(item, ownProps.bookNumber, ownProps.playerId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActionChartView);

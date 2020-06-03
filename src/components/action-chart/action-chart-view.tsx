@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IAdventure, IEquipment } from "../../redux/types";
+import { IAdventure, IEquipment, ILwState } from "../../redux/types";
 import {
   Container,
   Row,
@@ -10,9 +10,10 @@ import {
   ListGroup,
   ListGroupItem,
 } from "react-bootstrap";
-import ActionChartList from "./action-chart-list";
+import ActionChartEquipmentList from "./action-chart-equipment-list";
 import CX from "classnames";
 import { Plus, Dash } from "react-bootstrap-icons";
+import { useSelector } from "react-redux";
 
 interface Props {
   playerId: string;
@@ -25,6 +26,7 @@ interface Props {
   takeDamage: (damage: number) => void;
   spendMoney: (cost: number) => void;
   removeEquipment: (item: IEquipment) => void;
+  addEquipment: (item: IEquipment) => void;
 }
 
 const ActionChartView: React.FC<Props> = (props: Props) => {
@@ -143,34 +145,39 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
             </Col>
           </Row>
         </Col>
+
         <Col xs="12" sm="6">
           <Row>
             <Col>
-              <ActionChartList
+              <ActionChartEquipmentList
                 header={"Weapons"}
-                items={props.equipment.filter((w) => w.type === "WEAPON")}
+                equipmentType="WEAPON"
+                items={props.equipment}
                 onRemove={props.removeEquipment}
+                onAdd={props.addEquipment}
               />
             </Col>
           </Row>
 
           <Row>
             <Col>
-              <ActionChartList
+              <ActionChartEquipmentList
                 header={"Backpack"}
-                items={props.equipment.filter(
-                  (w) => w.type === "BACKPACK_ITEM"
-                )}
+                equipmentType="BACKPACK_ITEM"
+                items={props.equipment}
                 onRemove={props.removeEquipment}
+                onAdd={props.addEquipment}
               />
             </Col>
           </Row>
           <Row>
             <Col>
-              <ActionChartList
+              <ActionChartEquipmentList
                 header={"Special Items"}
-                items={props.equipment.filter((w) => w.type === "SPECIAL_ITEM")}
+                equipmentType="SPECIAL_ITEM"
+                items={props.equipment}
                 onRemove={props.removeEquipment}
+                onAdd={props.addEquipment}
               />
             </Col>
           </Row>

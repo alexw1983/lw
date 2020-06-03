@@ -180,6 +180,45 @@ export const spendMoneySuccess = (
   };
 };
 
+export const addEquipment = (
+  equipment: IEquipment,
+  bookNumber: number,
+  playerId: string
+): LwThunkAction => async (dispatch: LwTHunkDispatch) => {
+  dispatch(addEquipmentRequest());
+
+  API.addEquipment(equipment, bookNumber, playerId)
+    .then(
+      (response) => response,
+      (error) => handleError(error, [] as IAdventure[])
+    )
+    .then(() => {
+      dispatch(addEquipmentSuccess(equipment, bookNumber, playerId));
+    });
+};
+
+export const addEquipmentRequest = (): LwActionTypes => {
+  return {
+    type: "ADD_EQUIPMENT_REQUEST",
+    payload: {},
+  };
+};
+
+export const addEquipmentSuccess = (
+  equipment: IEquipment,
+  bookNumber: number,
+  playerId: string
+): LwActionTypes => {
+  return {
+    type: "ADD_EQUIPMENT_SUCCESS",
+    payload: {
+      equipment: equipment,
+      bookNumber: bookNumber,
+      playerId: playerId,
+    },
+  };
+};
+
 export const removeEquipment = (
   equipment: IEquipment,
   bookNumber: number,

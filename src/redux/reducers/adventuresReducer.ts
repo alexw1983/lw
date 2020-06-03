@@ -1,4 +1,4 @@
-import { IAdventure, IActionChart } from "../types";
+import { IAdventure } from "../types";
 import { LwActionTypes } from "../actions/actionTypes";
 
 const _match = (a: IAdventure, b: IAdventure) => {
@@ -36,7 +36,7 @@ const adventuresReducer = (state: IAdventure[] = [], action: LwActionTypes) => {
       return [...state, action.payload];
 
     case "TAKE_DAMAGE_SUCCESS":
-      if (current) {
+      if (current && current.actionChart) {
         current.actionChart.currentEndurancePoints =
           current.actionChart.currentEndurancePoints - action.payload.damage;
 
@@ -46,7 +46,7 @@ const adventuresReducer = (state: IAdventure[] = [], action: LwActionTypes) => {
       return state;
 
     case "SUCCESS_SPEND_MONEY":
-      if (current) {
+      if (current && current.actionChart) {
         current.actionChart.beltPouch =
           current.actionChart.beltPouch - action.payload.cost;
 
@@ -60,6 +60,18 @@ const adventuresReducer = (state: IAdventure[] = [], action: LwActionTypes) => {
         current.actionChart.equipment = current.actionChart.equipment.filter(
           (x) => x.id !== action.payload.equipment.id
         );
+
+        return Object.assign([], state, _reduce(state, action.payload));
+      }
+
+      return state;
+
+    case "ADD_EQUIPMENT_SUCCESS":
+      if (current && current.actionChart) {
+        current.actionChart.equipment = [
+          ...current.actionChart.equipment,
+          action.payload.equipment,
+        ];
 
         return Object.assign([], state, _reduce(state, action.payload));
       }

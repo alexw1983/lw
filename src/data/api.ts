@@ -61,6 +61,26 @@ const _removeEquipment = async (
   _save("adventures", adventures);
 };
 
+const _addEquipment = async (
+  equipment: IEquipment,
+  bookNumber: number,
+  playerId: string
+) => {
+  const adventures = _load<IAdventure[]>("adventures");
+
+  if (adventures) {
+    const current = adventures.find(
+      (x) => +x.bookNumber === +bookNumber && x.playerId === playerId
+    );
+
+    if (current) {
+      current.actionChart.equipment.push(equipment);
+    }
+
+    _upsertAdventure(current);
+  }
+};
+
 const _getPlayers = async () => {
   const current = _load<IPlayer[]>("players");
 
@@ -145,4 +165,5 @@ export const API = {
   takeDamage: _takeDamage,
   spendMoney: _spendMoney,
   removeEquipment: _removeEquipment,
+  addEquipment: _addEquipment,
 };
