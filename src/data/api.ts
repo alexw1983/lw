@@ -1,42 +1,67 @@
-import { IPlayer, IAdventure } from "../redux/types";
+import { IPlayer, IAdventure, IEquipment } from "../redux/types";
 
-export const API = {
-  takeDamage: async (damage: number, bookNumber: number, playerId: string) => {
-    const adventures = _load<IAdventure[]>("adventures");
-    
-    if (adventures) {
-      const current = adventures.find(
-        (x) => +x.bookNumber === bookNumber && x.playerId === playerId
-      );
-      if (current) {
-        current.actionChart.currentEndurancePoints =
-          current.actionChart.currentEndurancePoints - damage;
-      }
+const _takeDamage = async (
+  damage: number,
+  bookNumber: number,
+  playerId: string
+) => {
+  const adventures = _load<IAdventure[]>("adventures");
+
+  if (adventures) {
+    const current = adventures.find(
+      (x) => +x.bookNumber === bookNumber && x.playerId === playerId
+    );
+    if (current) {
+      current.actionChart.currentEndurancePoints =
+        current.actionChart.currentEndurancePoints - damage;
     }
+  }
 
-    _save("adventures", adventures);
-  },
-  spendMoney: async (cost: number, bookNumber: number, playerId: string) => {
-    const adventures = _load<IAdventure[]>("adventures");
-    
-    if (adventures) {
-      const current = adventures.find(
-        (x) => +x.bookNumber === bookNumber && x.playerId === playerId
-      );
-      if (current) {
-        current.actionChart.beltPouch =
-          current.actionChart.beltPouch - cost;
-      }
-    }
-
-    _save("adventures", adventures);
-  } 
+  _save("adventures", adventures);
 };
 
-/**
- * Loads players from the API
- */
-export const getPlayers = async () => {
+const _spendMoney = async (
+  cost: number,
+  bookNumber: number,
+  playerId: string
+) => {
+  const adventures = _load<IAdventure[]>("adventures");
+
+  if (adventures) {
+    const current = adventures.find(
+      (x) => +x.bookNumber === bookNumber && x.playerId === playerId
+    );
+    if (current) {
+      current.actionChart.beltPouch = current.actionChart.beltPouch - cost;
+    }
+  }
+
+  _save("adventures", adventures);
+};
+
+const _removeEquipment = async (
+  equipment: IEquipment,
+  bookNumber: number,
+  playerId: string
+) => {
+  const adventures = _load<IAdventure[]>("adventures");
+
+  if (adventures) {
+    const current = adventures.find(
+      (x) => +x.bookNumber === bookNumber && x.playerId === playerId
+    );
+
+    if (current) {
+      current.actionChart.equipment = current.actionChart.equipment.filter(
+        (x) => x.id !== equipment.id
+      );
+    }
+  }
+
+  _save("adventures", adventures);
+};
+
+const _getPlayers = async () => {
   const current = _load<IPlayer[]>("players");
 
   return {
@@ -44,11 +69,11 @@ export const getPlayers = async () => {
   };
 };
 
-export const upsertPlayer = async (player: IPlayer) => {
+const _upsertPlayer = async (player: IPlayer) => {
   _upsert<IPlayer>("players", player, (a, b) => a.id === b.id);
 };
 
-export const getAdventures = async () => {
+const _getAdventures = async () => {
   const current = _load<IAdventure[]>("adventures");
 
   return {
@@ -56,7 +81,7 @@ export const getAdventures = async () => {
   };
 };
 
-export const deleteAdventure = async (adventure: IAdventure) => {
+const _deleteAdventure = async (adventure: IAdventure) => {
   const current = _load<IAdventure[]>("adventures");
   if (current) {
     const newAdventures = current.reduce((acc, curr) => {
@@ -74,7 +99,7 @@ export const deleteAdventure = async (adventure: IAdventure) => {
   }
 };
 
-export const upsertAdventure = async (adventure: IAdventure) => {
+const _upsertAdventure = async (adventure: IAdventure) => {
   _upsert<IAdventure>(
     "adventures",
     adventure,
@@ -109,4 +134,15 @@ const _load = <T>(key: string) => {
 
 const _save = (key: string, item: any) => {
   localStorage.setItem(key, JSON.stringify(item));
+};
+
+export const API = {
+  getPlayers: _getPlayers,
+  upsertPlayer: _upsertPlayer,
+  getAdventures: _getAdventures,
+  deleteAdventure: _deleteAdventure,
+  upsertAdventure: _upsertAdventure,
+  takeDamage: _takeDamage,
+  spendMoney: _spendMoney,
+  removeEquipment: _removeEquipment,
 };

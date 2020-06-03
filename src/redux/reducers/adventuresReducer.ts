@@ -54,6 +54,18 @@ const adventuresReducer = (state: IAdventure[] = [], action: LwActionTypes) => {
       }
 
       return state;
+
+    case "REMOVE_EQUIPMENT_SUCCESS":
+      if (current && current.actionChart) {
+        current.actionChart.equipment = current.actionChart.equipment.filter(
+          (x) => x.id !== action.payload.equipment.id
+        );
+
+        return Object.assign([], state, _reduce(state, action.payload));
+      }
+
+      return state;
+
     default:
       return state;
   }

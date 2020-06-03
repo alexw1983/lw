@@ -1,5 +1,5 @@
 import { IPlayer, ILwState } from "../types";
-import { getPlayers, upsertPlayer } from "../../data/api";
+import { API } from "../../data/api";
 import { LwActionTypes, LwThunkAction, LwTHunkDispatch } from "./actionTypes";
 
 export const toggleNewPlayerForm = (): LwActionTypes => {
@@ -16,7 +16,6 @@ export const requestSavePlayer = (): LwActionTypes => {
   };
 };
 
-
 export const savePlayerSuccess = (player: IPlayer): LwActionTypes => {
   return {
     type: "SAVE_PLAYER_SUCCESS",
@@ -29,7 +28,7 @@ export const savePlayer = (player: IPlayer): LwThunkAction => async (
 ) => {
   dispatch(requestSavePlayer());
 
-  upsertPlayer(player)
+  API.upsertPlayer(player)
     .then(
       (response) => response,
       (error) => {
@@ -61,7 +60,7 @@ export const fetchPlayers = (): LwThunkAction => async (
 ) => {
   dispatch(requestPlayers());
 
-  getPlayers()
+  API.getPlayers()
     .then(
       (response) => response.json,
       (error) => {

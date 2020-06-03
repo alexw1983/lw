@@ -1,11 +1,6 @@
-import { IAdventure, IPlayer, ILwState } from "../types";
+import { IAdventure, IPlayer, ILwState, IEquipment } from "../types";
 import { LwActionTypes, LwThunkAction, LwTHunkDispatch } from "./actionTypes";
-import {
-  upsertAdventure,
-  getAdventures,
-  deleteAdventure,
-  API,
-} from "../../data/api";
+import { API } from "../../data/api";
 
 export const saveAdventureSuccess = (adventure: IAdventure): LwActionTypes => {
   return {
@@ -26,7 +21,7 @@ export const saveAdventure = (adventure: IAdventure): LwThunkAction => async (
 ) => {
   dispatch(requestSaveAdventure());
 
-  upsertAdventure(adventure)
+  API.upsertAdventure(adventure)
     .then(
       (response) => response,
       (error) => handleError(error, [] as IPlayer[])
@@ -57,7 +52,7 @@ export const removeAdventure = (adventure: IAdventure): LwThunkAction => async (
 ) => {
   dispatch(requestRemoveAdventure());
 
-  deleteAdventure(adventure)
+  API.deleteAdventure(adventure)
     .then(
       (response) => response,
       (error) => handleError(error, [] as IPlayer[])
@@ -86,7 +81,7 @@ export const fetchAdventures = (): LwThunkAction => async (
 ) => {
   dispatch(requestAdventures());
 
-  getAdventures()
+  API.getAdventures()
     .then(
       (response) => response.json,
       (error) => handleError(error, [] as IAdventure[])
@@ -185,7 +180,44 @@ export const spendMoneySuccess = (
   };
 };
 
+export const removeEquipment = (
+  equipment: IEquipment,
+  bookNumber: number,
+  playerId: string
+): LwThunkAction => async (dispatch: LwTHunkDispatch) => {
+  dispatch(removeEquipmentRequest());
 
+  API.removeEquipment(equipment, bookNumber, playerId)
+    .then(
+      (response) => response,
+      (error) => handleError(error, [] as IAdventure[])
+    )
+    .then(() => {
+      dispatch(removeEquipmentSuccess(equipment, bookNumber, playerId));
+    });
+};
+
+export const removeEquipmentRequest = (): LwActionTypes => {
+  return {
+    type: "REMOVE_EQUIPMENT_REQUEST",
+    payload: {},
+  };
+};
+
+export const removeEquipmentSuccess = (
+  equipment: IEquipment,
+  bookNumber: number,
+  playerId: string
+): LwActionTypes => {
+  return {
+    type: "REMOVE_EQUIPMENT_SUCCESS",
+    payload: {
+      equipment: equipment,
+      bookNumber: bookNumber,
+      playerId: playerId,
+    },
+  };
+};
 
 const handleError = <T>(error: any, empty: T) => {
   console.log("An error occurred.", error);

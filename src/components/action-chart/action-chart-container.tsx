@@ -1,14 +1,16 @@
 import { connect } from "react-redux";
-import { ILwState, IAdventure } from "../../redux/types";
+import { ILwState, IAdventure, IEquipment } from "../../redux/types";
 import {
   selectAdventure,
   selectCurrentEndurancePoints,
   selectCurrentBeltPouch,
+  selectCurrentEquipment,
 } from "../../redux/selectors/adventures.selectors";
 import {
   saveAdventure,
   takeDamage,
   spendMoney,
+  removeEquipment,
 } from "../../redux/actions/adventures-action";
 import ActionChartView from "./action-chart-view";
 
@@ -26,6 +28,11 @@ const mapStateToProps = (state: ILwState, ownProps: any) => ({
     ownProps.playerId,
     ownProps.bookNumber
   ),
+  equipment: selectCurrentEquipment(
+    state,
+    ownProps.playerId,
+    ownProps.bookNumber
+  ),
 });
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
@@ -34,6 +41,8 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     dispatch(takeDamage(damage, ownProps.bookNumber, ownProps.playerId)),
   spendMoney: (cost: number) =>
     dispatch(spendMoney(cost, ownProps.bookNumber, ownProps.playerId)),
+  removeEquipment: (item: IEquipment) =>
+    dispatch(removeEquipment(item, ownProps.bookNumber, ownProps.playerId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActionChartView);

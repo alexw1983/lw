@@ -1,7 +1,16 @@
 import * as React from "react";
-import { IAdventure } from "../../redux/types";
-import { Container, Row, Col, Button, Card, Alert } from "react-bootstrap";
-import ActionChartList from "./action-chart-list-item";
+import { IAdventure, IEquipment } from "../../redux/types";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Card,
+  Alert,
+  ListGroup,
+  ListGroupItem,
+} from "react-bootstrap";
+import ActionChartList from "./action-chart-list";
 import CX from "classnames";
 import { Plus, Dash } from "react-bootstrap-icons";
 
@@ -11,9 +20,11 @@ interface Props {
   adventure: IAdventure;
   endurancePoints: number;
   beltPouch: number;
+  equipment: IEquipment[];
   saveAdventure: (adventure: IAdventure) => void;
   takeDamage: (damage: number) => void;
   spendMoney: (cost: number) => void;
+  removeEquipment: (item: IEquipment) => void;
 }
 
 const ActionChartView: React.FC<Props> = (props: Props) => {
@@ -91,18 +102,7 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
           </Col>
         </Row>
       )}
-      {/* <pre>{JSON.stringify(props, null, 2)}</pre> */}
-      {/* <Row>
-        <Col>
-          <Button
-            variant="outline-primary"
-            className="ml-1 mt-1"
-            onClick={() => props.takeDamage(5)}
-          >
-            Take Damage
-          </Button>
-        </Col>
-      </Row> */}
+
       <Row>
         <Col xs="12" sm="6">
           <Row>
@@ -122,18 +122,24 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
           </Row>
           <Row>
             <Col>
-              <ActionChartList
-                header={"Kai Disciplines"}
-                items={props.adventure.actionChart.disciplines.map(
-                  (d) =>
-                    `${d.name} ${
-                      d.id === "weapon-skill" &&
-                      props.adventure.actionChart.weaponSkill
-                        ? "(" + props.adventure.actionChart.weaponSkill + ")"
-                        : ""
-                    }`
+              <h5 className="mt-3">Kai Disciplines</h5>
+              <ListGroup>
+                {props.adventure.actionChart.disciplines.map(
+                  (discipline, idx) => {
+                    return (
+                      <ListGroupItem
+                        key={`action-chart-${discipline.id}-${idx}`}
+                      >
+                        {discipline.name}
+                        {discipline.id === "weapon-skill" &&
+                        props.adventure.actionChart.weaponSkill
+                          ? " (" + props.adventure.actionChart.weaponSkill + ")"
+                          : ""}
+                      </ListGroupItem>
+                    );
+                  }
                 )}
-              />
+              </ListGroup>
             </Col>
           </Row>
         </Col>
@@ -142,9 +148,8 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
             <Col>
               <ActionChartList
                 header={"Weapons"}
-                items={props.adventure.actionChart.equipment
-                  .filter((w) => w.type === "WEAPON")
-                  .map((x) => x.name)}
+                items={props.equipment.filter((w) => w.type === "WEAPON")}
+                onRemove={props.removeEquipment}
               />
             </Col>
           </Row>
@@ -153,9 +158,10 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
             <Col>
               <ActionChartList
                 header={"Backpack"}
-                items={props.adventure.actionChart.equipment
-                  .filter((w) => w.type === "BACKPACK_ITEM")
-                  .map((x) => x.name)}
+                items={props.equipment.filter(
+                  (w) => w.type === "BACKPACK_ITEM"
+                )}
+                onRemove={props.removeEquipment}
               />
             </Col>
           </Row>
@@ -163,9 +169,8 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
             <Col>
               <ActionChartList
                 header={"Special Items"}
-                items={props.adventure.actionChart.equipment
-                  .filter((w) => w.type === "SPECIAL_ITEM")
-                  .map((x) => x.name)}
+                items={props.equipment.filter((w) => w.type === "SPECIAL_ITEM")}
+                onRemove={props.removeEquipment}
               />
             </Col>
           </Row>

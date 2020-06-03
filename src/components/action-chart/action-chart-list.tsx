@@ -1,11 +1,12 @@
 import * as React from "react";
 import { ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
+import { IEquipment } from "../../redux/types";
 
 interface Props {
   header: string;
-  items: string[];
-  onRemove?: (item: string) => void;
+  items: IEquipment[];
+  onRemove?: (item: IEquipment) => void;
 }
 
 const ActionChartList: React.FC<Props> = (props) => {
@@ -15,14 +16,15 @@ const ActionChartList: React.FC<Props> = (props) => {
       <ListGroup>
         {props.items.map((item, idx) => {
           return (
-            <ListGroupItem key={`action-chart-${idx}`}>
-              {item}{" "}
-              {props.onRemove ? (
-                <Button onClick={() => props.onRemove(item)}>
+            <ListGroupItem key={`action-chart-${item.id}-${idx}`}>
+              {item.name}
+              {props.onRemove && (
+                <Button
+                  className="float-right"
+                  onClick={() => props.onRemove(item)}
+                >
                   <Trash />
                 </Button>
-              ) : (
-                <></>
               )}
             </ListGroupItem>
           );

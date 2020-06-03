@@ -26,6 +26,15 @@ export function selectCurrentBeltPouch(
     .beltPouch;
 }
 
+export function selectCurrentEquipment(
+  state: ILwState,
+  playerId: string,
+  bookNumber: number
+) {
+  return _getCurrentAdventure(state, playerId, bookNumber).actionChart
+    .equipment;
+}
+
 export function selectAdventuresForPlayer(state: ILwState, playerId: string) {
   return state.adventures.filter((x) => x.playerId === playerId);
 }
