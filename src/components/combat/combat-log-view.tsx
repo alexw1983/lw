@@ -7,6 +7,7 @@ import {
   Form,
   FormGroup,
   Table,
+  Alert,
 } from "react-bootstrap";
 import { IAdventure, IEnemy } from "../../redux/types";
 import { useFormik } from "formik";
@@ -27,9 +28,9 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
   const [rounds, setRounds] = useState([]);
   const [showRandom, setShowRandom] = useState(false);
 
-  const startingEndurancePoints = props.adventure
-    ? props.adventure.actionChart.currentEndurancePoints
-    : 0;
+  const enemyIsDead = enemy && enemy.currentEndurancePoints <= 0;
+  const loneWolfIsDead =
+    props.adventure && props.adventure.actionChart.currentEndurancePoints <= 0;
 
   const getLoneWolfCombatSkill = () => {
     return props.adventure.actionChart.combatSkill;
@@ -122,6 +123,15 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
             </Col>
           </Row>
 
+          <Row>
+            <Col>
+              {loneWolfIsDead && <Alert variant="danger">You lost!</Alert>}
+              {enemyIsDead && (
+                <Alert variant="success">Congratulations you win!</Alert>
+              )}
+            </Col>
+          </Row>
+
           <Table>
             <thead>
               <tr>
@@ -133,7 +143,7 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
             <tbody>
               <tr>
                 <td>0</td>
-                <td>{startingEndurancePoints}</td>
+                <td>{props.adventure.actionChart.currentEndurancePoints}</td>
                 <td>{enemy.endurancePoints}</td>
               </tr>
               {rounds.length > 0 &&
@@ -146,12 +156,13 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
                 ))}
             </tbody>
           </Table>
-
-          <Row>
-            <Col>
-              <Button onClick={() => setShowRandom(true)}>Next Round</Button>
-            </Col>
-          </Row>
+          {!enemyIsDead && !loneWolfIsDead && (
+            <Row>
+              <Col>
+                <Button onClick={() => setShowRandom(true)}>Next Round</Button>
+              </Col>
+            </Row>
+          )}
         </>
       )}
       <RandomNumberTable show={showRandom} onSelect={handleNextRound} />
