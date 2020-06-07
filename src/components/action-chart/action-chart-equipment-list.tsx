@@ -110,7 +110,7 @@ const ActionChartEquipmentList: React.FC<Props> = (props) => {
       <Row>
         <Col>
           <h5 className="mt-3 p-4">
-            {`${props.header} ${filtered.length}`}
+            {`${props.header} (${filtered.length})`}
             {!props.complete && props.onAdd && (
               <Button
                 disabled={filtered.length >= props.maxItems}

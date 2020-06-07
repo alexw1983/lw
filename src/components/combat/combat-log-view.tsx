@@ -1,20 +1,8 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Form,
-  FormGroup,
-  Table,
-  Alert,
-} from "react-bootstrap";
+import { Container, Row, Col, Button, Table, Alert } from "react-bootstrap";
 import { IAdventure, IEnemy } from "../../redux/types";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import SetUpCombatForm from "./set-up-combat-form";
 import { RandomNumberTable } from "../shared/random-number-table";
-import { takeDamage } from "../../redux/actions/adventures-action";
 import { getDamage } from "./combat.utils";
 
 interface Props {
@@ -64,6 +52,9 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
     setRounds((prevState) => [
       ...prevState,
       {
+        r: r,
+        eDmg: dmg.e,
+        lwDmg: dmg.lw,
         e: enemy.currentEndurancePoints - dmg.e,
         lw: props.adventure.actionChart.currentEndurancePoints - dmg.lw,
       },
@@ -136,6 +127,7 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
             <thead>
               <tr>
                 <th>Round</th>
+                <th>Random Number</th>
                 <th>Lone Wolf</th>
                 <th>Enemy</th>
               </tr>
@@ -143,6 +135,7 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
             <tbody>
               <tr>
                 <td>0</td>
+                <td>-</td>
                 <td>{props.adventure.actionChart.currentEndurancePoints}</td>
                 <td>{enemy.endurancePoints}</td>
               </tr>
@@ -150,8 +143,9 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
                 rounds.map((round, idx) => (
                   <tr key={`round_${idx}`}>
                     <td>{idx + 1}</td>
-                    <td>{round.lw}</td>
-                    <td>{round.e}</td>
+                    <td>{round.r}</td>
+                    <td>{`${round.lw} (-${round.lwDmg})`}</td>
+                    <td>{`${round.e} (-${round.eDmg})`}</td>
                   </tr>
                 ))}
             </tbody>
