@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { IAdventure, IActionChart } from "../../redux/types";
 import { getBookTitle } from "../../utils/book.utils";
-import { Button, Container, Row, Col } from "react-bootstrap";
+import { Button, Container, Row, Col, Card } from "react-bootstrap";
 import { NewAdventure } from "./new-adventure/new-adventure";
 import { ActionChart } from "../action-chart";
+import { RandomNumberTable } from "../shared/random-number-table";
 
 interface Props {
   adventure: IAdventure;
@@ -14,6 +15,8 @@ interface Props {
 
 const AdventureView = (props: Props) => {
   const [showNewAdventureForm, setShowNewAdventureForm] = useState(false);
+  const [showRandom, setShowRandom] = useState(false);
+  const [random, setRandom] = useState(undefined);
 
   const handleSaveActionChart = (actionChart: IActionChart) => {
     const newAdventure = Object.assign({}, props.adventure, {
@@ -100,6 +103,24 @@ const AdventureView = (props: Props) => {
                 >
                   Combat
                 </Button>
+              </Col>
+            </Row>
+            <hr />
+            <Row>
+              <Col>
+                <Button onClick={() => setShowRandom(true)} className="mb-3">
+                  Pick a number from the random number table
+                </Button>
+                <Card>
+                  <Card.Body>{random}</Card.Body>
+                </Card>
+                <RandomNumberTable
+                  show={showRandom}
+                  onSelect={(r) => {
+                    setShowRandom(false);
+                    setRandom(r);
+                  }}
+                />
               </Col>
             </Row>
             <hr />
