@@ -60,3 +60,11 @@ code {
 .random-cell:hover {
   background: grey;
 }
+
+.enemy-card {
+  cursor: pointer;
+}
+
+.enemy-card:hover {
+  background: grey;
+}
