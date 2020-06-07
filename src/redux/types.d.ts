@@ -46,6 +46,7 @@ export interface IActionChart {
   weaponSkill?: string | undefined;
   weaponMastery?: string | undefined;
   grandWeaponMastery?: string | undefined;
+  endurancePointsCalculation: string[];
 }
 
 export type ADVENTURE_STATUS = "COMPLETE" | "IN PROGRESS" | "NOT STARTED";

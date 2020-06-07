@@ -53,7 +53,9 @@ export const NewAdventure = (props: Props) => {
       equipment: equipmentQuestion.equipment,
       disciplines: disciplinesQuestion.disciplines,
       weaponSkill: disciplinesQuestion.weaponSkill,
-    };
+      endurancePointsCalculation: [],
+    } as IActionChart;
+    
     props.saveActionChart(actionChart);
   };
 

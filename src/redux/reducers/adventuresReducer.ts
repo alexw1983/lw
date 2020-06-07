@@ -40,10 +40,7 @@ const adventuresReducer = (state: IAdventure[] = [], action: LwActionTypes) => {
       return [...state, action.payload];
 
     case "TAKE_DAMAGE_SUCCESS":
-      console.log("GOT HERE 0", action.payload);
-      console.log("GOT HERE 1", current);
       if (current && current.actionChart) {
-        console.log("GOT HERE 2");
         current.actionChart.currentEndurancePoints -= action.payload.damage;
 
         return Object.assign([], state, _reduce(state, action.payload));
@@ -67,6 +64,18 @@ const adventuresReducer = (state: IAdventure[] = [], action: LwActionTypes) => {
           (x) => x.id !== action.payload.equipment.id
         );
 
+        if (action.payload.equipment.endurancePointsBonus) {
+          current.actionChart.currentEndurancePoints =
+            current.actionChart.currentEndurancePoints -
+            action.payload.equipment.endurancePointsBonus;
+
+          if (current.actionChart.endurancePointsCalculation) {
+            current.actionChart.endurancePointsCalculation = current.actionChart.endurancePointsCalculation.filter(
+              (x) => !x.includes(action.payload.equipment.name)
+            );
+          }
+        }
+
         return Object.assign([], state, _reduce(state, action.payload));
       }
 
@@ -78,6 +87,20 @@ const adventuresReducer = (state: IAdventure[] = [], action: LwActionTypes) => {
           ...current.actionChart.equipment,
           action.payload.equipment,
         ];
+
+        if (action.payload.equipment.endurancePointsBonus) {
+          current.actionChart.currentEndurancePoints =
+            current.actionChart.currentEndurancePoints +
+            action.payload.equipment.endurancePointsBonus;
+
+          if (!current.actionChart.endurancePointsCalculation) {
+            current.actionChart.endurancePointsCalculation = [];
+          }
+
+          current.actionChart.endurancePointsCalculation.push(
+            `${action.payload.equipment.name} (+${action.payload.equipment.endurancePointsBonus})`
+          );
+        }
 
         return Object.assign([], state, _reduce(state, action.payload));
       }

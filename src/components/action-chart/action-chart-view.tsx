@@ -13,6 +13,7 @@ import {
 import ActionChartEquipmentList from "./action-chart-equipment-list";
 import CX from "classnames";
 import { Plus, Dash } from "react-bootstrap-icons";
+import { getEquipmentBonus } from "../combat/combat.utils";
 
 interface Props {
   playerId: string;
@@ -33,8 +34,20 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
   const complete = props.adventure.status === "COMPLETE";
 
   const renderEndurancePoints = () => {
+    const equipmentBonus = props.adventure.actionChart.equipment.reduce(
+      (acc, curr) => {
+        if (curr.endurancePointsBonus) {
+          return acc + curr.endurancePointsBonus;
+        }
+
+        return acc;
+      },
+      0
+    );
+
     const different =
-      props.adventure.actionChart.endurancePoints !== props.endurancePoints;
+      props.endurancePoints <
+      props.adventure.actionChart.endurancePoints + equipmentBonus;
 
     return (
       <Card className="mt-3 mb-3">
@@ -46,11 +59,16 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
                 lineThrough: different,
               })}
             >
-              {props.adventure.actionChart.endurancePoints}
+              {props.adventure.actionChart.endurancePoints + equipmentBonus}
             </span>
             <br />
             {different && <span>{props.endurancePoints}</span>}
           </Card.Text>
+          {props.adventure.actionChart.endurancePointsCalculation &&
+            props.adventure.actionChart.endurancePointsCalculation.length > 0 &&
+            props.adventure.actionChart.endurancePointsCalculation.map(
+              (log, idx) => <p key={`ep_log_${idx}`}>{log}</p>
+            )}
           {!dead && !complete && (
             <>
               <Button disabled={dead} onClick={() => props.takeDamage(1)}>
@@ -103,6 +121,27 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const renderDisciplines = () => {
+    return (
+      <>
+        <h5 className="mt-3">Kai Disciplines</h5>
+        <ListGroup>
+          {props.adventure.actionChart.disciplines.map((discipline, idx) => {
+            return (
+              <ListGroupItem key={`action-chart-${discipline.id}-${idx}`}>
+                {discipline.name}
+                {discipline.id === "weapon-skill" &&
+                props.adventure.actionChart.weaponSkill
+                  ? " (" + props.adventure.actionChart.weaponSkill + ")"
+                  : ""}
+              </ListGroupItem>
+            );
+          })}
+        </ListGroup>
+      </>
+    );
+  };
+
   return (
     <Container>
       {dead && (
@@ -131,26 +170,7 @@ const ActionChartView: React.FC<Props> = (props: Props) => {
             </Col>
           </Row>
           <Row>
-            <Col>
-              <h5 className="mt-3">Kai Disciplines</h5>
-              <ListGroup>
-                {props.adventure.actionChart.disciplines.map(
-                  (discipline, idx) => {
-                    return (
-                      <ListGroupItem
-                        key={`action-chart-${discipline.id}-${idx}`}
-                      >
-                        {discipline.name}
-                        {discipline.id === "weapon-skill" &&
-                        props.adventure.actionChart.weaponSkill
-                          ? " (" + props.adventure.actionChart.weaponSkill + ")"
-                          : ""}
-                      </ListGroupItem>
-                    );
-                  }
-                )}
-              </ListGroup>
-            </Col>
+            <Col>{renderDisciplines()}</Col>
           </Row>
         </Col>
 

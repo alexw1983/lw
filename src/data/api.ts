@@ -53,6 +53,18 @@ const _removeEquipment = async (
         (x) => x.id !== equipment.id
       );
 
+      if (equipment.endurancePointsBonus) {
+        current.actionChart.currentEndurancePoints =
+          current.actionChart.currentEndurancePoints -
+          equipment.endurancePointsBonus;
+
+        if (current.actionChart.endurancePointsCalculation) {
+          current.actionChart.endurancePointsCalculation = current.actionChart.endurancePointsCalculation.filter(
+            (x) => !x.includes(equipment.name)
+          );
+        }
+      }
+
       _upsertAdventure(current);
     }
   }
@@ -72,6 +84,20 @@ const _addEquipment = async (
 
     if (current) {
       current.actionChart.equipment.push(equipment);
+
+      if (equipment.endurancePointsBonus) {
+        current.actionChart.currentEndurancePoints =
+          current.actionChart.currentEndurancePoints +
+          equipment.endurancePointsBonus;
+
+        if (!current.actionChart.endurancePointsCalculation) {
+          current.actionChart.endurancePointsCalculation = [];
+        }
+
+        current.actionChart.endurancePointsCalculation.push(
+          `${equipment.name} (+${equipment.endurancePointsBonus})`
+        );
+      }
     }
 
     _upsertAdventure(current);

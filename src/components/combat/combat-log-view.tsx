@@ -118,7 +118,15 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
             <tr>
               <td>0</td>
               <td>-</td>
-              <td>{props.adventure.actionChart.currentEndurancePoints}</td>
+              <td>
+                {props.adventure.actionChart.currentEndurancePoints}{" "}
+                {props.adventure.actionChart.endurancePointsCalculation &&
+                  props.adventure.actionChart.endurancePointsCalculation
+                    .length > 0 &&
+                  props.adventure.actionChart.endurancePointsCalculation.map(
+                    (log, idx) => <p key={`ep_log_${idx}`}>{log}</p>
+                  )}
+              </td>
               <td>{enemy.endurancePoints}</td>
             </tr>
             {rounds.length > 0 &&

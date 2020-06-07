@@ -76,53 +76,55 @@ const AdventureView = (props: Props) => {
       case "IN PROGRESS":
         return (
           <>
-            <h2>Action Chart</h2>
-            <hr />
-            <Row>
-              <Col>
-                <Button
-                  onClick={() => handleCompleteAdventure()}
-                  className="ml-1 mt-1"
-                >
-                  Complete
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  onClick={() => setShowNewAdventureForm(true)}
-                  className="ml-1 mt-1"
-                >
-                  Reset
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  variant="outline-primary"
-                  className="ml-1 mt-1"
-                  href={`/player/${props.adventure.playerId}/adventure/${props.adventure.bookNumber}/combat`}
-                >
-                  Combat
-                </Button>
-              </Col>
-            </Row>
-            <hr />
-            <Row>
-              <Col>
-                <Button onClick={() => setShowRandom(true)} className="mb-3">
-                  Pick a number from the random number table
-                </Button>
-                <Card>
-                  <Card.Body>{random}</Card.Body>
-                </Card>
-                <RandomNumberTable
-                  show={showRandom}
-                  onSelect={(r) => {
-                    setShowRandom(false);
-                    setRandom(r);
-                  }}
-                />
-              </Col>
-            </Row>
+            <Container>
+              <h2>Action Chart</h2>
+              <hr />
+              <Row>
+                <Col>
+                  <Button
+                    onClick={() => handleCompleteAdventure()}
+                    className="ml-1 mt-1"
+                  >
+                    Complete
+                  </Button>
+                </Col>
+                <Col>
+                  <Button
+                    onClick={() => setShowNewAdventureForm(true)}
+                    className="ml-1 mt-1"
+                  >
+                    Reset
+                  </Button>
+                </Col>
+                <Col>
+                  <Button
+                    variant="outline-primary"
+                    className="ml-1 mt-1"
+                    href={`/player/${props.adventure.playerId}/adventure/${props.adventure.bookNumber}/combat`}
+                  >
+                    Combat
+                  </Button>
+                </Col>
+              </Row>
+              <hr />
+              <Row>
+                <Col>
+                  <Button onClick={() => setShowRandom(true)} className="mb-3">
+                    Pick a number from the random number table
+                  </Button>
+                  <Card>
+                    <Card.Body>{random}</Card.Body>
+                  </Card>
+                  <RandomNumberTable
+                    show={showRandom}
+                    onSelect={(r) => {
+                      setShowRandom(false);
+                      setRandom(r);
+                    }}
+                  />
+                </Col>
+              </Row>
+            </Container>
             <hr />
             <ActionChart
               playerId={props.adventure.playerId}
