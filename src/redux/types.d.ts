@@ -73,3 +73,9 @@ export interface IEnemy {
   undead: boolean;
   evadeAfter: number | undefined;
 }
+
+export interface ICombatConfig {
+  useMindBlast: boolean;
+  usePsiSurge: boolean;
+  useKaiSurge: boolean;
+}

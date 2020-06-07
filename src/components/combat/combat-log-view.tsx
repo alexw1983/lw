@@ -7,11 +7,12 @@ import {
   Table,
   Alert,
   Card,
+  Form,
 } from "react-bootstrap";
-import { IAdventure, IEnemy } from "../../redux/types";
+import { IAdventure, IEnemy, ICombatConfig } from "../../redux/types";
 import SetUpCombatForm from "./set-up-combat-form";
 import { RandomNumberTable } from "../shared/random-number-table";
-import { getDamage } from "./combat.utils";
+import { getDamage, calculateLoneWolfCombatSkill } from "./combat.utils";
 import { Enemies } from "../../data/enemies";
 
 interface Props {
@@ -24,17 +25,25 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
   const [enemy, setEnemy] = useState(undefined as IEnemy);
   const [rounds, setRounds] = useState([]);
   const [showRandom, setShowRandom] = useState(false);
-
+  const [config, setConfig] = useState({
+    useMindBlast: false,
+    usePsiSurge: false,
+    useKaiSurge: false,
+  } as ICombatConfig);
   const enemyIsDead = enemy && enemy.currentEndurancePoints <= 0;
   const loneWolfIsDead =
     props.adventure && props.adventure.actionChart.currentEndurancePoints <= 0;
 
   const getLoneWolfCombatSkill = () => {
-    return props.adventure.actionChart.combatSkill;
+    return calculateLoneWolfCombatSkill(
+      props.adventure.actionChart,
+      enemy,
+      config
+    );
   };
 
   const getCombatRatio = () => {
-    return getLoneWolfCombatSkill() - enemy.combatSkill;
+    return getLoneWolfCombatSkill().combatSKill - enemy.combatSkill;
   };
 
   const damageEnemy = (damage: number) => {
@@ -95,33 +104,42 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
 
   const renderRounds = () => {
     return (
-      <Table>
-        <thead>
-          <tr>
-            <th>Round</th>
-            <th>Random Number</th>
-            <th>Lone Wolf</th>
-            <th>Enemy</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>0</td>
-            <td>-</td>
-            <td>{props.adventure.actionChart.currentEndurancePoints}</td>
-            <td>{enemy.endurancePoints}</td>
-          </tr>
-          {rounds.length > 0 &&
-            rounds.map((round, idx) => (
-              <tr key={`round_${idx}`}>
-                <td>{idx + 1}</td>
-                <td>{round.r}</td>
-                <td>{`${round.lw} (-${round.lwDmg})`}</td>
-                <td>{`${round.e} (-${round.eDmg})`}</td>
-              </tr>
-            ))}
-        </tbody>
-      </Table>
+      <>
+        <Table>
+          <thead>
+            <tr>
+              <th>Round</th>
+              <th>Random Number</th>
+              <th>Lone Wolf</th>
+              <th>Enemy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0</td>
+              <td>-</td>
+              <td>{props.adventure.actionChart.currentEndurancePoints}</td>
+              <td>{enemy.endurancePoints}</td>
+            </tr>
+            {rounds.length > 0 &&
+              rounds.map((round, idx) => (
+                <tr key={`round_${idx}`}>
+                  <td>{idx + 1}</td>
+                  <td>{round.r}</td>
+                  <td>{`${round.lw} (-${round.lwDmg})`}</td>
+                  <td>{`${round.e} (-${round.eDmg})`}</td>
+                </tr>
+              ))}
+          </tbody>
+        </Table>
+        {!enemyIsDead && !loneWolfIsDead && (
+          <Row>
+            <Col>
+              <Button onClick={() => setShowRandom(true)}>Next Round</Button>
+            </Col>
+          </Row>
+        )}
+      </>
     );
   };
 
@@ -137,7 +155,24 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
         </thead>
         <tbody>
           <tr>
-            <td>{getLoneWolfCombatSkill()}</td>
+            <td>
+              <p>
+                {
+                  calculateLoneWolfCombatSkill(
+                    props.adventure.actionChart,
+                    enemy,
+                    config
+                  ).combatSKill
+                }
+              </p>
+              {calculateLoneWolfCombatSkill(
+                props.adventure.actionChart,
+                enemy,
+                config
+              ).calcualtion.map((log, idx) => (
+                <p key={`log_${idx}`}>{log}</p>
+              ))}
+            </td>
             <td>{getCombatRatio()}</td>
             <td>{enemy.combatSkill}</td>
           </tr>
@@ -177,6 +212,58 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const renderConfig = () => {
+    return (
+      <>
+        {props.adventure &&
+          props.adventure.actionChart.disciplines.find(
+            (x) => x.id === "mind-blast"
+          ) && (
+            <Form.Check
+              label="Use Mindblast"
+              checked={config.useMindBlast}
+              onChange={() =>
+                setConfig((prevState) => ({
+                  ...prevState,
+                  useMindBlast: !prevState.useMindBlast,
+                }))
+              }
+            />
+          )}
+        {props.adventure &&
+          props.adventure.actionChart.disciplines.find(
+            (x) => x.id === "psi-surge"
+          ) && (
+            <Form.Check
+              label="Use Psi Surge"
+              checked={config.usePsiSurge}
+              onChange={() =>
+                setConfig((prevState) => ({
+                  ...prevState,
+                  useMindBlast: !prevState.usePsiSurge,
+                }))
+              }
+            />
+          )}
+        {props.adventure &&
+          props.adventure.actionChart.disciplines.find(
+            (x) => x.id === "kai-surge"
+          ) && (
+            <Form.Check
+              label="Use Kai Surge"
+              checked={config.useKaiSurge}
+              onChange={() =>
+                setConfig((prevState) => ({
+                  ...prevState,
+                  useMindBlast: !prevState.useKaiSurge,
+                }))
+              }
+            />
+          )}
+      </>
+    );
+  };
+
   return (
     <Container>
       {renderHeader()}
@@ -185,12 +272,18 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
         <Col>{renderActionRow()}</Col>
       </Row>
       <hr />
+      <Row>
+        <Col>{renderConfig()}</Col>
+      </Row>
+      <hr />
       {!enemy && (
         <Row>
-          <Col>
+          <Col xs={12} className="mb-3">
+            {renderPreSelected()}
+          </Col>
+          <Col xs={12}>
             <SetUpCombatForm saveEnemy={(enemy) => setEnemy(enemy)} />
           </Col>
-          <Col>{renderPreSelected()}</Col>
         </Row>
       )}
       {enemy && (
@@ -198,13 +291,6 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
           {renderRatioTable()}
           {renderAlert()}
           {renderRounds()}
-          {!enemyIsDead && !loneWolfIsDead && (
-            <Row>
-              <Col>
-                <Button onClick={() => setShowRandom(true)}>Next Round</Button>
-              </Col>
-            </Row>
-          )}
         </>
       )}
       <RandomNumberTable show={showRandom} onSelect={handleNextRound} />

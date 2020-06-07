@@ -1,3 +1,11 @@
+import {
+  IActionChart,
+  IEnemy,
+  ICombatConfig,
+  IEquipment,
+} from "../../redux/types";
+import { act } from "@testing-library/react";
+
 export const getDamage = (
   random: number,
   ratio: number,
@@ -180,29 +188,133 @@ export const getDamage = (
 
   if (ratio <= -11) {
     return DAMAGE[0][random];
-  } else if (ratio == -10 || ratio == -9) {
+  } else if (ratio === -10 || ratio === -9) {
     return DAMAGE[1][random];
-  } else if (ratio == -8 || ratio == -7) {
+  } else if (ratio === -8 || ratio === -7) {
     return DAMAGE[2][random];
-  } else if (ratio == -6 || ratio == -5) {
+  } else if (ratio === -6 || ratio === -5) {
     return DAMAGE[3][random];
-  } else if (ratio == -4 || ratio == -3) {
+  } else if (ratio === -4 || ratio === -3) {
     return DAMAGE[4][random];
-  } else if (ratio == -2 || ratio == -1) {
+  } else if (ratio === -2 || ratio === -1) {
     return DAMAGE[5][random];
-  } else if (ratio == 0) {
+  } else if (ratio === 0) {
     return DAMAGE[6][random];
-  } else if (ratio == 1 || ratio == 2) {
+  } else if (ratio === 1 || ratio === 2) {
     return DAMAGE[7][random];
-  } else if (ratio == 3 || ratio == 4) {
+  } else if (ratio === 3 || ratio === 4) {
     return DAMAGE[8][random];
-  } else if (ratio == 5 || ratio == 6) {
+  } else if (ratio === 5 || ratio === 6) {
     return DAMAGE[9][random];
-  } else if (ratio == 7 || ratio == 8) {
+  } else if (ratio === 7 || ratio === 8) {
     return DAMAGE[10][random];
-  } else if (ratio == 9 || ratio == 10) {
+  } else if (ratio === 9 || ratio === 10) {
     return DAMAGE[11][random];
   } else if (ratio >= 11) {
     return DAMAGE[12][random];
   }
+};
+
+export const calculateLoneWolfCombatSkill = (
+  actionChart: IActionChart,
+  enemy: IEnemy,
+  config: ICombatConfig
+) => {
+  let log = [] as string[];
+
+  const bonus = getDisciplinesBonus(actionChart, enemy, config, log);
+
+  console.log("LOG", {
+    calcualtion: log,
+    combatSKill: bonus,
+  });
+
+  return { calcualtion: log, combatSKill: actionChart.combatSkill + bonus };
+};
+
+const getDisciplinesBonus = (
+  actionChart: IActionChart,
+  enemy: IEnemy,
+  config: ICombatConfig,
+  log: string[]
+) => {
+  let bonus = 0;
+  const hasGrandWeaponMastery = hasDiscipline(
+    "grand-weapon-mastery",
+    actionChart
+  );
+  const hasWeaponMastery = hasDiscipline("weapon-mastery", actionChart);
+  const hasWeaponSkill = hasDiscipline("weapon-skill", actionChart);
+  const hasMindBlast = hasDiscipline("mind-blast", actionChart);
+  const hasPsiSurge = hasDiscipline("psi-surge", actionChart);
+  const hasKaiSurge = hasDiscipline("kai-surge", actionChart);
+
+  const hasGrandWeaponMasteryWeapon = hasWeaponSkil(
+    actionChart.grandWeaponMastery,
+    actionChart.equipment
+  );
+  const hasWeaponMasteryWeapon = hasWeaponSkil(
+    actionChart.weaponMastery,
+    actionChart.equipment
+  );
+  const hasWeaponSkillWeapon = hasWeaponSkil(
+    actionChart.weaponSkill,
+    actionChart.equipment
+  );
+
+  const grandMasterRank = actionChart.disciplines.filter(
+    (x) => x.type === "GRAND_MASTER"
+  ).length;
+  const magnakaiRank = actionChart.disciplines.filter(
+    (x) => x.type === "MAGNAKAI"
+  ).length;
+
+  if (hasGrandWeaponMastery && hasGrandWeaponMasteryWeapon) {
+    bonus = bonus + 5;
+    log.push("Grand Weapon Matery (+5)");
+  } else if (hasWeaponMastery && hasWeaponMasteryWeapon) {
+    bonus = magnakaiRank >= 8 ? bonus + 4 : bonus + 3;
+    log.push("Weapon Matery (+3)");
+  } else if (hasWeaponSkill && hasWeaponSkillWeapon) {
+    bonus = bonus + 2;
+    log.push("Weapon Skill (+2)");
+  }
+
+  if (hasKaiSurge && config.useKaiSurge) {
+    bonus = bonus + 8;
+    log.push("Kai Surge (+8)");
+  } else if (hasKaiSurge && config.useMindBlast && !enemy.immuneToMindblast) {
+    bonus = bonus + 4;
+    log.push("Mindblast (+4)");
+  } else if (hasPsiSurge && config.usePsiSurge) {
+    bonus = magnakaiRank >= 9 ? bonus + 6 : bonus + 4;
+    log.push("Psi Surge (+4)");
+  } else if (hasPsiSurge && config.useMindBlast && !enemy.immuneToMindblast) {
+    bonus = magnakaiRank >= 9 ? bonus + 3 : bonus + 2;
+    log.push("Mindblast (+2)");
+  } else if (hasMindBlast && config.useMindBlast && !enemy.immuneToMindblast) {
+    bonus = bonus + 2;
+    log.push("Mindblast (+2)");
+  }
+
+  return bonus;
+};
+
+export const hasDiscipline = (id: string, actionChart: IActionChart) => {
+  return !!actionChart.disciplines.find((x) => x.id === id);
+};
+
+export const hasWeaponSkil = (
+  weaponSkill: string | undefined,
+  equipment: IEquipment[]
+) => {
+  return (
+    weaponSkill &&
+    !!equipment.find(
+      (x) =>
+        (x.type === "WEAPON" &&
+          x.name.toLowerCase() === weaponSkill.toLowerCase()) ||
+        (x.name === "Summerswerd" && weaponSkill.toLowerCase() === "sword")
+    )
+  );
 };

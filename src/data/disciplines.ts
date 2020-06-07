@@ -125,3 +125,78 @@ export const MagnaKaiDisciplines = [
     description: "",
   } as IDiscipline,
 ] as IDiscipline[];
+
+export const GrandMasterDisciplines = [
+  {
+    id: "grand-weapon-mastery",
+    name: "Grand Weapon Mastery",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "animal-mastery",
+    name: "Animal Mastery",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "deliverance",
+    name: "Deliverance (advanced Curing)",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "assimilance",
+    name: "Assimilance (advanced Invisibility)",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "grand-huntmastery",
+    name: "Grand Huntmastery",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "grand-pathsmanship",
+    name: "Grand Pathsmanship",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "kai-surge",
+    name: "Kai Surge",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "kai-screen",
+    name: "Kai Screen",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "grand-nexus",
+    name: "Grand Nexus",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "telegnosis",
+    name: "Telegnosis (advanced Divination)",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "magi-magic",
+    name: "Magi Magic",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+  {
+    id: "kai-alchemy",
+    name: "Kai Alchemy",
+    type: "GRAND_MASTER",
+    description: "",
+  } as IDiscipline,
+] as IDiscipline[];

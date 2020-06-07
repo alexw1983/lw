@@ -54,25 +54,25 @@ export const buildPreviousDisciplines = (
 export const getRandomWeapon = (r: number) => {
   switch (r) {
     case 0:
-      return Weapons.Dagger.id;
+      return Weapons.Dagger.name;
     case 1:
-      return Weapons.Spear.id;
+      return Weapons.Spear.name;
     case 2:
-      return Weapons.Mace.id;
+      return Weapons.Mace.name;
     case 3:
-      return Weapons.ShortSword.id;
+      return Weapons.ShortSword.name;
     case 4:
-      return Weapons.Warhammer.id;
+      return Weapons.Warhammer.name;
     case 5:
-      return Weapons.Sword.id;
+      return Weapons.Sword.name;
     case 6:
-      return Weapons.Axe.id;
+      return Weapons.Axe.name;
     case 7:
-      return Weapons.Sword.id;
+      return Weapons.Sword.name;
     case 8:
-      return Weapons.QuarterStaff.id;
+      return Weapons.QuarterStaff.name;
     case 9:
-      return Weapons.Broadsword.id;
+      return Weapons.Broadsword.name;
     default:
       return "";
   }

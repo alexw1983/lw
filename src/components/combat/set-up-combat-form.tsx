@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
-import { IAdventure, IEnemy } from "../../redux/types";
+import React from "react";
+import { Button, Form } from "react-bootstrap";
+import { IEnemy } from "../../redux/types";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
