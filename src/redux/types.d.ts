@@ -1,3 +1,5 @@
+import { number } from "yup";
+
 export type KaiDiscipineId =
   | "camouflage"
   | "hunting"
@@ -28,6 +30,9 @@ interface IEquipment {
   id: string;
   type: "WEAPON" | "SPECIAL_ITEM" | "BACKPACK_ITEM";
   name: string;
+  combatSkillBonus?: number;
+  combatSkillBonusVsUndead?: number;
+  endurancePointsBonus?: number;
   description?: string;
 }
 

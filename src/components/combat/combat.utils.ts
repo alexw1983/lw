@@ -222,17 +222,16 @@ export const calculateLoneWolfCombatSkill = (
 ) => {
   let log = [] as string[];
 
-  const bonus = getDisciplinesBonus(actionChart, enemy, config, log);
+  const disciplinesBonus = getDisciplinesBonus(actionChart, enemy, config, log);
+  const equipmentBonus = getEquipmentBonus(actionChart, enemy, config, log);
 
-  console.log("LOG", {
+  return {
     calcualtion: log,
-    combatSKill: bonus,
-  });
-
-  return { calcualtion: log, combatSKill: actionChart.combatSkill + bonus };
+    combatSKill: actionChart.combatSkill + equipmentBonus + disciplinesBonus,
+  };
 };
 
-const getDisciplinesBonus = (
+export const getDisciplinesBonus = (
   actionChart: IActionChart,
   enemy: IEnemy,
   config: ICombatConfig,
@@ -317,4 +316,27 @@ export const hasWeaponSkil = (
         (x.name === "Summerswerd" && weaponSkill.toLowerCase() === "sword")
     )
   );
+};
+
+export const getEquipmentBonus = (
+  actionChart: IActionChart,
+  enemy: IEnemy,
+  config: ICombatConfig,
+  log: string[]
+) => {
+  return actionChart.equipment.reduce((acc, curr) => {
+    let bonus = acc;
+
+    if (curr.combatSkillBonus) {
+      bonus = bonus + curr.combatSkillBonus;
+      log.push(`${curr.name} (+${curr.combatSkillBonus})`);
+    }
+
+    if (curr.combatSkillBonusVsUndead && enemy.undead) {
+      bonus = bonus + curr.combatSkillBonusVsUndead;
+      log.push(`${curr.name} vs undead (+${curr.combatSkillBonusVsUndead})`);
+    }
+
+    return bonus;
+  }, 0);
 };

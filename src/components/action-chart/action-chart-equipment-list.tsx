@@ -42,6 +42,9 @@ const ActionChartEquipmentList: React.FC<Props> = (props) => {
     initialValues: {
       name: "",
       description: "",
+      combatSkillBonus: 0,
+      combatSkillBonusVsUndead: 0,
+      endurancePointsBonus: 0,
     },
     validationSchema,
     onSubmit: (values) => {
@@ -50,6 +53,9 @@ const ActionChartEquipmentList: React.FC<Props> = (props) => {
         name: values.name,
         type: props.equipmentType,
         description: values.description,
+        combatSkillBonus: values.combatSkillBonus,
+        combatSkillBonusVsUndead: values.combatSkillBonusVsUndead,
+        endurancePointsBonus: values.endurancePointsBonus,
       } as IEquipment);
       handleClose();
     },
@@ -87,6 +93,45 @@ const ActionChartEquipmentList: React.FC<Props> = (props) => {
               />
               <Form.Control.Feedback type="invalid">
                 {formik.errors.description}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="combatSkillBonus">
+              <Form.Label>Combat Skill Bonus</Form.Label>
+              <Form.Control
+                type="number"
+                name="combatSkillBonus"
+                onChange={formik.handleChange}
+                isInvalid={!!formik.errors.combatSkillBonus}
+                value={formik.values.combatSkillBonus}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.combatSkillBonus}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="combatSkillBonusVsUndead">
+              <Form.Label>Combat Skill Bonus Vs Undead</Form.Label>
+              <Form.Control
+                type="number"
+                name="combatSkillBonusVsUndead"
+                onChange={formik.handleChange}
+                isInvalid={!!formik.errors.combatSkillBonusVsUndead}
+                value={formik.values.combatSkillBonusVsUndead}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.combatSkillBonusVsUndead}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="endurancePointsBonus">
+              <Form.Label>Endurance Points Bonus</Form.Label>
+              <Form.Control
+                type="number"
+                name="endurancePointsBonus"
+                onChange={formik.handleChange}
+                isInvalid={!!formik.errors.endurancePointsBonus}
+                value={formik.values.endurancePointsBonus}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.endurancePointsBonus}
               </Form.Control.Feedback>
             </Form.Group>
           </Modal.Body>
