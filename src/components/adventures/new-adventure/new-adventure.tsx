@@ -45,17 +45,27 @@ export const NewAdventure = (props: Props) => {
   };
 
   const handleSave = () => {
+    const calculationLog = [];
+    const equipmentBonus = equipmentQuestion.equipment.reduce((acc, curr) => {
+      if (curr.endurancePointsBonus) {
+        calculationLog.push(`${curr.name} (+${curr.endurancePointsBonus})`);
+        return acc + curr.endurancePointsBonus;
+      }
+
+      return acc;
+    }, 0);
+
     const actionChart = {
       combatSkill: statsQuestion.combatSkill,
       endurancePoints: statsQuestion.endurancePoints,
-      currentEndurancePoints: statsQuestion.endurancePoints,
+      currentEndurancePoints: statsQuestion.endurancePoints + equipmentBonus,
       beltPouch: goldQuestion.gold,
       equipment: equipmentQuestion.equipment,
       disciplines: disciplinesQuestion.disciplines,
       weaponSkill: disciplinesQuestion.weaponSkill,
-      endurancePointsCalculation: [],
+      endurancePointsCalculation: calculationLog,
     } as IActionChart;
-    
+
     props.saveActionChart(actionChart);
   };
 
