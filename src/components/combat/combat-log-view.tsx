@@ -30,9 +30,13 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
     usePsiSurge: false,
     useKaiSurge: false,
   } as ICombatConfig);
+
   const enemyIsDead = enemy && enemy.currentEndurancePoints <= 0;
   const loneWolfIsDead =
     props.adventure && props.adventure.actionChart.currentEndurancePoints <= 0;
+  const magnakaiRank = props.adventure.actionChart.disciplines.filter(
+    (x) => x.type === "MAGNAKAI"
+  ).length;
 
   const getLoneWolfCombatSkill = () => {
     return calculateLoneWolfCombatSkill(
@@ -67,18 +71,26 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
       enemy.currentEndurancePoints
     );
 
+    const lwDmg = config.useKaiSurge
+      ? dmg.lw + 1
+      : config.usePsiSurge
+      ? magnakaiRank >= 9
+        ? dmg.lw + 1
+        : dmg.lw + 2
+      : dmg.lw;
+
     setRounds((prevState) => [
       ...prevState,
       {
         r: r,
         eDmg: dmg.e,
-        lwDmg: dmg.lw,
+        lwDmg: lwDmg,
         e: enemy.currentEndurancePoints - dmg.e,
-        lw: props.adventure.actionChart.currentEndurancePoints - dmg.lw,
+        lw: props.adventure.actionChart.currentEndurancePoints - lwDmg,
       },
     ]);
 
-    dealDamage(dmg.e, dmg.lw);
+    dealDamage(dmg.e, lwDmg);
 
     setShowRandom(false);
   };
@@ -241,7 +253,10 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
         {props.adventure &&
           props.adventure.actionChart.disciplines.find(
             (x) => x.id === "psi-surge"
-          ) && (
+          ) &&
+          (props.adventure.actionChart.currentEndurancePoints > 6 ||
+            (magnakaiRank >= 9 &&
+              props.adventure.actionChart.currentEndurancePoints > 4)) && (
             <Form.Check
               label="Use Psi Surge"
               checked={config.usePsiSurge}
