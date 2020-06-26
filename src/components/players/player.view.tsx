@@ -15,6 +15,7 @@ import { Form, Button } from "react-bootstrap";
 import * as Yup from "yup";
 import { Trash, Play } from "react-bootstrap-icons";
 import { getBookTitle, getBooks } from "../../utils/book.utils";
+import PlayerProgress from "./player-progress";
 
 interface Props {
   player: IPlayer;
@@ -29,10 +30,6 @@ interface IFormValues {
 }
 
 const PlayerView: React.FC<Props> = (props: Props) => {
-  const [show, setShow] = useState(false);
-  const [selectedAdventure, setSelectedAdventure] = useState({} as IAdventure);
-
-  const handleClose = () => setShow(false);
 
   const validationSchema = Yup.object().shape({
     bookNumber: Yup.number().required("book is required"),
@@ -53,115 +50,6 @@ const PlayerView: React.FC<Props> = (props: Props) => {
     },
   });
 
-  const getVariant = (status: ADVENTURE_STATUS) => {
-    switch (status) {
-      case "IN PROGRESS":
-        return "warning";
-      case "NOT STARTED":
-        return "secondary";
-      case "COMPLETE":
-        return "success";
-      default:
-        return "secondary";
-    }
-  };
-
-  function renderTooltip(props, message: string) {
-    return (
-      <Tooltip id="button-tooltip" {...props}>
-        {message}
-      </Tooltip>
-    );
-  }
-
-  const handleShow = (
-    evt: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    adventure: IAdventure
-  ) => {
-    if (evt) {
-      evt.stopPropagation();
-      evt.preventDefault();
-    }
-
-    setShow(true);
-    setSelectedAdventure(adventure);
-  };
-
-  const handleRemoveAdventure = () => {
-    props.removeAdventure(selectedAdventure);
-    setShow(false);
-  };
-
-  const renderRemoveModal = () => {
-    return (
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Remove Adventure</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure? This will remove all traces.</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleRemoveAdventure}>
-            Remove Adventure
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  };
-
-  const renderProgress = () => {
-    return (
-      <>
-        <ListGroup>
-          {props.adventures
-            .sort((a, b) => a.bookNumber - b.bookNumber)
-            .map((ad, idx) => (
-              <ListGroupItem
-                key={`${ad.bookNumber}_${idx}`}
-                variant={getVariant(ad.status)}
-              >
-                <Row>
-                  <Col xs="1">{ad.bookNumber}</Col>
-                  <Col xs="8">{getBookTitle(+ad.bookNumber)}</Col>
-                  <Col xs="6" md="1">
-                    <OverlayTrigger
-                      placement="top"
-                      delay={{ show: 250, hide: 400 }}
-                      overlay={(props) => renderTooltip(props, "Continue")}
-                    >
-                      <Button
-                        variant="outline-primary"
-                        href={`/player/${props.player.id}/adventure/${ad.bookNumber}`}
-                      >
-                        <Play />
-                      </Button>
-                    </OverlayTrigger>
-                  </Col>
-                  <Col xs="6" md="1">
-                    <OverlayTrigger
-                      placement="top"
-                      delay={{ show: 250, hide: 400 }}
-                      overlay={(props) => renderTooltip(props, "Remove")}
-                    >
-                      <Button
-                        variant="outline-primary"
-                        onClick={(evt) => handleShow(evt, ad)}
-                      >
-                        <Trash />
-                      </Button>
-                    </OverlayTrigger>
-                  </Col>
-                </Row>
-              </ListGroupItem>
-            ))}
-        </ListGroup>
-        {renderRemoveModal()}
-      </>
-    );
-  };
-
   return (
     <>
       {props.player !== undefined && (
@@ -169,7 +57,9 @@ const PlayerView: React.FC<Props> = (props: Props) => {
           <h4 className="mt-3">{props.player.name}</h4>
           <hr />
           <h5>Progress</h5>
-          {renderProgress()}
+          <PlayerProgress player={props.player}
+            adventures={props.adventures}
+            removeAdventure={props.removeAdventure} />
           <hr />
           <h5>New Adventure</h5>
           <Form onSubmit={formik.handleSubmit}>

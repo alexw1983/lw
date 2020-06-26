@@ -3,6 +3,7 @@ import { IPlayer, IAdventure, IEquipment } from "../redux/types";
 const _match = (a: IAdventure, bookNumber: number, playerId: string) => {
   return +a.bookNumber === +bookNumber && a.playerId === playerId;
 };
+
 const _takeDamage = async (
   damage: number,
   bookNumber: number,
