@@ -75,9 +75,11 @@ export interface IEnemy {
   endurancePoints: number;
   currentEndurancePoints: number;
   combatSkill: number;
+  combatSkillBuffer: number;
   immuneToMindblast: boolean;
   undead: boolean;
   evadeAfter: number | undefined;
+  hasMindBlast: boolean;
 }
 
 export interface ICombatConfig {

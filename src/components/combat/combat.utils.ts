@@ -4,7 +4,6 @@ import {
   ICombatConfig,
   IEquipment,
 } from "../../redux/types";
-import { act } from "@testing-library/react";
 
 export const getDamage = (
   random: number,
@@ -225,9 +224,25 @@ export const calculateLoneWolfCombatSkill = (
   const disciplinesBonus = getDisciplinesBonus(actionChart, enemy, config, log);
   const equipmentBonus = getEquipmentBonus(actionChart, enemy, config, log);
 
+  let enemyBonus = 0;
+
+  if (enemy.combatSkillBuffer !== 0) {
+    enemyBonus = enemyBonus + enemy.combatSkillBuffer;
+    log.push(`Enemy buffer ${enemy.combatSkillBuffer}`);
+  }
+
+  if (enemy.hasMindBlast && !hasDiscipline("mind-shield", actionChart)) {
+    enemyBonus = enemyBonus - 2;
+    log.push(`Enemy has mindblast (-2)`);
+  }
+
   return {
     calcualtion: log,
-    combatSKill: actionChart.combatSkill + equipmentBonus + disciplinesBonus,
+    combatSKill:
+      actionChart.combatSkill +
+      equipmentBonus +
+      disciplinesBonus +
+      enemyBonus,
   };
 };
 
@@ -247,6 +262,44 @@ export const getDisciplinesBonus = (
   const hasMindBlast = hasDiscipline("mind-blast", actionChart);
   const hasPsiSurge = hasDiscipline("psi-surge", actionChart);
   const hasKaiSurge = hasDiscipline("kai-surge", actionChart);
+
+  const circleOfFire =
+    hasWeaponMastery && hasDiscipline("huntmastery", actionChart);
+
+  const circleOfLight =
+    hasDiscipline("animal-control", actionChart) &&
+    hasDiscipline("curing", actionChart);
+
+  const circleOfSolaris =
+    hasDiscipline("invisibility", actionChart) &&
+    hasDiscipline("huntmastery", actionChart) &&
+    hasDiscipline("pathsmanship", actionChart);
+
+  const circleOfSpirit =
+    hasDiscipline("psi-surge", actionChart) &&
+    hasDiscipline("psi-shield", actionChart) &&
+    hasDiscipline("nexus", actionChart) &&
+    hasDiscipline("divination", actionChart);
+
+  if (circleOfFire) {
+    bonus = bonus + 1;
+    log.push("Circle of Fire (+1)");
+  }
+
+  if (circleOfLight) {
+    bonus = bonus + 0;
+    log.push("Circle of Light (+0)");
+  }
+
+  if (circleOfSolaris) {
+    bonus = bonus + 1;
+    log.push("Circle of Solaris (+1)");
+  }
+
+  if (circleOfSpirit) {
+    bonus = bonus + 3;
+    log.push("Circle of Spirit (+3)");
+  }
 
   const hasGrandWeaponMasteryWeapon = hasWeaponSkil(
     actionChart.grandWeaponMastery,

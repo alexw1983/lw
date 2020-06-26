@@ -50,7 +50,19 @@ const DisciplinesStep = (props: Props) => {
       return 1;
     }
 
-    return 5;
+    if (props.bookNumber <= 5) {
+      return 5;
+    }
+
+    if (props.bookNumber > 5 && props.bookNumber <= 12) {
+      return 3;
+    }
+
+    if (props.bookNumber > 12 && props.bookNumber <= 20) {
+      return 4;
+    }
+
+    return 0;
   };
 
   const shouldButtonBeDisabled = () => {

@@ -47,7 +47,11 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
   };
 
   const getCombatRatio = () => {
-    return getLoneWolfCombatSkill().combatSKill - enemy.combatSkill;
+    return (
+      getLoneWolfCombatSkill().combatSKill +
+      enemy.combatSkillBuffer -
+      enemy.combatSkill
+    );
   };
 
   const damageEnemy = (damage: number) => {
@@ -224,7 +228,10 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
               className="enemy-card"
               onClick={() => setEnemy(enemy)}
             >
-              <Card.Body>{enemy.name}</Card.Body>
+              <Card.Body>
+                {enemy.name}{" "}
+                {`(${enemy.combatSkill}/${enemy.endurancePoints}/${enemy.combatSkillBuffer})`}
+              </Card.Body>
             </Card>
           ))}
         </Col>

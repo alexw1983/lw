@@ -44,6 +44,18 @@ export const NewAdventure = (props: Props) => {
       .find((x) => x.bookNumber < props.bookNumber);
   };
 
+  const hasDiscipline = (type: string, id: string) => {
+    return (
+      !!disciplinesQuestion.disciplines.find(
+        (x) => x.type === type && x.id === id
+      ) ||
+      (importQuestion.import &&
+        !!getMostRecentAdventure()?.actionChart.disciplines.find(
+          (x) => x.type === type && x.id === id
+        ))
+    );
+  };
+
   const handleSave = () => {
     const calculationLog = [];
     const equipmentBonus = equipmentQuestion.equipment.reduce((acc, curr) => {
@@ -55,10 +67,59 @@ export const NewAdventure = (props: Props) => {
       return acc;
     }, 0);
 
+    const circleOfFire =
+      hasDiscipline("MAGNAKAI", "weapon-mastery") &&
+      hasDiscipline("MAGNAKAI", "huntmastery");
+
+    const circleOfLight =
+      hasDiscipline("MAGNAKAI", "animal-control") &&
+      hasDiscipline("MAGNAKAI", "curing");
+
+    const circleOfSolaris =
+      hasDiscipline("MAGNAKAI", "invisibility") &&
+      hasDiscipline("MAGNAKAI", "huntmastery") &&
+      hasDiscipline("MAGNAKAI", "pathsmanship");
+
+    const circleOfSpirit =
+      hasDiscipline("MAGNAKAI", "psi-surge") &&
+      hasDiscipline("MAGNAKAI", "psi-shield") &&
+      hasDiscipline("MAGNAKAI", "nexus") &&
+      hasDiscipline("MAGNAKAI", "divination");
+
+    let disciplinesEpBonus = 0;
+
+    if (circleOfFire) {
+      if (!calculationLog.find((x) => x.includes("Fire"))) {
+        disciplinesEpBonus += 2;
+        calculationLog.push(`Circle of Fire (+2)`);
+      }
+    }
+
+    if (circleOfLight) {
+      if (!calculationLog.find((x) => x.includes("Light"))) {
+        disciplinesEpBonus += 3;
+        calculationLog.push(`Circle of Light (+3)`);
+      }
+    }
+
+    if (circleOfSolaris) {
+      if (!calculationLog.find((x) => x.includes("Solaris"))) {
+        disciplinesEpBonus += 3;
+        calculationLog.push(`Circle of Solaris (+3)`);
+      }
+    }
+
+    if (circleOfSpirit) {
+      if (!calculationLog.find((x) => x.includes("Spirit"))) {
+        disciplinesEpBonus += 3;
+        calculationLog.push(`Circle of Spirit (+3)`);
+      }
+    }
+
     const actionChart = {
       combatSkill: statsQuestion.combatSkill,
-      endurancePoints: statsQuestion.endurancePoints,
-      currentEndurancePoints: statsQuestion.endurancePoints + equipmentBonus,
+      endurancePoints: statsQuestion.endurancePoints + disciplinesEpBonus,
+      currentEndurancePoints: statsQuestion.endurancePoints + equipmentBonus + disciplinesEpBonus,
       beltPouch: goldQuestion.gold,
       equipment: equipmentQuestion.equipment,
       disciplines: disciplinesQuestion.disciplines,
@@ -207,7 +268,8 @@ export const NewAdventure = (props: Props) => {
   };
 
   const showImportStep =
-    props.bookNumber > 1 &&
+    props.bookNumber !== 1 &&
+    props.bookNumber !== 21 &&
     props.previousAdventures &&
     props.previousAdventures.length > 0;
 
