@@ -23,6 +23,8 @@ const SetUpCombatForm = (props: Props) => {
       immuneToMindblast: false,
       undead: false,
       evadeAfter: ("" as unknown) as number,
+      combatSkillBuffer: 0,
+      hasMindBlast: false,
     } as IEnemy,
     validationSchema,
     onSubmit: (values: IEnemy) => {
@@ -83,6 +85,14 @@ const SetUpCombatForm = (props: Props) => {
           onChange={formik.handleChange}
         />
       </Form.Group>
+      <Form.Group controlId="hasMindblast">
+        <Form.Check
+          type="checkbox"
+          name="hasMindblast"
+          label="Has mindblast"
+          onChange={formik.handleChange}
+        />
+      </Form.Group>
       <Form.Group controlId="undead">
         <Form.Check
           type="checkbox"
@@ -90,6 +100,19 @@ const SetUpCombatForm = (props: Props) => {
           label="undead"
           onChange={formik.handleChange}
         />
+      </Form.Group>
+      <Form.Group controlId="combatSkillBuffer">
+        <Form.Label>Combat Skill Buffer</Form.Label>
+        <Form.Control
+          type="number"
+          name="combatSkillBuffer"
+          onChange={formik.handleChange}
+          isInvalid={!!formik.errors.combatSkillBuffer}
+          value={formik.values.combatSkillBuffer}
+        />
+        <Form.Control.Feedback type="invalid">
+          {formik.errors.combatSkillBuffer}
+        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group controlId="evadeAfter">
         <Form.Label>Evade after how many rounds</Form.Label>
