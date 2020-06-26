@@ -33,8 +33,8 @@ const CombatLogView: React.FC<Props> = (props: Props) => {
 
   const enemyIsDead = enemy && enemy.currentEndurancePoints <= 0;
   const loneWolfIsDead =
-    props.adventure && props.adventure.actionChart.currentEndurancePoints <= 0;
-  const magnakaiRank = props.adventure.actionChart.disciplines.filter(
+    props.adventure && props.adventure?.actionChart.currentEndurancePoints <= 0;
+  const magnakaiRank = props.adventure?.actionChart.disciplines.filter(
     (x) => x.type === "MAGNAKAI"
   ).length;
 

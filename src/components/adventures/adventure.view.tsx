@@ -25,12 +25,14 @@ const AdventureView = (props: Props) => {
     });
     props.saveAdventure(newAdventure);
     setShowNewAdventureForm(false);
+    window.location.reload(false);
   };
 
   const handleCompleteAdventure = () => {
     props.saveAdventure(
       Object.assign({}, props.adventure, { status: "COMPLETE" })
     );
+    window.location.reload(false);
   };
 
   const renderHeading = () => {
